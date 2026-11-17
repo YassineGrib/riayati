@@ -30,9 +30,9 @@ void main() {
       ),
     );
     await pumpReports(tester, const ReportDetailScreen(7), FakeReports());
-    expect(find.text('SHA-256: 0123456789abâ€¦89abcdef'), findsOneWidget);
-    await tester.ensureVisible(find.byTooltip('Ù†Ø³Ø® Ø§Ù„Ø¨ØµÙ…Ø©'));
-    await tester.tap(find.byTooltip('Ù†Ø³Ø® Ø§Ù„Ø¨ØµÙ…Ø©'));
+    expect(find.text('SHA-256: 0123456789ab…89abcdef'), findsOneWidget);
+    await tester.ensureVisible(find.byTooltip('نسخ البصمة'));
+    await tester.tap(find.byTooltip('نسخ البصمة'));
     await tester.pumpAndSettle();
     expect(copied, fingerprint);
   });
@@ -59,10 +59,10 @@ void main() {
     }
     expect(repo.links, [(7, 9), (7, 9)]);
     expect(opened.map((uri) => uri.query), ['signature=1', 'signature=2']);
-    repo.linkError = const ApiError(message: 'ØªØ¹Ø°Ø± ÙØªØ­ Ø§Ù„Ù…Ø±ÙÙ‚');
+    repo.linkError = const ApiError(message: 'تعذر فتح المرفق');
     await tester.tap(find.text('evidence.pdf'));
     await tester.pumpAndSettle();
-    expect(find.text('ØªØ¹Ø°Ø± ÙØªØ­ Ø§Ù„Ù…Ø±ÙÙ‚'), findsOneWidget);
+    expect(find.text('تعذر فتح المرفق'), findsOneWidget);
   });
 
   testWidgets('default attachment opener explains platform hook', (
@@ -74,7 +74,7 @@ void main() {
     await tester.tap(find.text('evidence.pdf'));
     await tester.pumpAndSettle();
     expect(repo.links.length, 1);
-    expect(find.text('ÙØªØ­ Ø§Ù„Ø±ÙˆØ§Ø¨Ø· ØºÙŠØ± Ù…ØªØ§Ø­ Ø­Ø§Ù„ÙŠÙ‹Ø§.'), findsOneWidget);
+    expect(find.text('فتح الروابط غير متاح حاليًا.'), findsOneWidget);
   });
 
   testWidgets('PDF calls once while pending and opens downloaded file', (
@@ -93,11 +93,11 @@ void main() {
       ),
       repo,
     );
-    await tester.ensureVisible(reportButton('ØªØ­Ù…ÙŠÙ„ PDF'));
-    await tester.tap(reportButton('ØªØ­Ù…ÙŠÙ„ PDF'));
+    await tester.ensureVisible(reportButton('تحميل PDF'));
+    await tester.tap(reportButton('تحميل PDF'));
     await tester.pump();
-    expect(tester.widget<RButton>(reportButton('ØªØ­Ù…ÙŠÙ„ PDF')).loading, isTrue);
-    await tester.tap(reportButton('ØªØ­Ù…ÙŠÙ„ PDF'));
+    expect(tester.widget<RButton>(reportButton('تحميل PDF')).loading, isTrue);
+    await tester.tap(reportButton('تحميل PDF'));
     expect(repo.pdfs, [7]);
     pending.complete(File('downloaded.pdf'));
     await tester.pumpAndSettle();
@@ -106,29 +106,29 @@ void main() {
 
   testWidgets('PDF errors are visible and allow retry', (tester) async {
     final repo = FakeReports()
-      ..pdfError = const ApiError(message: 'ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ PDF');
+      ..pdfError = const ApiError(message: 'تعذر تحميل PDF');
     await pumpReports(
       tester,
       ReportDetailScreen(7, onOpenPdf: (_) async {}),
       repo,
     );
-    await tapReportButton(tester, 'ØªØ­Ù…ÙŠÙ„ PDF');
+    await tapReportButton(tester, 'تحميل PDF');
     expect(repo.pdfs, [7]);
-    expect(find.text('ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ PDF'), findsOneWidget);
+    expect(find.text('تعذر تحميل PDF'), findsOneWidget);
     repo.pdfError = null;
-    await tapReportButton(tester, 'ØªØ­Ù…ÙŠÙ„ PDF');
+    await tapReportButton(tester, 'تحميل PDF');
     expect(repo.pdfs, [7, 7]);
   });
 
   testWidgets('detail error retries', (tester) async {
     final repo = FakeReports()
-      ..detailError = const ApiError(message: 'ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¨Ù„Ø§Øº');
+      ..detailError = const ApiError(message: 'تعذر تحميل البلاغ');
     await pumpReports(tester, const ReportDetailScreen(7), repo);
-    expect(find.text('ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¨Ù„Ø§Øº'), findsOneWidget);
+    expect(find.text('تعذر تحميل البلاغ'), findsOneWidget);
     repo.detailError = null;
-    await tapReportButton(tester, 'Ø¥Ø¹Ø§Ø¯Ø© Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø©');
+    await tapReportButton(tester, 'إعادة المحاولة');
     expect(repo.gets, [7, 7]);
-    expect(find.text('ÙˆØµÙ Ø§Ù„ÙˆØ§Ù‚Ø¹Ø© Ø§Ù„Ù…Ø³Ø¬Ù„Ø©'), findsOneWidget);
+    expect(find.text('وصف الواقعة المسجلة'), findsOneWidget);
   });
 
   testWidgets('platform PDF opening failures are visible', (tester) async {
@@ -143,9 +143,9 @@ void main() {
       ),
       repo,
     );
-    await tapReportButton(tester, 'ØªØ­Ù…ÙŠÙ„ PDF');
+    await tapReportButton(tester, 'تحميل PDF');
     expect(repo.pdfs, [7]);
-    expect(find.text('ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ PDF. Ø­Ø§ÙˆÙ„ Ù…Ø¬Ø¯Ø¯Ù‹Ø§.'), findsOneWidget);
+    expect(find.text('تعذر تحميل PDF. حاول مجددًا.'), findsOneWidget);
   });
 
   for (final brightness in Brightness.values) {
@@ -158,7 +158,7 @@ void main() {
         FakeReports()..detail = sampleReport(long: true),
         brightness: brightness,
       );
-      await tester.ensureVisible(reportButton('ØªØ­Ù…ÙŠÙ„ PDF'));
+      await tester.ensureVisible(reportButton('تحميل PDF'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
     });

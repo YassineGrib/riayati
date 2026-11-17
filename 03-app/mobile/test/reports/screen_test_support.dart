@@ -107,7 +107,9 @@ Future<void> pumpReports(
       overrides: [reportRepositoryProvider.overrideWithValue(repo)],
       child: MaterialApp.router(
         routerConfig: router,
-        theme: buildTheme(brightness),
+        theme: buildTheme(brightness).copyWith(
+          splashFactory: InkRipple.splashFactory,
+        ),
         locale: const Locale('ar'),
         supportedLocales: const [Locale('ar')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
