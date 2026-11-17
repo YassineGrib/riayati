@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ar" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riayati: welcome and auth screens</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../components.css">
+<style>
+  /* welcome */
+  .welcome { background: var(--semantic-surface-brand-soft); }
+  .welcome .content { align-items: stretch; text-align: center; }
+  .brand { margin-block: var(--scale-12) 0; display: flex; flex-direction: column; align-items: center; }
+  .brand svg { inline-size: 148px; block-size: auto; }
+  .brand .olive { fill: var(--primitive-logo-olive); }
+  .brand .lime { fill: var(--primitive-logo-lime); }
+  .brand h1 { font-family: var(--fontFamily-display); margin: var(--scale-5) 0 var(--scale-1); font-size: var(--fontSize-5xl); line-height: var(--lineHeight-tight); font-weight: var(--fontWeight-bold); }
+  .brand p { margin: 0; max-inline-size: 28ch; color: var(--semantic-text-secondary); font-size: var(--fontSize-lg); line-height: var(--lineHeight-normal); }
+  .actions { margin-block-start: auto; display: grid; gap: var(--scale-3); padding-block-end: var(--scale-3); }
+  .privacy { display: flex; gap: var(--scale-2); justify-content: center; align-items: center; margin: var(--scale-4) 0 var(--scale-2); font-size: var(--fontSize-sm); color: var(--semantic-text-secondary); }
+  .privacy svg { color: var(--semantic-action-primary); }
+
+  /* sent state */
+  .sent-mark { inline-size: 80px; block-size: 80px; border-radius: var(--radius-full); background: var(--semantic-accent-soft); color: var(--semantic-action-primary); display: grid; place-items: center; margin: var(--scale-10) 0 var(--scale-6); }
+  .sent-mark svg { inline-size: 40px; block-size: 40px; }
+  .resend { color: var(--semantic-text-secondary); font-size: var(--fontSize-sm); text-align: center; min-block-size: 48px; display: grid; place-items: center; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition-duration: var(--reducedMotion-duration) !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-mail-check" viewBox="0 0 24 24"><path d="M22 13V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12c0 1.1.9 2 2 2h8"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><path d="m16 19 2 2 4-4"/></symbol>
+</svg>
+
+<main class="board">
+  <header class="board-head">
+    <div>
+      <h1>Riayati · welcome and auth</h1>
+      <p>Android, 360 dp, Arabic RTL. Email and password only, no OTP. All values come from 01-brand/tokens.</p>
+    </div>
+    <button class="theme-switch" type="button" id="theme" aria-pressed="false">Dark theme</button>
+  </header>
+
+  <div class="grid">
+
+    <!-- WELCOME -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen welcome">
+          <div class="content">
+            <div class="brand">
+              <svg viewBox="225 314 350 295" role="img" aria-label="شعار رعايتي">
+                <g class="olive">
+                  <path d="M 268.8,503.7 C 279.5,516.3 295.7,523.4 311.2,522.8 C 329.1,522.1 344.6,513.2 359.2,498.5 L 376.7,528.7 C 354.5,548.5 329.4,557.1 304.5,557.1 C 278.5,557.1 265.2,551.6 263.8,526.3 C 263.1,517.5 264.6,509.5 268.8,503.7 Z"/>
+                  <path d="M 370.6,483.3 C 391.5,449.0 415.1,424.2 445.2,417.0 C 472.9,410.5 500.4,441.3 506.2,462.8 C 508.6,471.2 508.4,480.2 506.2,486.1 C 496.8,477.2 484.5,473.5 470.8,473.5 C 443.1,473.5 420.4,487.9 397.3,510.9 Z"/>
+                </g>
+                <g class="lime">
+                  <path d="M 445.2,417.0 C 452.2,415.1 459.9,414.5 467.7,414.5 C 516.1,414.5 554.9,453.2 554.9,501.9 C 554.9,550.4 515.8,588.9 467.5,588.9 C 431.6,588.9 410.7,570.9 390.6,547.2 C 371.2,524.4 356.2,503.6 337.8,490.4 C 328.3,483.4 317.7,479.4 305.3,479.4 C 286.7,479.4 273.6,488.9 267.6,504.3 C 261.3,520.4 265.9,545.5 286.9,554.9 C 263.0,550.6 245.6,528.5 245.6,502.1 C 245.6,471.0 270.2,446.0 302.4,446.0 C 336.7,446.0 357.8,460.3 375.5,483.0 C 396.3,508.6 415.5,537.8 451.9,537.8 C 480.3,537.8 505.4,513.9 505.4,482.1 C 505.4,448.8 479.3,421.8 445.2,417.0 Z"/>
+                  <circle cx="301.9" cy="391.4" r="25.3"/><circle cx="469.3" cy="359.7" r="25.3"/>
+                </g>
+              </svg>
+              <h1>رعايتي</h1>
+              <p>مساحة آمنة لحماية الأطفال ومعرفة الحقوق في إطار الحضانة.</p>
+            </div>
+            <div class="actions">
+              <button class="btn primary" type="button">إنشاء حساب</button>
+              <button class="btn outline" type="button">تسجيل الدخول</button>
+              <div class="privacy"><svg class="i sm"><use href="#i-shield"/></svg><span>بياناتك خاصة، ولا يطّلع الطرف الآخر إلا على التقويم المشترك.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Welcome</figcaption>
+    </figure>
+
+    <!-- LOGIN -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"><button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="content">
+            <h2 class="title">مرحبًا بعودتك</h2>
+            <p class="lead">سجّل الدخول لمتابعة ملفك.</p>
+
+            <div class="field">
+              <label for="l-email">البريد الإلكتروني</label>
+              <div class="control"><svg class="i sm lead-icon"><use href="#i-mail"/></svg><input id="l-email" type="email" dir="ltr" inputmode="email" autocomplete="email" placeholder="name@example.com" value="amina@example.com"></div>
+            </div>
+            <div class="field">
+              <label for="l-pass">كلمة المرور</label>
+              <div class="control is-focus"><svg class="i sm lead-icon"><use href="#i-lock"/></svg><input id="l-pass" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••••"><button class="icon-btn toggle-pass" type="button" aria-label="إظهار كلمة المرور"><svg class="i sm"><use href="#i-eye"/></svg></button></div>
+            </div>
+            <div class="link-row"><button class="link" type="button">نسيت كلمة المرور؟</button></div>
+            <button class="btn primary" type="button">تسجيل الدخول</button>
+
+            <div class="foot"><span>ليس لديك حساب؟</span><button class="link" type="button">إنشاء حساب</button></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Login</figcaption>
+    </figure>
+
+    <!-- LOGIN ERROR -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"><button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="content">
+            <h2 class="title">مرحبًا بعودتك</h2>
+            <p class="lead">سجّل الدخول لمتابعة ملفك.</p>
+
+            <div class="alert" role="alert"><svg class="i sm"><use href="#i-alert"/></svg><span>البريد الإلكتروني أو كلمة المرور غير صحيحة. تحقق منهما وحاول مجددًا.</span></div>
+
+            <div class="field">
+              <label for="e-email">البريد الإلكتروني</label>
+              <div class="control is-error"><svg class="i sm lead-icon"><use href="#i-mail"/></svg><input id="e-email" type="email" dir="ltr" autocomplete="email" value="amina@example.com" aria-invalid="true"></div>
+            </div>
+            <div class="field">
+              <label for="e-pass">كلمة المرور</label>
+              <div class="control is-error"><svg class="i sm lead-icon"><use href="#i-lock"/></svg><input id="e-pass" type="password" dir="ltr" autocomplete="current-password" value="wrongpass" aria-invalid="true"><button class="icon-btn toggle-pass" type="button" aria-label="إظهار كلمة المرور"><svg class="i sm"><use href="#i-eye"/></svg></button></div>
+            </div>
+            <div class="link-row"><button class="link" type="button">نسيت كلمة المرور؟</button></div>
+            <button class="btn primary" type="button">تسجيل الدخول</button>
+
+            <div class="foot"><span>ليس لديك حساب؟</span><button class="link" type="button">إنشاء حساب</button></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Login, wrong credentials</figcaption>
+    </figure>
+
+    <!-- REGISTER -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"><button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="content">
+            <h2 class="title" style="margin-bottom: var(--scale-3)">إنشاء حساب</h2>
+
+            <div class="field">
+              <label for="r-name">الاسم الكامل</label>
+              <div class="control"><svg class="i sm lead-icon"><use href="#i-user"/></svg><input id="r-name" type="text" autocomplete="name" placeholder="الاسم واللقب"></div>
+            </div>
+            <div class="field">
+              <label for="r-email">البريد الإلكتروني</label>
+              <div class="control"><svg class="i sm lead-icon"><use href="#i-mail"/></svg><input id="r-email" type="email" dir="ltr" inputmode="email" autocomplete="email" placeholder="name@example.com"></div>
+            </div>
+            <div class="field">
+              <label for="r-pass">كلمة المرور</label>
+              <div class="control"><svg class="i sm lead-icon"><use href="#i-lock"/></svg><input id="r-pass" type="password" dir="ltr" autocomplete="new-password" placeholder="••••••••" aria-describedby="r-pass-hint"><button class="icon-btn toggle-pass" type="button" aria-label="إظهار كلمة المرور"><svg class="i sm"><use href="#i-eye"/></svg></button></div>
+              <p class="hint" id="r-pass-hint">8 أحرف على الأقل.</p>
+            </div>
+            <fieldset class="field" style="border:0;padding:0;margin:0 0 var(--scale-4)">
+              <div class="legend" role="presentation">أنا</div>
+              <div class="roles" role="radiogroup" aria-label="أنا">
+                <label class="role"><input type="radio" name="role" value="father" checked><span><svg class="i sm"><use href="#i-check"/></svg>أب</span></label>
+                <label class="role"><input type="radio" name="role" value="mother"><span><svg class="i sm"><use href="#i-check"/></svg>أم</span></label>
+              </div>
+            </fieldset>
+            <div class="consent">
+              <span class="box"><input type="checkbox" id="r-consent" aria-labelledby="r-consent-text"><i></i></span>
+              <p id="r-consent-text">أوافق على <a href="#">شروط الاستخدام</a> و<a href="#">سياسة الخصوصية</a>.</p>
+            </div>
+            <button class="btn primary" type="button">إنشاء الحساب</button>
+
+            <div class="foot"><span>لديك حساب؟</span><button class="link" type="button">تسجيل الدخول</button></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Register</figcaption>
+    </figure>
+
+    <!-- FORGOT -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"><button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="content">
+            <h2 class="title">استعادة كلمة المرور</h2>
+            <p class="lead">أدخل بريدك الإلكتروني وسنرسل لك رابطًا لتعيين كلمة مرور جديدة.</p>
+
+            <div class="field">
+              <label for="f-email">البريد الإلكتروني</label>
+              <div class="control is-focus"><svg class="i sm lead-icon"><use href="#i-mail"/></svg><input id="f-email" type="email" dir="ltr" inputmode="email" autocomplete="email" placeholder="name@example.com"></div>
+            </div>
+            <button class="btn primary" type="button" style="margin-top: var(--scale-2)">إرسال الرابط</button>
+
+            <div class="foot"><button class="link" type="button">العودة إلى تسجيل الدخول</button></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Forgot password</figcaption>
+    </figure>
+
+    <!-- FORGOT SENT -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"><button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button></div>
+          <div class="content" style="align-items:center;text-align:center">
+            <div class="sent-mark"><svg class="i"><use href="#i-mail-check"/></svg></div>
+            <h2 class="title">تحقق من بريدك</h2>
+            <p class="lead" style="max-inline-size:30ch">أرسلنا رابط الاستعادة إلى <bdi dir="ltr">amina@example.com</bdi>. قد يستغرق وصوله بضع دقائق.</p>
+            <button class="btn primary" type="button">العودة إلى تسجيل الدخول</button>
+            <div class="resend" style="margin-top: var(--scale-2)">لم يصلك؟ يمكنك إعادة الإرسال بعد <bdi>0:45</bdi></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Forgot password, link sent</figcaption>
+    </figure>
+
+  </div>
+</main>
+
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') !== 'dark';
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.textContent = dark ? 'Light theme' : 'Dark theme';
+  });
+  document.querySelectorAll('.toggle-pass').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var input = b.parentElement.querySelector('input');
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      b.setAttribute('aria-label', show ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور');
+      b.querySelector('use').setAttribute('href', show ? '#i-eye-off' : '#i-eye');
+    });
+  });
+</script>
+</body>
+</html>

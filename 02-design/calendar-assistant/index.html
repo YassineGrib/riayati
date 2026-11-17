@@ -1,0 +1,334 @@
+﻿<!doctype html>
+<html lang="ar" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riayati: calendar and assistant</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../app.css">
+<style>
+  .chip.ok { background: var(--semantic-feedback-success-bg); color: var(--semantic-feedback-success-text); }
+  .chip.bad { background: var(--semantic-feedback-error-bg); color: var(--semantic-feedback-error-text); }
+
+  /* month grid */
+  .month { display: flex; align-items: center; justify-content: space-between; block-size: 48px; padding-inline: var(--scale-2); }
+  .month b { font-size: var(--fontSize-lg); font-weight: var(--fontWeight-bold); font-family: var(--fontFamily-display); }
+  .week, .days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); padding-inline: var(--scale-2); direction: rtl; }
+  .week span { text-align: center; font-size: 12px; font-weight: var(--fontWeight-medium); color: var(--semantic-text-secondary); line-height: 24px; }
+  .day { position: relative; block-size: 48px; border: 0; background: transparent; color: var(--semantic-text-primary); font: inherit; font-size: var(--fontSize-sm); font-weight: var(--fontWeight-medium); border-radius: var(--radius-full); cursor: pointer; display: grid; place-items: center; }
+  .day:hover { background: var(--semantic-interactive-hover-overlay); }
+  .day.today { box-shadow: inset 0 0 0 var(--width-medium) var(--semantic-border-focus); }
+  .day.sel { background: var(--semantic-action-primary); color: var(--semantic-text-on-action); }
+  .day.dot::after { content: ""; position: absolute; inset-block-end: 5px; inset-inline: 0; margin-inline: auto; inline-size: 6px; block-size: 6px; border-radius: var(--radius-full); background: var(--dot, var(--semantic-feedback-warning-icon)); }
+  .day.sel.dot::after { background: var(--semantic-text-on-action); }
+  .dot-warn { --dot: var(--semantic-feedback-warning-icon); }
+  .dot-conf { --dot: var(--semantic-action-primary); }
+  .agenda-h { margin: var(--scale-3) 0 var(--scale-2); font-size: var(--fontSize-base); font-weight: var(--fontWeight-bold); }
+  .fab { position: absolute; inset-inline-end: var(--scale-4); inset-block-end: calc(64px + var(--scale-3) + var(--scale-4)); block-size: 56px; padding-inline: var(--scale-5); border: 0; border-radius: var(--radius-2xl); background: var(--component-button-primary-bg); color: var(--component-button-primary-text); display: flex; align-items: center; gap: var(--scale-2); font: inherit; font-size: var(--fontSize-base); font-weight: var(--fontWeight-bold); cursor: pointer;
+         box-shadow: 0 var(--scale-1) var(--scale-4) color-mix(in srgb, var(--primitive-black) 30%, transparent); }
+  .fab:hover { background: var(--component-button-primary-bg-hover); }
+
+  /* forms */
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--scale-3); }
+  .control.area.sm { block-size: 88px; }
+  .info { display: flex; gap: var(--scale-2); align-items: flex-start; padding: var(--scale-3) var(--scale-4); border-radius: var(--radius-xl); background: var(--semantic-feedback-info-bg); color: var(--semantic-feedback-info-text); border: var(--width-thin) solid var(--semantic-feedback-info-border); font-size: var(--fontSize-sm); line-height: var(--lineHeight-snug); }
+  .info svg { flex: none; color: var(--semantic-feedback-info-icon); margin-block-start: 1px; }
+
+  /* timeline */
+  .steps { list-style: none; margin: 0; padding: 0; }
+  .steps li { position: relative; display: flex; gap: var(--scale-4); padding-block-end: var(--scale-5); }
+  .steps li:last-child { padding-block-end: 0; }
+  .steps li::before { content: ""; position: absolute; inset-inline-start: 15px; inset-block: 32px 0; inline-size: var(--width-medium); background: var(--semantic-border-default); }
+  .steps li:last-child::before { display: none; }
+  .steps .mk { flex: none; inline-size: 32px; block-size: 32px; border-radius: var(--radius-full); display: grid; place-items: center; background: var(--semantic-surface-card); border: var(--width-medium) solid var(--semantic-border-strong); color: var(--semantic-text-secondary); }
+  .steps .mk svg { inline-size: 16px; block-size: 16px; }
+  .steps .is-done .mk { background: var(--semantic-action-primary); border-color: var(--semantic-action-primary); color: var(--semantic-text-on-action); }
+  .steps .is-now .mk { background: var(--semantic-feedback-warning-bg); border-color: var(--semantic-feedback-warning-icon); color: var(--semantic-feedback-warning-text); }
+  .steps b { display: block; font-size: var(--fontSize-base); font-weight: var(--fontWeight-bold); line-height: var(--lineHeight-snug); }
+  .steps small { display: block; font-size: var(--fontSize-sm); color: var(--semantic-text-secondary); line-height: var(--lineHeight-snug); }
+
+  /* assistant */
+  .composer { position: absolute; inset-inline: var(--scale-4); inset-block-end: calc(64px + var(--scale-3) + var(--scale-3)); }
+  .suggest { display: flex; align-items: center; justify-content: space-between; inline-size: 100%; min-block-size: 48px; padding-inline: var(--scale-4); border: var(--width-thin) solid var(--semantic-border-strong); border-radius: var(--radius-xl); background: transparent; color: var(--semantic-text-primary); font: inherit; font-size: var(--fontSize-base); cursor: pointer; text-align: start; }
+  .suggest:hover { background: var(--semantic-interactive-hover-overlay); }
+  .msgs { display: flex; flex-direction: column; gap: var(--scale-3); }
+  .msg { max-inline-size: 86%; padding: var(--scale-3) var(--scale-4); border-radius: var(--radius-2xl); }
+  .msg.user { align-self: flex-start; background: var(--semantic-action-primary); color: var(--semantic-text-on-action); border-end-start-radius: var(--radius-sm); font-size: var(--fontSize-base); line-height: var(--lineHeight-snug); }
+  .msg.bot { align-self: flex-end; max-inline-size: 100%; background: var(--component-card-bg); border: var(--width-thin) solid var(--component-card-border); border-end-end-radius: var(--radius-sm); padding: var(--scale-4); }
+  .msg.bot .answer { margin: 0; font-family: var(--fontFamily-serif-text); font-size: var(--fontSize-base); line-height: var(--lineHeight-relaxed); }
+  .msg.bot h4 { margin: var(--scale-3) 0 var(--scale-1_5); font-size: var(--fontSize-sm); font-weight: var(--fontWeight-bold); color: var(--semantic-text-secondary); }
+  .src { display: flex; align-items: center; gap: var(--scale-2); inline-size: 100%; min-block-size: 48px; padding-inline: var(--scale-3); border: var(--width-thin) solid var(--semantic-border-default); border-radius: var(--radius-xl); background: var(--semantic-surface-brand-soft); color: var(--semantic-text-primary); font: inherit; font-size: var(--fontSize-sm); font-weight: var(--fontWeight-medium); cursor: pointer; text-align: start; margin-block-end: var(--scale-1_5); }
+  .src svg:first-child { color: var(--semantic-action-primary); flex: none; }
+  .src .go { margin-inline-start: auto; color: var(--semantic-text-secondary); transform: none; }
+  .warn-line { display: flex; gap: var(--scale-2); align-items: flex-start; font-weight: var(--fontWeight-bold); line-height: var(--lineHeight-snug); }
+  .warn-line svg { flex: none; color: var(--semantic-feedback-warning-icon); margin-block-start: 2px; }
+  .legal-note { display: flex; gap: var(--scale-2); align-items: flex-start; margin: var(--scale-2) 0 0; font-size: var(--fontSize-sm); color: var(--semantic-text-secondary); line-height: var(--lineHeight-snug); }
+  .legal-note svg { flex: none; margin-block-start: 1px; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-back-l" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-cal-check" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+</svg>
+
+<main class="board">
+  <header class="board-head">
+    <div>
+      <h1>Riayati · calendar and assistant</h1>
+      <p>Android, 360 dp, Arabic RTL. Dates, names and the legal answer text are demo content, not real legal information.</p>
+    </div>
+    <button class="theme-switch" type="button" id="theme" aria-pressed="false">Dark theme</button>
+  </header>
+
+  <div class="grid">
+
+    <!-- CALENDAR -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">التقويم</div></div>
+          <div class="month">
+            <button class="icon-btn" type="button" aria-label="الشهر السابق"><svg class="i"><use href="#i-chev-r"/></svg></button>
+            <b>نوفمبر 2026</b>
+            <button class="icon-btn" type="button" aria-label="الشهر التالي"><svg class="i"><use href="#i-chev-l"/></svg></button>
+          </div>
+          <div class="week"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span>الجمعة</span><span>السبت</span></div>
+          <div class="days">
+            <button class="day" type="button">1</button><button class="day" type="button">2</button><button class="day" type="button">3</button><button class="day" type="button">4</button><button class="day" type="button">5</button><button class="day dot dot-conf" type="button" aria-label="6، زيارة مؤكدة">6</button><button class="day" type="button">7</button>
+            <button class="day" type="button">8</button><button class="day" type="button">9</button><button class="day" type="button">10</button><button class="day" type="button">11</button><button class="day" type="button">12</button><button class="day" type="button">13</button><button class="day" type="button">14</button>
+            <button class="day" type="button">15</button><button class="day" type="button">16</button><button class="day today" type="button" aria-current="date">17</button><button class="day" type="button">18</button><button class="day" type="button">19</button><button class="day sel dot dot-warn" type="button" aria-label="20، زيارة بانتظار الرد">20</button><button class="day" type="button">21</button>
+            <button class="day" type="button">22</button><button class="day" type="button">23</button><button class="day" type="button">24</button><button class="day" type="button">25</button><button class="day" type="button">26</button><button class="day" type="button">27</button><button class="day dot dot-conf" type="button" aria-label="28، زيارة مؤكدة">28</button>
+            <button class="day" type="button">29</button><button class="day" type="button">30</button>
+          </div>
+          <div class="content tabbed" style="padding-block-start: 0">
+            <h3 class="agenda-h">الزيارات القادمة</h3>
+            <section class="card" aria-labelledby="v1">
+              <div class="row between">
+                <h3 id="v1">الجمعة 20 نوفمبر</h3>
+                <span class="chip warn"><svg class="i"><use href="#i-clock"/></svg>بانتظار ردّك</span>
+              </div>
+              <p class="meta" style="margin-top: var(--scale-1)">10:00 – 14:00 · اقترحها الطرف الآخر</p>
+              <div class="row" style="margin-top: var(--scale-3)">
+                <button class="btn primary sm half" type="button">قبول</button>
+                <button class="btn outline sm half" type="button">رفض</button>
+              </div>
+            </section>
+          </div>
+          <button class="fab" type="button"><svg class="i"><use href="#i-plus"/></svg>اقتراح زيارة</button>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Calendar, month and next visit</figcaption>
+    </figure>
+
+    <!-- PROPOSE -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar">
+            <button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button>
+            <span style="font-size: var(--fontSize-xl); font-weight: var(--fontWeight-bold); font-family: var(--fontFamily-display); margin-inline-start: var(--scale-2)">اقتراح زيارة</span>
+          </div>
+          <div class="content" style="padding-block-start: var(--scale-2)">
+            <div class="field">
+              <label for="p-date">التاريخ</label>
+              <div class="control is-focus"><svg class="i sm lead-icon"><use href="#i-cal"/></svg><input id="p-date" value="الجمعة 27 نوفمبر 2026"></div>
+            </div>
+            <div class="two">
+              <div class="field">
+                <label for="p-from">من</label>
+                <div class="control"><svg class="i sm lead-icon"><use href="#i-clock"/></svg><input id="p-from" dir="ltr" value="10:00"></div>
+              </div>
+              <div class="field">
+                <label for="p-to">إلى</label>
+                <div class="control"><svg class="i sm lead-icon"><use href="#i-clock"/></svg><input id="p-to" dir="ltr" value="14:00"></div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="p-note">ملاحظة (اختياري)</label>
+              <div class="control area sm"><textarea id="p-note" placeholder="مثال: مكان التسليم."></textarea></div>
+            </div>
+            <p class="info"><svg class="i sm"><use href="#i-info"/></svg><span>سيصل الاقتراح إلى الطرف الآخر ليقبله أو يرفضه، وستصلك نتيجة ردّه.</span></p>
+          </div>
+          <div class="footer-cta"><button class="btn primary" type="button">إرسال الاقتراح</button></div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Propose a visit</figcaption>
+    </figure>
+
+    <!-- VISIT DETAIL -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar">
+            <button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button>
+            <span style="font-size: var(--fontSize-xl); font-weight: var(--fontWeight-bold); font-family: var(--fontFamily-display); margin-inline-start: var(--scale-2)">تفاصيل الزيارة</span>
+          </div>
+          <div class="content" style="padding-block-start: var(--scale-2)">
+            <section class="card">
+              <div class="row between">
+                <h3 style="font-size: var(--fontSize-xl)">الجمعة 20 نوفمبر</h3>
+                <span class="chip warn"><svg class="i"><use href="#i-clock"/></svg>بانتظار ردّك</span>
+              </div>
+              <p class="meta" style="margin-top: var(--scale-1)">10:00 – 14:00 · اقترحها الطرف الآخر</p>
+            </section>
+            <h3 class="agenda-h" style="margin-block: var(--scale-5) var(--scale-3)">مراحل الزيارة</h3>
+            <ol class="steps">
+              <li class="is-done"><span class="mk"><svg class="i"><use href="#i-check"/></svg></span><div><b>تم اقتراح الزيارة</b><small>الأحد 15 نوفمبر · 18:20</small></div></li>
+              <li class="is-now"><span class="mk"><svg class="i"><use href="#i-clock"/></svg></span><div><b>ردّك</b><small>بانتظار قبولك أو رفضك</small></div></li>
+              <li><span class="mk"><svg class="i"><use href="#i-cal-check"/></svg></span><div><b>تأكيد الزيارة</b><small>بعد القبول</small></div></li>
+            </ol>
+          </div>
+          <div class="footer-cta">
+            <div class="row"><button class="btn primary half" type="button">قبول</button><button class="btn outline half" type="button">رفض</button></div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Visit detail and status</figcaption>
+    </figure>
+
+    <!-- ASSISTANT EMPTY -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">المساعد القانوني</div></div>
+          <div class="content tabbed" style="gap: var(--scale-4); display: flex">
+            <section class="card" style="background: var(--semantic-surface-brand-soft)">
+              <div class="row" style="margin-bottom: var(--scale-2)"><span class="mark-lime" style="background: var(--semantic-surface-card)"><svg class="i sm"><use href="#i-chat"/></svg></span><h3>اسأل عن قانون الأسرة الجزائري</h3></div>
+              <p class="meta">أجيب من النصوص المعتمدة فقط، وأذكر المواد التي استندت إليها عند توفرها.</p>
+            </section>
+            <p class="info"><svg class="i sm"><use href="#i-info"/></svg><span>لا تكتب أسماء أو تفاصيل قضية. هذه معلومات عامة وليست استشارة قانونية.</span></p>
+            <div>
+              <h3 class="agenda-h" style="margin-top: 0">جرّب أن تسأل</h3>
+              <div class="stack" style="gap: var(--scale-2)">
+                <button class="suggest" type="button">من الأحق بحضانة الطفل؟<svg class="i sm"><use href="#i-chev-l"/></svg></button>
+                <button class="suggest" type="button">كيف تُنظَّم زيارة الطفل؟<svg class="i sm"><use href="#i-chev-l"/></svg></button>
+                <button class="suggest" type="button">ما الذي تشمله نفقة الأولاد؟<svg class="i sm"><use href="#i-chev-l"/></svg></button>
+              </div>
+            </div>
+          </div>
+          <div class="composer"><div class="ask"><span>اكتب سؤالك…</span><span class="send"><svg class="i"><use href="#i-send"/></svg></span></div></div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Assistant, first open</figcaption>
+    </figure>
+
+    <!-- ASSISTANT ANSWER -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">المساعد القانوني</div></div>
+          <div class="content tabbed" style="overflow: hidden">
+            <div class="msgs">
+              <div class="msg user">من الأحق بحضانة الطفل؟</div>
+              <div class="msg bot">
+                <p class="answer">تنظّم المواد الخاصة بالحضانة في قانون الأسرة من تُسند إليها الحضانة وشروطها، وتجعل مصلحة المحضون معيارًا أساسيًا في ذلك.</p>
+                <h4>المصادر</h4>
+                <button class="src" type="button"><svg class="i sm"><use href="#i-book"/></svg>قانون الأسرة · المادة 64<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+                <button class="src" type="button"><svg class="i sm"><use href="#i-book"/></svg>قانون الأسرة · المادة 65<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+                <p class="legal-note"><svg class="i sm"><use href="#i-info"/></svg><span>معلومات عامة وليست استشارة قانونية.</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="composer"><div class="ask"><span>اكتب سؤالك…</span><span class="send"><svg class="i"><use href="#i-send"/></svg></span></div></div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Assistant, answer with sources</figcaption>
+    </figure>
+
+    <!-- ASSISTANT INSUFFICIENT -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">المساعد القانوني</div></div>
+          <div class="content tabbed" style="overflow: hidden">
+            <div class="msgs">
+              <div class="msg user">هل يحق لي السفر بالطفل إلى الخارج دون موافقة؟</div>
+              <div class="msg bot">
+                <p class="warn-line"><svg class="i sm"><use href="#i-info"/></svg><span>لم أجد في المصادر المتوفرة ما يجيب عن سؤالك بدقة.</span></p>
+                <p class="answer" style="margin-top: var(--scale-2)">جرّب إعادة صياغة السؤال، أو استشر محاميًا أو الجهة القضائية المختصة.</p>
+                <button class="btn outline sm" type="button" style="margin-top: var(--scale-3)">أعد صياغة السؤال</button>
+                <p class="legal-note" style="margin-top: var(--scale-3)"><svg class="i sm"><use href="#i-info"/></svg><span>معلومات عامة وليست استشارة قانونية.</span></p>
+              </div>
+            </div>
+          </div>
+          <div class="composer"><div class="ask"><span>اكتب سؤالك…</span><span class="send"><svg class="i"><use href="#i-send"/></svg></span></div></div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Assistant, not enough in the sources</figcaption>
+    </figure>
+
+  </div>
+</main>
+
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') !== 'dark';
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.textContent = dark ? 'Light theme' : 'Dark theme';
+  });
+</script>
+</body>
+</html>
+
+

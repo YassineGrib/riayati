@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ar" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riayati: app screens</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../app.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-back-l" viewBox="0 0 24 24"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-alert-tri" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-check-c" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect width="12" height="8" x="6" y="14" rx="1"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></symbol>
+</svg>
+
+<main class="board">
+  <header class="board-head">
+    <div>
+      <h1>Riayati · linking, home, report</h1>
+      <p>Android, 360 dp, Arabic RTL. Floating 5-tab bar. Names, dates and codes are demo data.</p>
+    </div>
+    <button class="theme-switch" type="button" id="theme" aria-pressed="false">Dark theme</button>
+  </header>
+
+  <div class="grid">
+
+    <!-- LINK CO-PARENT -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar"></div>
+          <div class="content">
+            <h2 class="title">ربط حساب الطرف الآخر</h2>
+            <p class="lead" style="margin-bottom: var(--scale-4)">لتشاركا تقويم الزيارات، اربطا حسابيكما برمز دعوة. لن يطّلع الطرف الآخر إلا على التقويم المشترك.</p>
+
+            <div class="card">
+              <div class="row between" style="margin-bottom: var(--scale-3)">
+                <h3>رمزك</h3>
+                <span class="chip neutral"><svg class="i"><use href="#i-clock"/></svg>ينتهي خلال 48 ساعة</span>
+              </div>
+              <div class="code mono">K7M-4Q2</div>
+              <div class="row" style="margin-top: var(--scale-3)">
+                <button class="btn outline sm half" type="button"><svg class="i sm"><use href="#i-copy"/></svg>نسخ</button>
+                <button class="btn primary sm half" type="button"><svg class="i sm"><use href="#i-share"/></svg>مشاركة</button>
+              </div>
+            </div>
+
+            <div class="or"><span>أو</span></div>
+
+            <div class="field" style="margin-bottom: var(--scale-3)">
+              <label for="k-code">لديّ رمز من الطرف الآخر</label>
+              <div class="control is-focus"><input class="code-in" id="k-code" dir="ltr" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="XXX-XXX"></div>
+            </div>
+            <button class="btn primary" type="button" disabled>ربط الحساب</button>
+
+            <div class="foot" style="flex-direction: column; align-items: center">
+              <button class="link" type="button">لاحقًا</button>
+              <span style="text-align:center">لن يعمل التقويم المشترك قبل الربط.</span>
+            </div>
+          </div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Link co-parent</figcaption>
+    </figure>
+
+    <!-- HOME -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar">
+            <div><div class="hello">مرحبًا، أمينة</div><div class="date">الثلاثاء 17 نوفمبر</div></div>
+            <button class="icon-btn bell" type="button" aria-label="الإشعارات، لديك إشعار جديد"><svg class="i"><use href="#i-bell"/></svg><i></i></button>
+          </div>
+          <div class="content tabbed stack" style="gap: var(--scale-4); align-content: start">
+
+            <button class="sos" type="button">
+              <span class="badge"><svg class="i"><use href="#i-alert-tri"/></svg></span>
+              <span>
+                <span class="t">الإبلاغ عن حادثة</span>
+                <span class="s">وثّق ما حدث بالنص والصور والفيديو.</span>
+              </span>
+              <svg class="i go"><use href="#i-back-l"/></svg>
+            </button>
+
+            <section class="card" aria-labelledby="h-visit">
+              <div class="row between">
+                <h3 id="h-visit">الزيارة القادمة</h3>
+                <span class="chip warn"><svg class="i"><use href="#i-clock"/></svg>بانتظار ردّك</span>
+              </div>
+              <p style="margin: var(--scale-3) 0 var(--scale-1); font-size: var(--fontSize-xl); font-weight: var(--fontWeight-bold); line-height: var(--lineHeight-snug)">الجمعة 20 نوفمبر</p>
+              <p class="meta">10:00 – 14:00 · اقترحها الطرف الآخر</p>
+              <div class="row" style="margin-top: var(--scale-4)">
+                <button class="btn primary sm half" type="button">قبول</button>
+                <button class="btn outline sm half" type="button">رفض</button>
+              </div>
+            </section>
+
+            <section class="card" aria-labelledby="h-ask">
+              <div class="row" style="margin-bottom: var(--scale-3)">
+                <span class="mark-lime"><svg class="i sm"><use href="#i-chat"/></svg></span>
+                <h3 id="h-ask">المساعد القانوني</h3>
+              </div>
+              <div class="ask"><span>اسأل عن قانون الأسرة…</span><span class="send"><svg class="i"><use href="#i-send"/></svg></span></div>
+              <p class="meta" style="margin-top: var(--scale-3)">أجوبة من نصوص قانون الأسرة الجزائري. لا تكتب أسماء أو تفاصيل قضية.</p>
+            </section>
+          </div>
+
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Home</figcaption>
+    </figure>
+
+    <!-- REPORT FORM -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar">
+            <button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button>
+            <span style="font-size: var(--fontSize-xl); font-weight: var(--fontWeight-bold); font-family: var(--fontFamily-display); margin-inline-start: var(--scale-2)">بلاغ جديد</span>
+          </div>
+          <div class="content" style="padding-block-start: var(--scale-2); overflow: hidden">
+            <div class="field">
+              <label for="r-what">ماذا حدث؟</label>
+              <div class="control area is-focus"><textarea id="r-what" placeholder="صف ما حدث بإيجاز: ماذا، ومتى، وأين، ومن كان حاضرًا."></textarea></div>
+            </div>
+            <div class="field">
+              <label for="r-when">تاريخ الحادثة ووقتها</label>
+              <div class="control"><svg class="i sm lead-icon"><use href="#i-cal"/></svg><input id="r-when" value="17 نوفمبر 2026 · 09:30"></div>
+            </div>
+
+            <div class="row between" style="margin-bottom: var(--scale-1_5)">
+              <span class="legend" style="font-size: var(--fontSize-sm); font-weight: var(--fontWeight-medium)">المرفقات</span>
+              <span class="meta">2 من 5</span>
+            </div>
+            <div class="adds">
+              <button class="add" type="button"><svg class="i sm"><use href="#i-image"/></svg>صورة</button>
+              <button class="add" type="button"><svg class="i sm"><use href="#i-video"/></svg>فيديو</button>
+              <button class="add" type="button"><svg class="i sm"><use href="#i-clip"/></svg>ملف</button>
+            </div>
+
+            <div class="stack" style="gap: var(--scale-2); margin-top: var(--scale-3)">
+              <div class="card file" style="padding-block: 0">
+                <span class="tile"><svg class="i sm"><use href="#i-image"/></svg></span>
+                <span class="grow"><span class="name">صورة 1</span><span class="meta" style="display:block">2.4 ميغابايت</span></span>
+                <button class="icon-btn" type="button" aria-label="إزالة صورة 1"><svg class="i sm"><use href="#i-x"/></svg></button>
+              </div>
+              <div class="card file" style="padding-block: var(--scale-2)">
+                <span class="tile"><svg class="i sm"><use href="#i-video"/></svg></span>
+                <span class="grow"><span class="name">فيديو 1</span><span class="meta" style="display:block">جارٍ الضغط، 60٪</span><span class="bar"><b></b></span></span>
+                <button class="icon-btn" type="button" aria-label="إلغاء رفع فيديو 1"><svg class="i sm"><use href="#i-x"/></svg></button>
+              </div>
+            </div>
+
+            <p class="meta" style="margin: var(--scale-3) 0">حتى 5 ملفات، وبحد أقصى 30 ميغابايت للملف.</p>
+            <p class="note"><svg class="i sm"><use href="#i-lock"/></svg><span>لا يطّلع على هذا البلاغ إلا أنت وفريق الإدارة.</span></p>
+          </div>
+          <div class="footer-cta"><button class="btn primary" type="button">إرسال البلاغ</button></div>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>New report</figcaption>
+    </figure>
+
+    <!-- REPORT SUMMARY -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="appbar">
+            <button class="icon-btn" type="button" aria-label="رجوع"><svg class="i"><use href="#i-arrow"/></svg></button>
+            <span style="font-size: var(--fontSize-xl); font-weight: var(--fontWeight-bold); font-family: var(--fontFamily-display); margin-inline-start: var(--scale-2)">تفاصيل البلاغ</span>
+          </div>
+          <div class="content tabbed" style="padding-block-start: var(--scale-2)">
+            <div class="row" style="gap: var(--scale-4); margin-bottom: var(--scale-4)">
+              <span class="done"><svg class="i"><use href="#i-check"/></svg></span>
+              <div>
+                <h2 class="title" style="margin: 0; font-size: var(--fontSize-2xl)">تم إرسال البلاغ</h2>
+                <span class="chip neutral mono" style="margin-top: var(--scale-1)">RIA-2026-0142</span>
+              </div>
+            </div>
+
+            <section class="card" style="padding-block: var(--scale-1)">
+              <dl class="facts">
+                <div><dt>الحالة</dt><dd><span class="chip info">قيد المراجعة</span></dd></div>
+                <div><dt>تاريخ الحادثة</dt><dd>17 نوفمبر 2026 · 09:30</dd></div>
+                <div><dt>المرفقات</dt><dd>صورة وفيديو</dd></div>
+                <div style="display:block; padding-block: var(--scale-3)"><dt style="margin-bottom: var(--scale-1)">الوصف</dt><dd class="clamp" style="text-align:start; font-weight: var(--fontWeight-regular)">عند تسليم الطفل بعد الزيارة لاحظتُ كدمة على ذراعه ولم يُقدَّم أي تفسير. صوّرتُ المكان فورًا.</dd></div>
+              </dl>
+            </section>
+
+            <section class="card file" style="margin-top: var(--scale-3); padding-block: var(--scale-2)">
+              <span class="tile"><svg class="i sm"><use href="#i-file"/></svg></span>
+              <span class="grow"><span class="name">تقرير البلاغ</span><span class="meta" style="display:block">ملف PDF · 214 كيلوبايت</span></span>
+              <button class="icon-btn" type="button" aria-label="تنزيل التقرير" style="background: var(--component-button-primary-bg); color: var(--component-button-primary-text)"><svg class="i sm"><use href="#i-download"/></svg></button>
+            </section>
+            <div class="row" style="margin-top: var(--scale-3)">
+              <button class="btn outline sm half" type="button"><svg class="i sm"><use href="#i-download"/></svg>حفظ</button>
+              <button class="btn outline sm half" type="button"><svg class="i sm"><use href="#i-print"/></svg>طباعة</button>
+            </div>
+            <p class="note" style="margin-top: var(--scale-3)"><svg class="i sm"><use href="#i-lock"/></svg><span>لا يمكن حذف البلاغ بعد إرساله، للحفاظ عليه كدليل.</span></p>
+          </div>
+
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Report sent, summary and PDF</figcaption>
+    </figure>
+
+  </div>
+</main>
+
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') !== 'dark';
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.textContent = dark ? 'Light theme' : 'Dark theme';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "$description": "Arabic-first typography. Major Third (1.25) scale, px (Flutter: logical px). Arabic rules: letter-spacing is ALWAYS 0 (any tracking breaks letter joining), and leading is looser than Latin because of diacritics and tall letters.",
+  "fontFamily": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "thmanyah sans",
+        "IBM Plex Sans Arabic",
+        "Noto Sans Arabic",
+        "system-ui",
+        "sans-serif"
+      ],
+      "$description": "App UI: labels, buttons, fields, numbers (the 'digital' face). Local files only, see 01-brand/fonts/thmanyah/README.md"
+    },
+    "display": {
+      "$type": "fontFamily",
+      "$value": [
+        "thmanyah serif display",
+        "thmanyah sans",
+        "IBM Plex Sans Arabic",
+        "serif"
+      ],
+      "$description": "Large titles and the wordmark only"
+    },
+    "serif-text": {
+      "$type": "fontFamily",
+      "$value": [
+        "thmanyah serif text",
+        "thmanyah sans",
+        "IBM Plex Sans Arabic",
+        "serif"
+      ],
+      "$description": "Long reading text such as legal articles"
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": [
+        "IBM Plex Mono",
+        "Consolas",
+        "monospace"
+      ],
+      "$description": "Reference numbers and codes only"
+    }
+  },
+  "fontSize": {
+    "$description": "Major Third scale. Base 16px. Minimum UI text 14px for Arabic.",
+    "sm": {
+      "$type": "dimension",
+      "$value": "14px"
+    },
+    "base": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "18px"
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": "20px"
+    },
+    "2xl": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "3xl": {
+      "$type": "dimension",
+      "$value": "30px"
+    },
+    "4xl": {
+      "$type": "dimension",
+      "$value": "36px"
+    },
+    "5xl": {
+      "$type": "dimension",
+      "$value": "48px"
+    }
+  },
+  "fontWeight": {
+    "regular": {
+      "$type": "number",
+      "$value": 400
+    },
+    "medium": {
+      "$type": "number",
+      "$value": 500
+    },
+    "semibold": {
+      "$type": "number",
+      "$value": 600
+    },
+    "bold": {
+      "$type": "number",
+      "$value": 700
+    }
+  },
+  "lineHeight": {
+    "$description": "Arabic needs more room than Latin.",
+    "tight": {
+      "$type": "number",
+      "$value": 1.4,
+      "$description": "Large headings only"
+    },
+    "snug": {
+      "$type": "number",
+      "$value": 1.5
+    },
+    "normal": {
+      "$type": "number",
+      "$value": 1.65,
+      "$description": "Body"
+    },
+    "relaxed": {
+      "$type": "number",
+      "$value": 1.8,
+      "$description": "Long legal text"
+    }
+  },
+  "letterSpacing": {
+    "normal": {
+      "$type": "dimension",
+      "$value": "0em",
+      "$description": "The only value used for Arabic"
+    }
+  },
+  "textStyle": {
+    "$description": "Composite styles. Use these in components.",
+    "display": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.display}",
+        "fontSize": "{fontSize.4xl}",
+        "fontWeight": "{fontWeight.bold}",
+        "lineHeight": "{lineHeight.tight}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Splash / landing hero: 36px"
+    },
+    "heading-1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.display}",
+        "fontSize": "{fontSize.3xl}",
+        "fontWeight": "{fontWeight.bold}",
+        "lineHeight": "{lineHeight.tight}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Screen title: 30px"
+    },
+    "heading-2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.2xl}",
+        "fontWeight": "{fontWeight.semibold}",
+        "lineHeight": "{lineHeight.snug}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Section title: 24px"
+    },
+    "heading-3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.xl}",
+        "fontWeight": "{fontWeight.semibold}",
+        "lineHeight": "{lineHeight.snug}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Card title: 20px"
+    },
+    "heading-4": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.lg}",
+        "fontWeight": "{fontWeight.semibold}",
+        "lineHeight": "{lineHeight.snug}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Small title: 18px"
+    },
+    "body-lg": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.lg}",
+        "fontWeight": "{fontWeight.regular}",
+        "lineHeight": "{lineHeight.normal}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Lead text: 18px"
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.base}",
+        "fontWeight": "{fontWeight.regular}",
+        "lineHeight": "{lineHeight.normal}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Default body: 16px"
+    },
+    "body-legal": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.serif-text}",
+        "fontSize": "{fontSize.base}",
+        "fontWeight": "{fontWeight.regular}",
+        "lineHeight": "{lineHeight.relaxed}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Legal article text: 16px, loose leading"
+    },
+    "label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.sm}",
+        "fontWeight": "{fontWeight.medium}",
+        "lineHeight": "{lineHeight.snug}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Form labels, buttons: 14px"
+    },
+    "caption": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{fontFamily.sans}",
+        "fontSize": "{fontSize.sm}",
+        "fontWeight": "{fontWeight.regular}",
+        "lineHeight": "{lineHeight.normal}",
+        "letterSpacing": "{letterSpacing.normal}"
+      },
+      "$description": "Captions, helper text: 14px"
+    }
+  }
+}

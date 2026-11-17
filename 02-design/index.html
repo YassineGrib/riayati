@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riayati: design index</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="base.css">
+<style>
+  body { padding: var(--scale-8) var(--scale-6); }
+  *, *::before, *::after { box-sizing: border-box; }
+  main { inline-size: 100%; max-inline-size: 760px; margin-inline: auto; }
+  h1 { font-family: var(--fontFamily-display); font-size: var(--fontSize-4xl); line-height: var(--lineHeight-tight); margin: 0 0 var(--scale-2); }
+  p.lead { margin: 0 0 var(--scale-8); color: var(--semantic-text-secondary); }
+  h2 { font-size: var(--fontSize-xl); margin: var(--scale-8) 0 var(--scale-3); }
+  .list { display: grid; gap: var(--scale-3); }
+  a.card { display: block; padding: var(--scale-4) var(--scale-5); background: var(--component-card-bg); border: var(--width-thin) solid var(--component-card-border); border-radius: var(--radius-2xl); color: inherit; text-decoration: none; }
+  a.card:hover { border-color: var(--semantic-border-strong); }
+  a.card b { display: block; font-size: var(--fontSize-lg); }
+  a.card span { color: var(--semantic-text-secondary); font-size: var(--fontSize-sm); }
+  a.card.big { background: var(--semantic-surface-brand-soft); border-color: var(--semantic-action-primary); }
+</style>
+</head>
+<body>
+<main>
+  <h1>رعايتي · واجهات التصميم</h1>
+  <p class="lead">اضغط على أي بطاقة لفتح الواجهات. في أعلى كل صفحة زر لتبديل الوضع الفاتح والداكن.</p>
+
+  <h2>لوحة الإدارة (على الحاسوب)</h2>
+  <div class="list">
+    <a class="card big" href="admin/index.html"><b>لوحة الإدارة</b><span>5 شاشات: صندوق البلاغات، تفاصيل البلاغ، قائمة النصوص القانونية، تعديل نص، وتأكيد الحذف</span></a>
+  </div>
+
+  <h2>تطبيق الهاتف</h2>
+  <div class="list">
+    <a class="card" href="auth/index.html"><b>الترحيب وتسجيل الدخول</b><span>6 شاشات: الترحيب، الدخول، خطأ الدخول، إنشاء حساب، استعادة كلمة المرور، تم الإرسال</span></a>
+    <a class="card" href="app/index.html"><b>ربط الحساب والرئيسية والبلاغ</b><span>4 شاشات: ربط حساب الطرف الآخر، الرئيسية، بلاغ جديد، ملخص البلاغ</span></a>
+    <a class="card" href="calendar-assistant/index.html"><b>التقويم والمساعد القانوني</b><span>6 شاشات: التقويم، اقتراح زيارة، تفاصيل الزيارة، والمساعد بثلاث حالات</span></a>
+    <a class="card" href="reports-profile/index.html"><b>بلاغاتي وحسابي</b><span>4 شاشات: قائمة البلاغات، قائمة فارغة، الحساب، والحساب غير المرتبط</span></a>
+  </div>
+</main>
+</body>
+</html>

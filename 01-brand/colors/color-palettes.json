@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "source": "10 Modern UI Color Palettes",
+    "default_theme_id": "ocean",
+    "usage_note": "Each palette contains 5 harmonious shades ordered from darkest (text/primary dark) to lightest (surface/background), suitable for Minimalist Flat UI with subtle hero gradients and abstract corner accents."
+  },
+  "palettes": [
+    {
+      "id": "dusk",
+      "number": 1,
+      "name": "DUSK",
+      "mood": [
+        "Calm",
+        "Warm",
+        "Sophisticated"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#1A1B2E",
+        "primary": "#42426F",
+        "accent": "#6D5BA6",
+        "soft_highlight": "#F08A8A",
+        "background": "#FFD6C9"
+      },
+      "hex_list": [
+        "#1A1B2E",
+        "#42426F",
+        "#6D5BA6",
+        "#F08A8A",
+        "#FFD6C9"
+      ]
+    },
+    {
+      "id": "sage",
+      "number": 2,
+      "name": "SAGE",
+      "mood": [
+        "Fresh",
+        "Natural",
+        "Balanced"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#2E4D3D",
+        "primary": "#527F5B",
+        "accent": "#A3C9A8",
+        "soft_highlight": "#DCEAD9",
+        "background": "#F7F7F2"
+      },
+      "hex_list": [
+        "#2E4D3D",
+        "#527F5B",
+        "#A3C9A8",
+        "#DCEAD9",
+        "#F7F7F2"
+      ]
+    },
+    {
+      "id": "ocean",
+      "number": 3,
+      "name": "OCEAN",
+      "mood": [
+        "Cool",
+        "Clean",
+        "Refreshing"
+      ],
+      "is_default": true,
+      "colors": {
+        "dark_ink": "#0D1B2A",
+        "primary": "#1B4965",
+        "accent": "#29ADB2",
+        "soft_highlight": "#A8DADC",
+        "background": "#E6F4F1"
+      },
+      "hex_list": [
+        "#0D1B2A",
+        "#1B4965",
+        "#29ADB2",
+        "#A8DADC",
+        "#E6F4F1"
+      ]
+    },
+    {
+      "id": "sunset",
+      "number": 4,
+      "name": "SUNSET",
+      "mood": [
+        "Vibrant",
+        "Energetic",
+        "Friendly"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#E94F37",
+        "primary": "#F9844A",
+        "accent": "#F9C74F",
+        "soft_highlight": "#FDD9B5",
+        "background": "#FFF2E7"
+      },
+      "hex_list": [
+        "#E94F37",
+        "#F9844A",
+        "#F9C74F",
+        "#FDD9B5",
+        "#FFF2E7"
+      ]
+    },
+    {
+      "id": "lavender",
+      "number": 5,
+      "name": "LAVENDER",
+      "mood": [
+        "Soft",
+        "Dreamy",
+        "Elegant"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#5E4B8B",
+        "primary": "#7D6CC4",
+        "accent": "#B9A7E0",
+        "soft_highlight": "#E7D6F7",
+        "background": "#F6F2FB"
+      },
+      "hex_list": [
+        "#5E4B8B",
+        "#7D6CC4",
+        "#B9A7E0",
+        "#E7D6F7",
+        "#F6F2FB"
+      ]
+    },
+    {
+      "id": "mustard",
+      "number": 6,
+      "name": "MUSTARD",
+      "mood": [
+        "Bold",
+        "Modern",
+        "Playful"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#2B2B2B",
+        "primary": "#D4A017",
+        "accent": "#F0C94C",
+        "soft_highlight": "#F7E7B5",
+        "background": "#FFFDF5"
+      },
+      "hex_list": [
+        "#2B2B2B",
+        "#D4A017",
+        "#F0C94C",
+        "#F7E7B5",
+        "#FFFDF5"
+      ]
+    },
+    {
+      "id": "teal_gray",
+      "number": 7,
+      "name": "TEAL/GRAY",
+      "mood": [
+        "Minimal",
+        "Calm",
+        "Professional"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#263238",
+        "primary": "#455A64",
+        "accent": "#80CBC4",
+        "soft_highlight": "#CFD8DC",
+        "background": "#ECEFF1"
+      },
+      "hex_list": [
+        "#263238",
+        "#455A64",
+        "#80CBC4",
+        "#CFD8DC",
+        "#ECEFF1"
+      ]
+    },
+    {
+      "id": "berry",
+      "number": 8,
+      "name": "BERRY",
+      "mood": [
+        "Rich",
+        "Bold",
+        "Luxurious"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#6B0F3C",
+        "primary": "#9D174D",
+        "accent": "#E3356A",
+        "soft_highlight": "#F7A1B3",
+        "background": "#FFE6EC"
+      },
+      "hex_list": [
+        "#6B0F3C",
+        "#9D174D",
+        "#E3356A",
+        "#F7A1B3",
+        "#FFE6EC"
+      ]
+    },
+    {
+      "id": "arctic",
+      "number": 9,
+      "name": "ARCTIC",
+      "mood": [
+        "Crisp",
+        "Cool",
+        "Modern"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#102A43",
+        "primary": "#1E88E5",
+        "accent": "#64B5F6",
+        "soft_highlight": "#BBDEFB",
+        "background": "#E3F2FD"
+      },
+      "hex_list": [
+        "#102A43",
+        "#1E88E5",
+        "#64B5F6",
+        "#BBDEFB",
+        "#E3F2FD"
+      ]
+    },
+    {
+      "id": "neutral",
+      "number": 10,
+      "name": "NEUTRAL",
+      "mood": [
+        "Timeless",
+        "Clean",
+        "Versatile"
+      ],
+      "is_default": false,
+      "colors": {
+        "dark_ink": "#333333",
+        "primary": "#757575",
+        "accent": "#BDBDBD",
+        "soft_highlight": "#EEEEEE",
+        "background": "#FAFAFA"
+      },
+      "hex_list": [
+        "#333333",
+        "#757575",
+        "#BDBDBD",
+        "#EEEEEE",
+        "#FAFAFA"
+      ]
+    }
+  ],
+  "semantic_fixed_colors": {
+    "sos_emergency": "#DC2626",
+    "sos_emergency_soft": "#FEE2E2",
+    "success": "#16A34A",
+    "warning": "#D97706"
+  }
+}

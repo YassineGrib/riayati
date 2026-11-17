@@ -1,0 +1,250 @@
+﻿<!doctype html>
+<html lang="ar" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riayati: reports and profile</title>
+<link rel="stylesheet" href="../tokens.css">
+<link rel="stylesheet" href="../base.css">
+<link rel="stylesheet" href="../components.css">
+<link rel="stylesheet" href="../app.css">
+<style>
+  .chip.ok { background: var(--semantic-feedback-success-bg); color: var(--semantic-feedback-success-text); }
+
+  /* segmented filter */
+  .seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 0; overflow: hidden; block-size: 48px; border-radius: var(--radius-xl); background: var(--semantic-surface-sunken); margin-inline: var(--scale-6); }
+  .seg button { border: 0; border-radius: 0; block-size: 48px; background: transparent; color: var(--semantic-text-secondary); font: inherit; font-size: var(--fontSize-sm); font-weight: var(--fontWeight-medium); cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--semantic-surface-card); color: var(--semantic-text-primary); font-weight: var(--fontWeight-bold); box-shadow: inset 0 0 0 var(--width-thin) var(--semantic-border-strong); }
+
+  .list { display: grid; gap: var(--scale-3); }
+  .rep { display: block; inline-size: 100%; text-align: start; font: inherit; color: inherit; cursor: pointer; }
+  .rep:hover { background: var(--semantic-interactive-hover-overlay); }
+  .rep .ex { margin: var(--scale-2) 0 var(--scale-3); font-size: var(--fontSize-sm); line-height: var(--lineHeight-snug); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .rep .foot2 { display: flex; align-items: center; gap: var(--scale-1_5); color: var(--semantic-text-secondary); font-size: var(--fontSize-sm); }
+  .rep .foot2 .go { margin-inline-start: auto; }
+
+  /* empty state */
+  .empty { flex: 1; display: grid; align-content: center; justify-items: center; text-align: center; gap: var(--scale-3); padding-block-end: var(--scale-16); }
+  .empty .mk { inline-size: 80px; block-size: 80px; border-radius: var(--radius-full); background: var(--semantic-accent-soft); color: var(--semantic-action-primary); display: grid; place-items: center; }
+  .empty .mk svg { inline-size: 40px; block-size: 40px; }
+  .empty h2 { margin: var(--scale-2) 0 0; font-family: var(--fontFamily-display); font-size: var(--fontSize-2xl); line-height: var(--lineHeight-tight); }
+  .empty p { margin: 0; max-inline-size: 28ch; color: var(--semantic-text-secondary); }
+
+  /* profile */
+  .pf { display: flex; align-items: center; gap: var(--scale-4); }
+  .avatar { flex: none; inline-size: 72px; block-size: 72px; border-radius: var(--radius-full); background: var(--semantic-accent-soft); color: var(--semantic-action-primary); display: grid; place-items: center; font-family: var(--fontFamily-display); font-size: var(--fontSize-3xl); font-weight: var(--fontWeight-bold); }
+  .pf h2 { margin: 0; font-family: var(--fontFamily-display); font-size: var(--fontSize-2xl); line-height: var(--lineHeight-tight); }
+  .pf .mail { direction: ltr; unicode-bidi: isolate; display: block; text-align: start; }
+  .rows { padding: 0; overflow: hidden; }
+  .rowitem { display: flex; align-items: center; gap: var(--scale-3); inline-size: 100%; min-block-size: 56px; padding-inline: var(--scale-4); border: 0; background: transparent; color: var(--semantic-text-primary); font: inherit; font-size: var(--fontSize-base); text-align: start; cursor: pointer; }
+  .rowitem + .rowitem { border-block-start: var(--width-thin) solid var(--semantic-border-default); }
+  .rowitem:hover { background: var(--semantic-interactive-hover-overlay); }
+  .rowitem .lead { color: var(--semantic-text-secondary); flex: none; }
+  .rowitem .go { margin-inline-start: auto; color: var(--semantic-text-secondary); flex: none; }
+  .linkcard { display: flex; align-items: center; gap: var(--scale-3); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+</svg>
+
+<main class="board">
+  <header class="board-head">
+    <div>
+      <h1>Riayati · my reports and profile</h1>
+      <p>Android, 360 dp, Arabic RTL. Names, numbers and dates are demo data.</p>
+    </div>
+    <button class="theme-switch" type="button" id="theme" aria-pressed="false">Dark theme</button>
+  </header>
+
+  <div class="grid">
+
+    <!-- REPORTS LIST -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">بلاغاتي</div></div>
+          <div class="seg" role="group" aria-label="تصفية البلاغات">
+            <button type="button" aria-pressed="true">الكل</button>
+            <button type="button" aria-pressed="false">قيد المراجعة</button>
+            <button type="button" aria-pressed="false">تمت المراجعة</button>
+          </div>
+          <div class="content tabbed" style="padding-block-start: var(--scale-4)">
+            <div class="list">
+              <button class="card rep" type="button">
+                <div class="row between"><span class="chip neutral mono">RIA-2026-0142</span><span class="chip info">قيد المراجعة</span></div>
+                <p class="meta" style="margin-top: var(--scale-2)">17 نوفمبر 2026 · 09:30</p>
+                <p class="ex">عند تسليم الطفل بعد الزيارة لاحظتُ كدمة على ذراعه ولم يُقدَّم أي تفسير.</p>
+                <div class="foot2"><svg class="i sm"><use href="#i-clip"/></svg><span>ملفان</span><svg class="i sm go"><use href="#i-chev-l"/></svg></div>
+              </button>
+              <button class="card rep" type="button">
+                <div class="row between"><span class="chip neutral mono">RIA-2026-0138</span><span class="chip ok">تمت المراجعة</span></div>
+                <p class="meta" style="margin-top: var(--scale-2)">9 نوفمبر 2026 · 18:05</p>
+                <p class="ex">تأخّر تسليم الطفل عن الموعد المتفق عليه بأكثر من ساعتين دون إشعار مسبق.</p>
+                <div class="foot2"><svg class="i sm"><use href="#i-clip"/></svg><span>ملف واحد</span><svg class="i sm go"><use href="#i-chev-l"/></svg></div>
+              </button>
+              <button class="card rep" type="button">
+                <div class="row between"><span class="chip neutral mono">RIA-2026-0131</span><span class="chip ok">تمت المراجعة</span></div>
+                <p class="meta" style="margin-top: var(--scale-2)">28 أكتوبر 2026 · 11:20</p>
+                <p class="ex">تغيّر مكان التسليم دون اتفاق مسبق وبدون إخباري.</p>
+                <div class="foot2"><svg class="i sm"><use href="#i-clip"/></svg><span>بدون مرفقات</span><svg class="i sm go"><use href="#i-chev-l"/></svg></div>
+              </button>
+            </div>
+          </div>
+          <button class="fab" type="button" style="inset-block-end: calc(64px + var(--scale-3) + var(--scale-4))"><svg class="i"><use href="#i-plus"/></svg>بلاغ جديد</button>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>My reports</figcaption>
+    </figure>
+
+    <!-- REPORTS EMPTY -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">بلاغاتي</div></div>
+          <div class="content tabbed">
+            <div class="empty">
+              <span class="mk"><svg class="i"><use href="#i-file"/></svg></span>
+              <h2>لا توجد بلاغات بعد</h2>
+              <p>عند توثيق حادثة ستظهر هنا بلاغاتك مع حالة كل بلاغ.</p>
+              <button class="btn primary" type="button" style="margin-top: var(--scale-3); inline-size: auto; padding-inline: var(--scale-8)"><svg class="i sm"><use href="#i-plus"/></svg>بلاغ جديد</button>
+            </div>
+          </div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>My reports, empty</figcaption>
+    </figure>
+
+    <!-- PROFILE LINKED -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">حسابي</div></div>
+          <div class="content tabbed" style="gap: var(--scale-4); display: flex">
+            <div class="pf">
+              <span class="avatar" aria-hidden="true">أ</span>
+              <div>
+                <h2>أمينة</h2>
+                <span class="meta mail">amina@example.com</span>
+                <span class="chip neutral" style="margin-top: var(--scale-1_5)">أم</span>
+              </div>
+            </div>
+            <section class="card linkcard">
+              <svg class="i" style="color: var(--semantic-action-primary)"><use href="#i-link"/></svg>
+              <div class="grow"><h3>حساب الطرف الآخر</h3><p class="meta">يرى التقويم المشترك فقط.</p></div>
+              <span class="chip ok"><svg class="i"><use href="#i-check"/></svg>مرتبط</span>
+            </section>
+            <section class="card rows">
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-pencil"/></svg>تعديل الاسم والبريد<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-lock"/></svg>تغيير كلمة المرور<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-shield"/></svg>خصوصية بياناتي<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-file"/></svg>شروط الاستخدام وسياسة الخصوصية<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+            </section>
+            <button class="btn outline" type="button"><svg class="i sm"><use href="#i-logout"/></svg>تسجيل الخروج</button>
+          </div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Profile, linked</figcaption>
+    </figure>
+
+    <!-- PROFILE UNLINKED -->
+    <figure>
+      <div class="frame">
+        <div class="statusbar"><span>9:41</span><span class="bat"></span></div>
+        <div class="screen">
+          <div class="topbar"><div class="hello">حسابي</div></div>
+          <div class="content tabbed" style="gap: var(--scale-4); display: flex">
+            <div class="pf">
+              <span class="avatar" aria-hidden="true">أ</span>
+              <div>
+                <h2>أمينة</h2>
+                <span class="meta mail">amina@example.com</span>
+                <span class="chip neutral" style="margin-top: var(--scale-1_5)">أم</span>
+              </div>
+            </div>
+            <section class="card">
+              <div class="linkcard">
+                <svg class="i" style="color: var(--semantic-feedback-warning-icon)"><use href="#i-link"/></svg>
+                <div class="grow"><h3>حساب الطرف الآخر</h3><p class="meta">لم يتم الربط بعد.</p></div>
+                <span class="chip warn">غير مرتبط</span>
+              </div>
+              <p class="meta" style="margin-block: var(--scale-3)">اربط الحسابين لتفعيل التقويم المشترك.</p>
+              <button class="btn primary sm" type="button"><svg class="i sm"><use href="#i-link"/></svg>ربط الحساب</button>
+            </section>
+            <section class="card rows">
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-pencil"/></svg>تعديل الاسم والبريد<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-lock"/></svg>تغيير كلمة المرور<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-shield"/></svg>خصوصية بياناتي<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+              <button class="rowitem" type="button"><svg class="i sm lead"><use href="#i-file"/></svg>شروط الاستخدام وسياسة الخصوصية<svg class="i sm go"><use href="#i-chev-l"/></svg></button>
+            </section>
+          </div>
+          <nav class="tabbar" aria-label="التنقل الرئيسي">
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-home"/></svg></span>الرئيسية</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-cal"/></svg></span>التقويم</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-chat"/></svg></span>المساعد</button>
+            <button class="tab" type="button"><span class="pill"><svg class="i"><use href="#i-file"/></svg></span>بلاغاتي</button>
+            <button class="tab" type="button" aria-current="page"><span class="pill"><svg class="i"><use href="#i-user"/></svg></span>حسابي</button>
+          </nav>
+        </div>
+        <div class="gesture"></div>
+      </div>
+      <figcaption>Profile, not linked yet</figcaption>
+    </figure>
+
+  </div>
+</main>
+
+<script>
+  var root = document.documentElement, btn = document.getElementById('theme');
+  btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') !== 'dark';
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.textContent = dark ? 'Light theme' : 'Dark theme';
+  });
+</script>
+</body>
+</html>
+

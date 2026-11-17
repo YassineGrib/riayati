@@ -1,0 +1,16 @@
+# --- Fonts under license: NEVER commit the thmanyah files (see 01-brand/fonts/thmanyah/README.md)
+/Thmanyah-Font-Family/
+/01-brand/fonts/thmanyah/*
+!/01-brand/fonts/thmanyah/README.md
+*.otf
+*.woff2
+
+# --- Third-party design kit: reinstall with `npx ux-ui-agent-skills init` (see README)
+/tools/ux-ui-kit/
+
+# --- Local machine files
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+__MACOSX/
+*.log
