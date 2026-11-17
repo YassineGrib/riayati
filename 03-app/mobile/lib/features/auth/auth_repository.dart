@@ -41,6 +41,10 @@ class AuthRepository {
     (await api.get<Map<String, dynamic>>('/me'))['user']
         as Map<String, dynamic>,
   );
+  Future<void> forgotPassword(String email) async {
+    await api.post<dynamic>('/forgot-password', data: {'email': email});
+  }
+
   Future<void> signOut() async {
     try {
       await api.post<dynamic>('/logout');

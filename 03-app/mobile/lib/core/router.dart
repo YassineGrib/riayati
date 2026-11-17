@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_controller.dart';
+import '../features/auth/screens/forgot_password_screen.dart';
+import '../features/auth/screens/login_screen.dart';
+import '../features/auth/screens/register_screen.dart';
+import '../features/auth/screens/welcome_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
@@ -24,11 +28,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       return public.contains(path) || path == '/link' ? '/home' : null;
     },
     routes: [
+      GoRoute(path: '/welcome', builder: (_, _) => const WelcomeScreen()),
+      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
+      GoRoute(path: '/forgot', builder: (_, _) => const ForgotPasswordScreen()),
       for (final entry in const {
-        '/welcome': 'رعايتي',
-        '/login': 'تسجيل الدخول',
-        '/register': 'إنشاء حساب',
-        '/forgot': 'استعادة كلمة المرور',
         '/link': 'ربط الوالد الآخر',
         '/home': 'الرئيسية',
         '/reports': 'التقارير',

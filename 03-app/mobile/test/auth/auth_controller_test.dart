@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:riayati/core/api/api_client.dart';
 import 'package:riayati/core/api/api_error.dart';
 import 'package:riayati/core/api/token_store.dart';
+import 'package:riayati/core/theme/app_theme.dart';
 import 'package:riayati/features/auth/auth_controller.dart';
 
 import '../api/api_client_test.dart'
@@ -68,7 +69,15 @@ void main() {
     final controller = container.read(authControllerProvider.notifier);
     await controller.refresh();
     final router = container.read(routerProvider);
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(
+          theme: buildTheme(Brightness.light),
+          routerConfig: router,
+        ),
+      ),
+    );
     router.go('/calendar');
     await tester.pumpAndSettle();
     expect(router.routeInformationProvider.value.uri.path, '/welcome');
