@@ -27,7 +27,7 @@ class _RiayatiAppState extends ConsumerState<RiayatiApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-    title: 'رعايتي',
+    title: 'Riayati',
     debugShowCheckedModeBanner: false,
     locale: const Locale('ar'),
     supportedLocales: const [Locale('ar')],

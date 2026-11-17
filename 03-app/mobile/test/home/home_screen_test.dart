@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riayati/core/api/api_error.dart';
 import 'package:riayati/core/theme/app_theme.dart';
+import 'package:riayati/core/widgets/watermark.dart';
 import 'package:riayati/features/auth/auth_controller.dart';
 import 'package:riayati/features/auth/user.dart';
 import 'package:riayati/features/calendar/visit.dart';
@@ -193,6 +194,59 @@ void main() {
     await tester.tap(sosFinder);
     await tester.pumpAndSettle();
     expect(pushed, contains('/reports/new'));
+  });
+
+  testWidgets('SOS card displays directional forward arrow and watermark', (tester) async {
+    final visits = FakeHomeVisits();
+    final reports = FakeHomeReports();
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports);
+
+    final sosFinder = find.byKey(const ValueKey('home-sos-card'));
+    expect(sosFinder, findsOneWidget);
+
+    expect(
+      find.descendant(
+        of: sosFinder,
+        matching: find.byType(Watermark),
+      ),
+      findsOneWidget,
+    );
+
+    expect(
+      find.descendant(
+        of: sosFinder,
+        matching: find.byIcon(Icons.arrow_forward),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('home section titles have leading icons for visits and reports', (tester) async {
+    final visits = FakeHomeVisits();
+    final reports = FakeHomeReports();
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports);
+
+    final visitSection = find.byKey(const ValueKey('home-visit-section'));
+    expect(visitSection, findsOneWidget);
+    expect(
+      find.descendant(
+        of: visitSection,
+        matching: find.byIcon(Icons.calendar_month_outlined),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('الزيارات القادمة'), findsOneWidget);
+
+    final reportsSection = find.byKey(const ValueKey('home-reports-section'));
+    expect(reportsSection, findsOneWidget);
+    expect(
+      find.descendant(
+        of: reportsSection,
+        matching: find.byIcon(Icons.description_outlined),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('آخر البلاغات'), findsOneWidget);
   });
 
   testWidgets('shows empty state when no upcoming visits or when not_linked', (tester) async {

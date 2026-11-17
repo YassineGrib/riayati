@@ -9,6 +9,7 @@ import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
 import '../../core/widgets/r_card.dart';
 import '../../core/widgets/status_chip.dart';
+import '../../core/widgets/watermark.dart';
 import '../auth/auth_controller.dart';
 import '../calendar/visit.dart';
 import '../calendar/visit_repository.dart';
@@ -192,56 +193,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   onTap: () {
                     context.push('/reports/new');
                   },
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.all(RSpace.s5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Badge
-                        Container(
-                          width: RSpace.s14,
-                          height: RSpace.s14,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: c.sosTextOnBg,
-                          ),
-                          child: Icon(
-                            Icons.warning_amber_rounded,
-                            size: RSpace.s7,
-                            color: c.sos,
-                          ),
-                        ),
-                        const SizedBox(width: RSpace.s4),
-                        // Titles
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'الإبلاغ عن حادثة',
-                                style: RType.heading3.copyWith(
-                                  color: c.sosTextOnBg,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: RSpace.s1),
-                              Text(
-                                'وثّق ما حدث بالنص والصور والفيديو.',
-                                style: RType.caption.copyWith(
-                                  color: c.sosTextOnBg,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: RSpace.s2),
-                        Icon(
-                          Icons.arrow_back,
-                          size: RSpace.s6,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Watermark(
                           color: c.sosTextOnBg,
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsetsDirectional.all(RSpace.s5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Badge
+                            Container(
+                              width: RSpace.s14,
+                              height: RSpace.s14,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: c.sosTextOnBg,
+                              ),
+                              child: Icon(
+                                Icons.warning_amber_rounded,
+                                size: RSpace.s7,
+                                color: c.sos,
+                              ),
+                            ),
+                            const SizedBox(width: RSpace.s4),
+                            // Titles
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'الإبلاغ عن حادثة',
+                                    style: RType.heading3.copyWith(
+                                      color: c.sosTextOnBg,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: RSpace.s1),
+                                  Text(
+                                    'وثّق ما حدث بالنص والصور والفيديو.',
+                                    style: RType.caption.copyWith(
+                                      color: c.sosTextOnBg,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: RSpace.s2),
+                            Icon(
+                              Icons.arrow_forward,
+                              size: RSpace.s6,
+                              color: c.sosTextOnBg,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -268,12 +278,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'الزيارة القادمة',
-            style: RType.heading3.copyWith(
-              color: c.textPrimary,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              Icon(
+                Icons.calendar_month_outlined,
+                size: RSpace.s5,
+                color: c.textPrimary,
+              ),
+              const SizedBox(width: RSpace.s2),
+              Expanded(
+                child: Text(
+                  'الزيارات القادمة',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: RType.heading3.copyWith(
+                    color: c.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: RSpace.s3),
           FutureBuilder<List<Visit>>(
@@ -525,14 +549,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                child: Text(
-                  'آخر البلاغات',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: RType.heading3.copyWith(
-                    color: c.textPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.description_outlined,
+                      size: RSpace.s5,
+                      color: c.textPrimary,
+                    ),
+                    const SizedBox(width: RSpace.s2),
+                    Expanded(
+                      child: Text(
+                        'آخر البلاغات',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: RType.heading3.copyWith(
+                          color: c.textPrimary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(width: RSpace.s2),

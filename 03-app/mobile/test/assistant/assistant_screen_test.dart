@@ -76,10 +76,22 @@ void main() {
         await tester.ensureVisible(find.text(question));
         await tester.tap(find.text(question));
         await tester.pumpAndSettle();
+        expect(
+          find.text('المساعد الذكي قيد التجهيز وسيكون متاحًا قريبًا'),
+          findsOneWidget,
+        );
       }
+      ScaffoldMessenger.of(
+        tester.element(find.byType(AssistantScreen)),
+      ).clearSnackBars();
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.byType(TextField));
       await tester.tap(find.byType(TextField));
       await tester.pumpAndSettle();
+      expect(
+        find.text('المساعد الذكي قيد التجهيز وسيكون متاحًا قريبًا'),
+        findsOneWidget,
+      );
       expect(tester.testTextInput.isVisible, isFalse);
       final send = tester.widget<IconButton>(
         find.widgetWithIcon(IconButton, Icons.send_outlined),

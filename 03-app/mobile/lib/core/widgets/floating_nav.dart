@@ -67,23 +67,17 @@ class FloatingNav extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: RSpace.s14,
                                   height: RSpace.s7,
-                                  decoration: BoxDecoration(
-                                    color: i == index
-                                        ? c.interactiveSelectedBg
-                                        : null,
-                                    borderRadius: BorderRadius.circular(
-                                      RRadius.full,
+                                  child: Center(
+                                    child: Icon(
+                                      _tabs[i].$2,
+                                      size: RSpace.s6,
+                                      color: i == index
+                                          ? c.primary
+                                          : c.textSecondary,
                                     ),
-                                  ),
-                                  child: Icon(
-                                    _tabs[i].$2,
-                                    size: RSpace.s6,
-                                    color: i == index
-                                        ? c.primary
-                                        : c.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: RSpace.s0_5),

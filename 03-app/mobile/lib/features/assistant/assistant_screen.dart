@@ -8,6 +8,18 @@ import '../../core/widgets/status_chip.dart';
 class AssistantScreen extends StatelessWidget {
   const AssistantScreen({super.key});
 
+  static const comingSoonMessage = 'المساعد الذكي قيد التجهيز وسيكون متاحًا قريبًا';
+
+  void _showComingSoon(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text(comingSoonMessage),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.c;
@@ -121,41 +133,45 @@ class AssistantScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: RSpace.s2),
                   for (final question in _questions) ...[
-                    Semantics(
-                      button: true,
-                      enabled: false,
-                      child: Container(
-                        constraints: const BoxConstraints(
-                          minHeight: RSpace.s12,
-                        ),
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: RSpace.s4,
-                          vertical: RSpace.s2,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: c.borderStrong,
-                            width: RBorderWidth.thin,
+                    Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(RRadius.xl),
+                      child: InkWell(
+                        onTap: () => _showComingSoon(context),
+                        borderRadius: BorderRadius.circular(RRadius.xl),
+                        child: Container(
+                          constraints: const BoxConstraints(
+                            minHeight: RSpace.s12,
                           ),
-                          borderRadius: BorderRadius.circular(RRadius.xl),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                question,
-                                style: RType.body.copyWith(
-                                  color: c.textPrimary,
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: RSpace.s4,
+                            vertical: RSpace.s2,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: c.borderStrong,
+                              width: RBorderWidth.thin,
+                            ),
+                            borderRadius: BorderRadius.circular(RRadius.xl),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  question,
+                                  style: RType.body.copyWith(
+                                    color: c.textPrimary,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: RSpace.s2),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              size: RSpace.s4,
-                              color: c.textSecondary,
-                            ),
-                          ],
+                              const SizedBox(width: RSpace.s2),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: RSpace.s4,
+                                color: c.textSecondary,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -170,42 +186,49 @@ class AssistantScreen extends StatelessWidget {
               top: RSpace.s3,
               bottom: RSpace.s3,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: c.surface,
-                border: Border.all(
-                  color: c.borderStrong,
-                  width: RBorderWidth.thin,
-                ),
+            child: Material(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(RRadius.xl),
+              child: InkWell(
+                onTap: () => _showComingSoon(context),
                 borderRadius: BorderRadius.circular(RRadius.xl),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      enabled: false,
-                      style: RType.body.copyWith(color: c.textDisabled),
-                      decoration: InputDecoration(
-                        hintText: 'اكتب سؤالك…',
-                        hintStyle: RType.body.copyWith(color: c.textDisabled),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        filled: false,
-                        contentPadding: const EdgeInsetsDirectional.all(
-                          RSpace.s4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: c.borderStrong,
+                      width: RBorderWidth.thin,
+                    ),
+                    borderRadius: BorderRadius.circular(RRadius.xl),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          enabled: false,
+                          style: RType.body.copyWith(color: c.textDisabled),
+                          decoration: InputDecoration(
+                            hintText: 'اكتب سؤالك…',
+                            hintStyle: RType.body.copyWith(color: c.textDisabled),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            filled: false,
+                            contentPadding: const EdgeInsetsDirectional.all(
+                              RSpace.s4,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      IconButton(
+                        tooltip: 'إرسال',
+                        onPressed: null,
+                        disabledColor: c.textDisabled,
+                        icon: const Icon(Icons.send_outlined, size: RSpace.s6),
+                      ),
+                      const SizedBox(width: RSpace.s2),
+                    ],
                   ),
-                  IconButton(
-                    tooltip: 'إرسال',
-                    onPressed: null,
-                    disabledColor: c.textDisabled,
-                    icon: const Icon(Icons.send_outlined, size: RSpace.s6),
-                  ),
-                  const SizedBox(width: RSpace.s2),
-                ],
+                ),
               ),
             ),
           ),

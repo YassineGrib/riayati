@@ -31,6 +31,15 @@ void main() {
     expect(find.text('detail route'), findsOneWidget);
   });
 
+  testWidgets('reports filter chips display corresponding icons', (tester) async {
+    final repo = FakeReports();
+    await pumpReports(tester, const ReportsScreen(), repo);
+
+    expect(find.byIcon(Icons.list_alt_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.hourglass_empty_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.check_rounded), findsOneWidget);
+  });
+
   testWidgets('empty state opens the new report route', (tester) async {
     await pumpReports(
       tester,

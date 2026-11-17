@@ -56,4 +56,48 @@ void main() {
     }
     expect(index, 4);
   });
+
+  testWidgets('selected tab has no halo or pill background and differs only in color', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      testApp(
+        FloatingNav(
+          index: 0,
+          onTap: (_) {},
+        ),
+      ),
+    );
+
+    final selectedNavFinder = find.byKey(const ValueKey('nav-0'));
+    final unselectedNavFinder = find.byKey(const ValueKey('nav-1'));
+
+    // Verify there is no DecoratedBox with a fill color inside the nav item (no halo/pill)
+    final decoratedBoxes = tester.widgetList<DecoratedBox>(
+      find.descendant(
+        of: selectedNavFinder,
+        matching: find.byType(DecoratedBox),
+      ),
+    );
+    for (final box in decoratedBoxes) {
+      final decor = box.decoration;
+      if (decor is BoxDecoration) {
+        expect(decor.color, isNull);
+      }
+    }
+
+    // Selected item differs in icon color
+    final selectedIcon = tester.widget<Icon>(
+      find.descendant(of: selectedNavFinder, matching: find.byType(Icon)),
+    );
+    final unselectedIcon = tester.widget<Icon>(
+      find.descendant(of: unselectedNavFinder, matching: find.byType(Icon)),
+    );
+    expect(selectedIcon.color, isNot(equals(unselectedIcon.color)));
+
+    // Selected item differs in label color
+    final selectedText = tester.widget<Text>(find.text('الرئيسية'));
+    final unselectedText = tester.widget<Text>(find.text('التقارير'));
+    expect(selectedText.style?.color, isNot(equals(unselectedText.style?.color)));
+  });
 }

@@ -39,6 +39,14 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     if (mounted) _load();
   }
 
+  IconData _statusFilterIcon(ReportStatus? status) {
+    return switch (status) {
+      null => Icons.list_alt_rounded,
+      ReportStatus.underReview => Icons.hourglass_empty_rounded,
+      ReportStatus.reviewed => Icons.check_rounded,
+    };
+  }
+
   @override
   Widget build(BuildContext context) => AppScaffold(
     title: 'بلاغاتي',
@@ -79,7 +87,11 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                           backgroundColor: status == _status
                               ? context.c.surface
                               : null,
-                          textStyle: RType.label,
+                          textStyle: RType.label.copyWith(
+                            fontWeight: status == _status
+                                ? FontWeight.w700
+                                : FontWeight.w500,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(RRadius.xl),
                             side: status == _status
@@ -90,9 +102,24 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                 : BorderSide.none,
                           ),
                         ),
-                        child: Text(
-                          status?.label ?? 'الكل',
-                          textAlign: TextAlign.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              _statusFilterIcon(status),
+                              size: RSpace.s4,
+                            ),
+                            const SizedBox(width: RSpace.s1),
+                            Flexible(
+                              child: Text(
+                                status?.label ?? 'الكل',
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -9,10 +9,12 @@ class Watermark extends StatelessWidget {
     super.key,
     this.opacity = .08,
     this.align = AlignmentDirectional.topEnd,
+    this.color,
   }) : assert(opacity >= 0 && opacity <= 1);
 
   final double opacity;
   final AlignmentDirectional align;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class Watermark extends StatelessWidget {
         child: ClipRect(
           child: CustomPaint(
             painter: _RibbonPainter(
-              context.c.primary.withValues(alpha: opacity),
+              (color ?? context.c.primary).withValues(alpha: opacity),
               align.resolve(Directionality.of(context)),
             ),
             child: const SizedBox.expand(),

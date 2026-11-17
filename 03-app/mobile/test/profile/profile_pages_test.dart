@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,7 +72,7 @@ void main() {
       (tester) async {
         final router = await _pump(tester, page);
         expect(
-          find.text('Ù†Ø³Ø®Ø© Ù…Ø¨Ø¯Ø¦ÙŠØ©ØŒ Ø³ÙŠÙØ³ØªØ¨Ø¯Ù„ Ø§Ù„Ù†Øµ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ Ù‚Ø¨Ù„ Ø§Ù„Ø¥Ø·Ù„Ø§Ù‚'),
+          find.text('نسخة مبدئية، سيُستبدل النص النهائي قبل الإطلاق'),
           findsOneWidget,
         );
         expect(
@@ -83,7 +83,7 @@ void main() {
           ),
           findsWidgets,
         );
-        await tester.tap(find.byTooltip('Ø±Ø¬ÙˆØ¹'));
+        await tester.tap(find.byTooltip('رجوع'));
         await tester.pumpAndSettle();
         expect(router.routeInformationProvider.value.uri.path, '/profile');
       },
@@ -95,12 +95,12 @@ void main() {
     (tester) async {
       final repository = _Repository()
         ..error = const ApiError(
-          message: 'ØªØ­Ù‚Ù‚ Ù…Ù† Ø§Ù„Ø­Ù‚ÙˆÙ„',
+          message: 'تحقق من الحقول',
           status: 422,
           fields: {
-            'current_password': ['Ø§Ù„Ø­Ø§Ù„ÙŠØ© ØºÙŠØ± ØµØ­ÙŠØ­Ø©'],
-            'password': ['Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© ØºÙŠØ± ØµØ§Ù„Ø­Ø©'],
-            'password_confirmation': ['Ø§Ù„ØªØ£ÙƒÙŠØ¯ ØºÙŠØ± Ù…Ø·Ø§Ø¨Ù‚'],
+            'current_password': ['الحالية غير صحيحة'],
+            'password': ['الجديدة غير صالحة'],
+            'password_confirmation': ['التأكيد غير مطابق'],
           },
         );
       final router = await _pump(
@@ -114,8 +114,8 @@ void main() {
           i == 0 ? 'old-password' : 'new-password',
         );
       }
-      await tester.ensureVisible(find.text('Ø­ÙØ¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±'));
-      await tester.tap(find.text('Ø­ÙØ¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±'));
+      await tester.ensureVisible(find.text('حفظ كلمة المرور'));
+      await tester.tap(find.text('حفظ كلمة المرور'));
       await tester.pumpAndSettle();
       expect(repository.submitted, [
         'old-password',
@@ -123,21 +123,21 @@ void main() {
         'new-password',
       ]);
       for (final message in [
-        'Ø§Ù„Ø­Ø§Ù„ÙŠØ© ØºÙŠØ± ØµØ­ÙŠØ­Ø©',
-        'Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø© ØºÙŠØ± ØµØ§Ù„Ø­Ø©',
-        'Ø§Ù„ØªØ£ÙƒÙŠØ¯ ØºÙŠØ± Ù…Ø·Ø§Ø¨Ù‚',
+        'الحالية غير صحيحة',
+        'الجديدة غير صالحة',
+        'التأكيد غير مطابق',
       ]) {
         expect(find.text(message), findsOneWidget);
       }
       expect(
-        tester.getTopLeft(find.text('Ø§Ù„Ø­Ø§Ù„ÙŠØ© ØºÙŠØ± ØµØ­ÙŠØ­Ø©')).dy,
+        tester.getTopLeft(find.text('الحالية غير صحيحة')).dy,
         greaterThan(tester.getTopLeft(find.byType(TextFormField).first).dy),
       );
       repository.error = null;
-      await tester.ensureVisible(find.text('Ø­ÙØ¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±'));
-      await tester.tap(find.text('Ø­ÙØ¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±'));
+      await tester.ensureVisible(find.text('حفظ كلمة المرور'));
+      await tester.tap(find.text('حفظ كلمة المرور'));
       await tester.pumpAndSettle();
-      expect(find.text('ØªÙ… ØªØºÙŠÙŠØ± ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø¨Ù†Ø¬Ø§Ø­.'), findsOneWidget);
+      expect(find.text('تم تغيير كلمة المرور بنجاح.'), findsOneWidget);
       expect(router.routeInformationProvider.value.uri.path, '/profile');
     },
   );
