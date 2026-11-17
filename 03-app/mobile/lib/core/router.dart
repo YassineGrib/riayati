@@ -7,7 +7,15 @@ import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/register_screen.dart';
 import '../features/auth/screens/welcome_screen.dart';
+import '../features/assistant/assistant_screen.dart';
+import '../features/calendar/calendar_screen.dart';
+import '../features/calendar/visit_detail_screen.dart';
 import '../features/family/link_screen.dart';
+import '../features/home/home_screen.dart';
+import '../features/profile/profile_screen.dart';
+import '../features/reports/new_report_screen.dart';
+import '../features/reports/report_detail_screen.dart';
+import '../features/reports/reports_screen.dart';
 import 'shell.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -39,25 +47,48 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state, navigationShell) =>
             Shell(navigationShell: navigationShell),
         branches: [
-          for (final entry in const {
-            '/home': 'الرئيسية',
-            '/reports': 'التقارير',
-            '/calendar': 'التقويم',
-            '/assistant': 'المساعد',
-            '/profile': 'حسابي',
-          }.entries)
-            StatefulShellBranch(
-              routes: [
-                GoRoute(path: entry.key, builder: (_, _) => Text(entry.value)),
-              ],
-            ),
+          StatefulShellBranch(
+            routes: [GoRoute(path: '/home', builder: (_, _) => HomeScreen())],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/reports', builder: (_, _) => ReportsScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(path: '/calendar', builder: (_, _) => CalendarScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/assistant',
+                builder: (_, _) => const AssistantScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (_, _) => const ProfileScreen(),
+              ),
+            ],
+          ),
         ],
       ),
-      for (final entry in const {
-        '/reports/new': 'تقرير جديد',
-        '/reports/:id': 'تفاصيل التقرير',
-      }.entries)
-        GoRoute(path: entry.key, builder: (_, _) => Text(entry.value)),
+      GoRoute(path: '/reports/new', builder: (_, _) => NewReportScreen()),
+      GoRoute(
+        path: '/reports/:id',
+        builder: (_, state) =>
+            ReportDetailScreen(int.parse(state.pathParameters['id']!)),
+      ),
+      GoRoute(
+        path: '/calendar/:id',
+        builder: (_, state) =>
+            VisitDetailScreen(int.parse(state.pathParameters['id']!)),
+      ),
     ],
   );
   ref.onDispose(() {

@@ -3,6 +3,7 @@ import 'package:riayati/core/router.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:riayati/core/api/api_client.dart';
 import 'package:riayati/core/api/api_error.dart';
 import 'package:riayati/core/api/token_store.dart';
@@ -44,10 +45,12 @@ void main() {
     expect(store.token, isNull);
     expect(container.read(authControllerProvider).status, AuthStatus.signedOut);
   });
+  setUpAll(() => initializeDateFormatting('ar'));
   testWidgets('guards routes and reacts to not_linked and sign out', (
     tester,
   ) async {
     final store = MemoryTokenStore();
+    var serverSaysNotLinked = false;
     final dio = Dio()
       ..httpClientAdapter = FakeAdapter((request) {
         if (request.path == '/login') {
@@ -57,7 +60,13 @@ void main() {
           );
         }
         if (request.path == '/logout') return jsonResponse('{}', 200);
-        return jsonResponse('{"code":"not_linked"}', 403);
+        // Real screens fetch their own data while the guard is exercised: stay
+        // quiet (empty data) until the test deliberately makes the server say
+        // the parent is not linked.
+        if (serverSaysNotLinked) {
+          return jsonResponse('{"code":"not_linked"}', 403);
+        }
+        return jsonResponse('{"data":[],"visits":[],"reports":[]}', 200);
       });
     final container = ProviderContainer(
       overrides: [
@@ -104,6 +113,7 @@ void main() {
       expect(router.routeInformationProvider.value.uri.path, path);
       expect(tester.takeException(), isNull);
     }
+    serverSaysNotLinked = true;
     await tester.runAsync(() async {
       await expectLater(
         container.read(apiClientProvider).get<dynamic>('/visits'),

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'app.dart';
 
-void main() => runApp(const ProviderScope(child: RiayatiApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Screens format dates with Arabic month and day names.
+  await initializeDateFormatting('ar');
+  runApp(const ProviderScope(child: RiayatiApp()));
+}
