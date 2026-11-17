@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/router.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/auth_controller.dart';
 
-class RiayatiApp extends StatefulWidget {
+class RiayatiApp extends ConsumerStatefulWidget {
   const RiayatiApp({super.key});
   @override
-  State<RiayatiApp> createState() => _RiayatiAppState();
+  ConsumerState<RiayatiApp> createState() => _RiayatiAppState();
 }
 
-class _RiayatiAppState extends State<RiayatiApp> {
-  late final _router = GoRouter(
-    routes: [
-      GoRoute(path: '/', builder: (context, state) => const _Placeholder()),
-    ],
-  );
+class _RiayatiAppState extends ConsumerState<RiayatiApp> {
   @override
-  void dispose() {
-    _router.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      try {
+        await ref.read(authControllerProvider.notifier).refresh();
+      } catch (_) {
+        /* Welcome remains available; login can retry authentication. */
+      }
+    });
   }
 
   @override
@@ -32,20 +35,8 @@ class _RiayatiAppState extends State<RiayatiApp> {
     theme: buildTheme(Brightness.light),
     darkTheme: buildTheme(Brightness.dark),
     themeMode: ThemeMode.system,
-    routerConfig: _router,
+    routerConfig: ref.watch(routerProvider),
     builder: (context, child) =>
         Directionality(textDirection: TextDirection.rtl, child: child!),
-  );
-}
-
-class _Placeholder extends StatelessWidget {
-  const _Placeholder();
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: Center(
-        child: Text('رعايتي', style: Theme.of(context).textTheme.displayLarge),
-      ),
-    ),
   );
 }
