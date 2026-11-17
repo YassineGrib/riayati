@@ -12,7 +12,10 @@ import '../features/calendar/calendar_screen.dart';
 import '../features/calendar/visit_detail_screen.dart';
 import '../features/family/link_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/profile/change_password_screen.dart';
+import '../features/profile/privacy_screen.dart';
 import '../features/profile/profile_screen.dart';
+import '../features/profile/terms_screen.dart';
 import '../features/reports/new_report_screen.dart';
 import '../features/reports/report_detail_screen.dart';
 import '../features/reports/reports_screen.dart';
@@ -77,6 +80,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(path: '/profile/terms', builder: (_, _) => const TermsScreen()),
+      GoRoute(
+        path: '/profile/privacy',
+        builder: (_, _) => const PrivacyScreen(),
+      ),
+      GoRoute(
+        path: '/profile/password',
+        builder: (_, _) => const ChangePasswordScreen(),
       ),
       GoRoute(path: '/reports/new', builder: (_, _) => NewReportScreen()),
       GoRoute(

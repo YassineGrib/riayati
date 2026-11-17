@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+
+import 'dart:async';
+
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:riayati/core/api/api_client.dart';
 import 'package:riayati/core/api/token_store.dart';
 import 'package:riayati/core/theme/app_theme.dart';
+import 'package:riayati/core/theme/tokens.g.dart';
 import 'package:riayati/features/auth/auth_controller.dart';
 import 'package:riayati/features/auth/user.dart';
 import 'package:riayati/features/profile/profile_screen.dart';
@@ -24,6 +29,7 @@ class _Api extends ApiClient {
   _Api(TokenStore tokens) : super(tokenStore: tokens);
   final calls = <String>[];
   bool offline = false;
+  bool stalled = false;
 
   @override
   Future<T> get<T>(String path, {Map<String, dynamic>? queryParameters}) =>
@@ -36,6 +42,7 @@ class _Api extends ApiClient {
     ProgressCallback? onSendProgress,
   }) async {
     calls.add(path);
+    if (stalled) return Completer<T>().future;
     if (path != '/logout' || offline) throw StateError('Request failed');
     return <String, dynamic>{} as T;
   }
@@ -85,20 +92,72 @@ Future<ProviderContainer> _pump(
     ],
   );
   addTearDown(container.dispose);
+  final router = _RecordingRouter();
+  addTearDown(router.dispose);
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: buildTheme(brightness),
         locale: const Locale('ar'),
         supportedLocales: const [Locale('ar')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
-        home: const ProfileScreen(),
+        routerConfig: router,
       ),
     ),
   );
   await tester.pumpAndSettle();
   return container;
+}
+
+class _RecordingRouter extends GoRouter {
+  _RecordingRouter()
+    : this._(
+        ValueNotifier(
+          RoutingConfig(
+            routes: [
+              StatefulShellRoute.indexedStack(
+                builder: (_, _, shell) => Scaffold(body: shell),
+                branches: [
+                  StatefulShellBranch(
+                    routes: [
+                      GoRoute(
+                        path: '/profile',
+                        builder: (_, _) => const ProfileScreen(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              for (final path in [
+                '/profile/terms',
+                '/profile/privacy',
+                '/profile/password',
+                '/welcome',
+              ])
+                GoRoute(
+                  path: path,
+                  builder: (_, _) => Scaffold(body: Text(path)),
+                ),
+            ],
+          ),
+        ),
+      );
+  _RecordingRouter._(this._routes)
+    : super.routingConfig(initialLocation: '/profile', routingConfig: _routes);
+  final ValueNotifier<RoutingConfig> _routes;
+  @override
+  void dispose() {
+    super.dispose();
+    _routes.dispose();
+  }
+
+  final pushes = <String>[];
+  @override
+  Future<T?> push<T extends Object?>(String location, {Object? extra}) {
+    pushes.add(location);
+    return super.push<T>(location, extra: extra);
+  }
 }
 
 Future<void> _askToSignOut(WidgetTester tester) async {
@@ -164,6 +223,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(api.calls, ['/logout']);
         expect(tokens.value, isNull);
+        expect(find.text('/welcome'), findsOneWidget);
         expect(
           container.read(authControllerProvider).status,
           AuthStatus.signedOut,
@@ -171,6 +231,80 @@ void main() {
         expect(tester.takeException(), isNull);
       },
     );
+  }
+
+  testWidgets(
+    'stalled logout still clears token and reaches welcome in three seconds',
+    (tester) async {
+      final tokens = _Tokens();
+      final api = _Api(tokens)..stalled = true;
+      final container = await _pump(tester, _user(), tokens, api);
+      await _askToSignOut(tester);
+      await tester.tap(find.text('تأكيد الخروج'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+      expect(tokens.value, isNull);
+      expect(
+        container.read(authControllerProvider).status,
+        AuthStatus.signedOut,
+      );
+      expect(find.text('/welcome'), findsOneWidget);
+    },
+  );
+
+  for (final (label, path) in [
+    ('تغيير كلمة المرور', '/profile/password'),
+    ('خصوصية بياناتي', '/profile/privacy'),
+    ('شروط الاستخدام', '/profile/terms'),
+  ]) {
+    testWidgets('$label pushes $path', (tester) async {
+      final tokens = _Tokens();
+      await _pump(tester, _user(), tokens, _Api(tokens));
+      final router = GoRouter.of(
+        tester.element(find.byType(ProfileScreen)),
+      ) as _RecordingRouter;
+      await tester.ensureVisible(find.text(label));
+      await tester.tap(find.text(label));
+      await tester.pumpAndSettle();
+      expect(router.pushes, [path]);
+      expect(find.text(path), findsOneWidget);
+      router.pop();
+      await tester.pumpAndSettle();
+      expect(find.byType(ProfileScreen), findsOneWidget);
+    });
+  }
+
+  testWidgets('account details row responds', (tester) async {
+    final tokens = _Tokens();
+    await _pump(tester, _user(), tokens, _Api(tokens));
+    await tester.tap(find.text('تعديل الاسم والبريد'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(
+      find.textContaining('تعديل الاسم والبريد غير متاح في النسخة الحالية.'),
+      findsOneWidget,
+    );
+  });
+
+  for (final brightness in Brightness.values) {
+    testWidgets('sign-out uses readable destructive tokens in $brightness', (
+      tester,
+    ) async {
+      final tokens = _Tokens();
+      await _pump(
+        tester,
+        _user(),
+        tokens,
+        _Api(tokens),
+        brightness: brightness,
+      );
+      final finder = find.widgetWithText(TextButton, 'تسجيل الخروج');
+      final button = tester.widget<TextButton>(finder);
+      final colors = tester.element(finder).c;
+      expect(button.style!.backgroundColor!.resolve({}), colors.sos);
+      expect(button.style!.foregroundColor!.resolve({}), colors.sosTextOnBg);
+    });
   }
 
   for (final brightness in Brightness.values) {

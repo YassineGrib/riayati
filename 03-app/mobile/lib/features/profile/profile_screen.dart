@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
@@ -24,18 +25,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     setState(() => _confirmingSignOut = true);
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => Directionality(
+      builder: (dialogContext) => Directionality(
         textDirection: TextDirection.rtl,
         child: AlertDialog(
           title: const Text('تسجيل الخروج'),
           content: const Text('هل تريد تسجيل الخروج من حسابك؟'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () =>
+                  Navigator.of(dialogContext, rootNavigator: true).pop(false),
               child: const Text('إلغاء'),
             ),
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              onPressed: () =>
+                  Navigator.of(dialogContext, rootNavigator: true).pop(true),
+              style: TextButton.styleFrom(foregroundColor: context.c.sos),
               child: const Text('تأكيد الخروج'),
             ),
           ],
@@ -48,9 +52,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       _signingOut = confirmed == true;
     });
     if (confirmed != true) return;
+    // Capture before awaiting: the auth guard may dispose this branch.
+    final router = GoRouter.of(context);
     try {
-      // Auth clears the local session even if the logout request fails.
-      // The app's auth guard owns the return to the welcome route.
       await ref.read(authControllerProvider.notifier).signOut();
     } catch (_) {
       if (mounted) {
@@ -59,6 +63,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         );
       }
     } finally {
+      router.go('/welcome');
       if (mounted) setState(() => _signingOut = false);
     }
   }
@@ -189,7 +194,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               thickness: RBorderWidth.thin,
                               color: c.border,
                             ),
-                          _ProfileEntry(label: entry.$1, icon: entry.$2),
+                          _ProfileEntry(
+                            label: entry.$1,
+                            icon: entry.$2,
+                            onTap: () {
+                              if (entry.$3 == null) {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (dialogContext) => Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: AlertDialog(
+                                      title: const Text('بيانات الحساب'),
+                                      content: Text(
+                                        '${user.name}\n${user.email}\n\nتعديل الاسم والبريد غير متاح في النسخة الحالية.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(dialogContext).pop(),
+                                          child: const Text('إغلاق'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                context.push(entry.$3!);
+                              }
+                            },
+                          ),
                         ],
                       ],
                     ),
@@ -198,7 +231,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   RButton(
                     label: 'تسجيل الخروج',
                     icon: Icons.logout,
-                    kind: RButtonKind.secondary,
+                    kind: RButtonKind.sos,
                     loading: _signingOut,
                     onPressed: _confirmingSignOut ? null : _confirmSignOut,
                   ),
@@ -217,45 +250,52 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 }
 
 const _entries = [
-  ('تعديل الاسم والبريد', Icons.edit_outlined),
-  ('تغيير كلمة المرور', Icons.lock_outline),
-  ('خصوصية بياناتي', Icons.verified_user_outlined),
-  ('شروط الاستخدام وسياسة الخصوصية', Icons.description_outlined),
+  ('تعديل الاسم والبريد', Icons.edit_outlined, null),
+  ('تغيير كلمة المرور', Icons.lock_outline, '/profile/password'),
+  ('خصوصية بياناتي', Icons.verified_user_outlined, '/profile/privacy'),
+  ('شروط الاستخدام', Icons.description_outlined, '/profile/terms'),
 ];
 
 class _ProfileEntry extends StatelessWidget {
-  const _ProfileEntry({required this.label, required this.icon});
+  const _ProfileEntry({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
   final String label;
   final IconData icon;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
-    enabled: false,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: RSpace.s14),
-      child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(
-          horizontal: RSpace.s4,
-          vertical: RSpace.s2,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: RSpace.s6, color: context.c.textSecondary),
-            const SizedBox(width: RSpace.s3),
-            Expanded(
-              child: Text(
-                label,
-                style: RType.body.copyWith(color: context.c.textPrimary),
+    child: InkWell(
+      onTap: onTap,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: RSpace.s14),
+        child: Padding(
+          padding: const EdgeInsetsDirectional.symmetric(
+            horizontal: RSpace.s4,
+            vertical: RSpace.s2,
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: RSpace.s6, color: context.c.textSecondary),
+              const SizedBox(width: RSpace.s3),
+              Expanded(
+                child: Text(
+                  label,
+                  style: RType.body.copyWith(color: context.c.textPrimary),
+                ),
               ),
-            ),
-            const SizedBox(width: RSpace.s2),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: RSpace.s4,
-              color: context.c.textSecondary,
-            ),
-          ],
+              const SizedBox(width: RSpace.s2),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: RSpace.s4,
+                color: context.c.textSecondary,
+              ),
+            ],
+          ),
         ),
       ),
     ),

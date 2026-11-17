@@ -37,6 +37,7 @@ Public, rate-limited to 6 requests per minute:
 With `Authorization: Bearer <token>`:
 - `GET /me` → `{user: {id, name, email, role, linked, partner_role}}` (never any detail of the other parent)
 - `POST /logout`
+- `PUT /password` `{current_password, password (8–128 characters), password_confirmation}` → `{message}`. Checks the current password; returns Arabic field errors with 422. Revokes all other tokens, keeping this device's current token. Limited to 6 requests per minute; requires Sanctum authentication.
 - `GET /family` → `{linked, partner_role}`
 - `POST /family/invite` → `201 {code: "K7M-4Q2", expires_at}` (48 h; a new code replaces the previous unused one)
 - `POST /family/link` `{code}` → `{linked: true, partner_role}`; limited to 10 per minute

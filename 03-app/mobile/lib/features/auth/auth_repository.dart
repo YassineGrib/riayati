@@ -47,9 +47,27 @@ class AuthRepository {
 
   Future<void> signOut() async {
     try {
-      await api.post<dynamic>('/logout');
+      // Bound the entire operation, including interceptor/token lookup time.
+      await api.post<dynamic>('/logout').timeout(const Duration(seconds: 3));
+    } catch (_) {
+      // Remote revocation is best effort; leaving the device must work offline.
     } finally {
       await tokens.clear();
     }
+  }
+
+  Future<void> changePassword({
+    required String current,
+    required String next,
+    required String confirmation,
+  }) async {
+    await api.put<dynamic>(
+      '/password',
+      data: {
+        'current_password': current,
+        'password': next,
+        'password_confirmation': confirmation,
+      },
+    );
   }
 }

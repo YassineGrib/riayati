@@ -56,6 +56,8 @@ class ApiClient {
   }) => _request(
     () => _dio.post<T>(path, data: data, onSendProgress: onSendProgress),
   );
+  Future<T> put<T>(String path, {Object? data}) =>
+      _request(() => _dio.put<T>(path, data: data));
   Future<T> _request<T>(Future<Response<T>> Function() send) async {
     try {
       return (await send()).data as T;

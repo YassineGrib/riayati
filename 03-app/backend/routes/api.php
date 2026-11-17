@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\FamilyController;
+use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\VisitController;
@@ -23,6 +24,7 @@ Route::get('/attachments/{attachment}/download', [AttachmentController::class, '
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/password', [PasswordController::class, 'update'])->middleware('throttle:6,1');
 
     // Linking the two parents' accounts with an invite code.
     Route::get('/family', [FamilyController::class, 'show']);
