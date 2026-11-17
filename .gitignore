@@ -14,3 +14,6 @@
 Thumbs.db
 __MACOSX/
 *.log
+
+/03-app/mobile/assets/fonts/thmanyah/
+/.local-flutter/
