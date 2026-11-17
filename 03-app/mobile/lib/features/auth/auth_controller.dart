@@ -73,6 +73,30 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    String? phone,
+    String? wilaya,
+    int? childrenCount,
+    String? currentPassword,
+  }) async {
+    final previous = state.user;
+    if (previous == null) return;
+    final updated = await ref
+        .read(authRepositoryProvider)
+        .updateProfile(
+          name: name,
+          email: email,
+          phone: phone,
+          wilaya: wilaya,
+          childrenCount: childrenCount,
+          currentPassword: currentPassword,
+        );
+    // A request that finishes after sign-out must not restore the session.
+    if (state.user?.id == previous.id) state = AuthState.signedIn(updated);
+  }
+
   Future<void> refresh() async {
     if (await ref.read(tokenStoreProvider).read() == null) {
       state = const AuthState.signedOut();

@@ -23,6 +23,7 @@ Route::get('/attachments/{attachment}/download', [AttachmentController::class, '
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [AuthController::class, 'updateProfile'])->middleware('throttle:6,1');
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/password', [PasswordController::class, 'update'])->middleware('throttle:6,1');
 

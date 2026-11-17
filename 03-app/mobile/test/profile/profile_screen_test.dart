@@ -133,6 +133,7 @@ class _RecordingRouter extends GoRouter {
                 '/profile/terms',
                 '/profile/privacy',
                 '/profile/password',
+                '/profile/edit',
                 '/welcome',
               ])
                 GoRoute(
@@ -254,6 +255,7 @@ void main() {
   );
 
   for (final (label, path) in [
+    ('تعديل', '/profile/edit'),
     ('تغيير كلمة المرور', '/profile/password'),
     ('خصوصية بياناتي', '/profile/privacy'),
     ('شروط الاستخدام', '/profile/terms'),
@@ -274,18 +276,6 @@ void main() {
       expect(find.byType(ProfileScreen), findsOneWidget);
     });
   }
-
-  testWidgets('account details row responds', (tester) async {
-    final tokens = _Tokens();
-    await _pump(tester, _user(), tokens, _Api(tokens));
-    await tester.tap(find.text('تعديل الاسم والبريد'));
-    await tester.pumpAndSettle();
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(
-      find.textContaining('تعديل الاسم والبريد غير متاح في النسخة الحالية.'),
-      findsOneWidget,
-    );
-  });
 
   for (final brightness in Brightness.values) {
     testWidgets('sign-out uses readable destructive tokens in $brightness', (

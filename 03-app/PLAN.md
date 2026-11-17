@@ -35,7 +35,8 @@ Public, rate-limited to 6 requests per minute:
 - `POST /reset-password` `{token, email, password, password_confirmation}` → signs out all sessions.
 
 With `Authorization: Bearer <token>`:
-- `GET /me` → `{user: {id, name, email, role, linked, partner_role}}` (never any detail of the other parent)
+- `GET /me` → `{user: {id, name, email, role, linked, partner_role, phone, wilaya, children_count}}`. Login/register return the same user shape; optional details default to null. Never includes the other parent's private details.
+- `PUT /me` `{name, email, phone?, wilaya?, children_count?, current_password?}` → `{user}`. Name: 2–80 characters; email unique except self (normalized to lowercase); changing email requires the correct current password and clears email verification. Phone: `0` or `+213` followed by nine digits, with whitespace/dashes removed. Wilaya: nullable name up to 60 characters; children count: nullable integer 0–20. Unknown fields (including role) ignored; Sanctum required, 6 requests/minute. Run migrations to add the nullable user columns.
 - `POST /logout`
 - `PUT /password` `{current_password, password (8–128 characters), password_confirmation}` → `{message}`. Checks the current password; returns Arabic field errors with 422. Revokes all other tokens, keeping this device's current token. Limited to 6 requests per minute; requires Sanctum authentication.
 - `GET /family` → `{linked, partner_role}`
@@ -62,6 +63,9 @@ Visit calendar (the two linked parents only; an unlinked parent gets `403 {code:
 Rules enforced and tested: a family holds exactly two parents; they must be one father and one mother; a code works once; unknown, expired, used and own codes return the same error; a parent already linked elsewhere gets 409.
 
 ## Notes
+- Profile editing: `lib/features/profile/edit_profile_screen.dart` uses the profile page frame, Arabic field errors, a searchable numbered 58-wilaya picker, and a nullable children-count stepper. Saving through `AuthController.updateProfile` replaces the signed-in user with the server response so profile details refresh immediately. Missing details show `غير محدد`.
+- Router integration is reserved for the orchestrator: register `/profile/edit` with `EditProfileScreen`; the profile's `تعديل` entry already pushes that path. No router/shared-widget/dependency changes are part of this task.
+- Profile tests: `tests/Feature/Api/ProfileTest.php` and mobile `test/profile/{edit_profile_screen,profile_screen,profile_repository}_test.dart`. Backend full gate passed locally; Flutter gates require the orchestrator because this sandbox denies Flutter SDK cache lockfile access and Dart analysis child-process creation.
 - Local PHP is 8.5 but Hostinger may be older: `composer.json` pins `platform.php` to 8.3.0.
 - `.env` is not shared: copy `.env.example`, set `APP_KEY` (run `key:generate`), mail settings and the Gemini key later.
 - The scaffold's own `CLAUDE.md` and `AGENTS.md` ask for Laravel Boost to be installed. It was not installed because it was not requested; decide whether to add it.

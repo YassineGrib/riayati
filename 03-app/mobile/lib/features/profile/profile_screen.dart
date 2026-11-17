@@ -129,13 +129,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                             const SizedBox(height: RSpace.s1),
                             StatusChip(
-                              label: user.role == 'father' ? 'أب' : 'أم',
+                              label: switch (user.role) {
+                                'father' => 'أب',
+                                'mother' => 'أم',
+                                'admin' => 'مشرف',
+                                _ => 'غير محدد',
+                              },
                               tone: StatusTone.neutral,
                             ),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: RSpace.s4),
+                  RCard(
+                    child: Column(
+                      children: [
+                        _ProfileDetail(
+                          label: 'رقم الهاتف',
+                          value: user.phone,
+                          icon: Icons.phone_outlined,
+                          ltr: true,
+                        ),
+                        _ProfileDetail(
+                          label: 'الولاية',
+                          value: user.wilaya,
+                          icon: Icons.location_on_outlined,
+                        ),
+                        _ProfileDetail(
+                          label: 'عدد الأطفال',
+                          value: user.childrenCount?.toString(),
+                          icon: Icons.child_care_outlined,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: RSpace.s4),
                   RCard(
@@ -197,31 +225,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           _ProfileEntry(
                             label: entry.$1,
                             icon: entry.$2,
-                            onTap: () {
-                              if (entry.$3 == null) {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (dialogContext) => Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: AlertDialog(
-                                      title: const Text('بيانات الحساب'),
-                                      content: Text(
-                                        '${user.name}\n${user.email}\n\nتعديل الاسم والبريد غير متاح في النسخة الحالية.',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(dialogContext).pop(),
-                                          child: const Text('إغلاق'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                context.push(entry.$3!);
-                              }
-                            },
+                            onTap: () => context.push(entry.$3),
                           ),
                         ],
                       ],
@@ -250,11 +254,56 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 }
 
 const _entries = [
-  ('تعديل الاسم والبريد', Icons.edit_outlined, null),
+  ('تعديل', Icons.edit_outlined, '/profile/edit'),
   ('تغيير كلمة المرور', Icons.lock_outline, '/profile/password'),
   ('خصوصية بياناتي', Icons.verified_user_outlined, '/profile/privacy'),
   ('شروط الاستخدام', Icons.description_outlined, '/profile/terms'),
 ];
+
+class _ProfileDetail extends StatelessWidget {
+  const _ProfileDetail({
+    required this.label,
+    required this.value,
+    required this.icon,
+    this.ltr = false,
+  });
+  final String label;
+  final String? value;
+  final IconData icon;
+  final bool ltr;
+
+  @override
+  Widget build(BuildContext context) {
+    final present = value != null && value!.trim().isNotEmpty;
+    return Padding(
+      padding: const EdgeInsetsDirectional.symmetric(vertical: RSpace.s2),
+      child: Row(
+        children: [
+          Icon(icon, color: context.c.textSecondary, size: RSpace.s6),
+          const SizedBox(width: RSpace.s3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: RType.caption.copyWith(color: context.c.textSecondary),
+                ),
+                Text(
+                  present ? value! : 'غير محدد',
+                  textDirection: present && ltr
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
+                  style: RType.body.copyWith(color: context.c.textPrimary),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _ProfileEntry extends StatelessWidget {
   const _ProfileEntry({

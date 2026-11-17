@@ -13,6 +13,7 @@ import '../features/calendar/visit_detail_screen.dart';
 import '../features/family/link_screen.dart';
 import '../features/home/home_screen.dart';
 import '../features/profile/change_password_screen.dart';
+import '../features/profile/edit_profile_screen.dart';
 import '../features/profile/privacy_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/profile/terms_screen.dart';
@@ -80,6 +81,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/profile/edit',
+        builder: (_, _) => const EditProfileScreen(),
       ),
       GoRoute(path: '/profile/terms', builder: (_, _) => const TermsScreen()),
       GoRoute(

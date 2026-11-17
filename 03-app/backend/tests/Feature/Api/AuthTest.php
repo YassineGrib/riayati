@@ -28,7 +28,7 @@ class AuthTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('user.role', 'mother')
             ->assertJsonPath('user.linked', false)
-            ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email', 'role']]);
+            ->assertJsonStructure(['token', 'user' => ['id', 'name', 'email', 'role', 'phone', 'wilaya', 'children_count']]);
 
         $user = User::firstWhere('email', 'amina@example.com');
         $this->assertNotNull($user->terms_accepted_at);
@@ -56,11 +56,15 @@ class AuthTest extends TestCase
 
     public function test_login_returns_a_token_for_correct_credentials(): void
     {
-        User::factory()->mother()->create(['email' => 'amina@example.com', 'password' => 'password-123']);
+        User::factory()->mother()->create(['email' => 'amina@example.com', 'password' => 'password-123',
+            'phone' => '0555123456', 'wilaya' => 'الجزائر', 'children_count' => 0]);
 
         $this->postJson('/api/login', ['email' => 'AMINA@example.com', 'password' => 'password-123'])
             ->assertOk()
-            ->assertJsonStructure(['token', 'user']);
+            ->assertJsonStructure(['token', 'user'])
+            ->assertJsonPath('user.phone', '0555123456')
+            ->assertJsonPath('user.wilaya', 'الجزائر')
+            ->assertJsonPath('user.children_count', 0);
     }
 
     public function test_login_gives_the_same_error_for_a_wrong_password_and_an_unknown_email(): void
@@ -90,7 +94,7 @@ class AuthTest extends TestCase
         $user = User::factory()->mother()->create();
         $payload = $this->actingAs($user, 'sanctum')->getJson('/api/me')->json('user');
 
-        $this->assertSame(['id', 'name', 'email', 'role', 'linked', 'partner_role'], array_keys($payload));
+        $this->assertSame(['id', 'name', 'email', 'role', 'linked', 'partner_role', 'phone', 'wilaya', 'children_count'], array_keys($payload));
     }
 
     public function test_login_is_rate_limited(): void

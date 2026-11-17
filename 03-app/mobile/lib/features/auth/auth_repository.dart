@@ -45,6 +45,28 @@ class AuthRepository {
     await api.post<dynamic>('/forgot-password', data: {'email': email});
   }
 
+  Future<User> updateProfile({
+    required String name,
+    required String email,
+    String? phone,
+    String? wilaya,
+    int? childrenCount,
+    String? currentPassword,
+  }) async {
+    final json = await api.put<Map<String, dynamic>>(
+      '/me',
+      data: {
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'wilaya': wilaya,
+        'children_count': childrenCount,
+        'current_password': ?currentPassword,
+      },
+    );
+    return User.fromJson(json['user'] as Map<String, dynamic>);
+  }
+
   Future<void> signOut() async {
     try {
       // Bound the entire operation, including interceptor/token lookup time.

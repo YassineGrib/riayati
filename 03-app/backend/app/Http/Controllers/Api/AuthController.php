@@ -74,6 +74,39 @@ class AuthController extends Controller
         return response()->json(['user' => $this->payload($request->user())]);
     }
 
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        // Normalize before uniqueness and format checks; never coerce arrays to strings.
+        if (is_string($request->input('email'))) {
+            $request->merge(['email' => strtolower(trim($request->input('email')))]);
+        }
+        if (is_string($request->input('phone'))) {
+            $phone = preg_replace('/[\s-]+/u', '', $request->input('phone'));
+            $request->merge(['phone' => $phone === '' ? null : $phone]);
+        }
+
+        $data = $request->validate([
+            'name' => ['required', 'string', 'min:2', 'max:80'],
+            'email' => ['required', 'string', 'email:rfc', 'max:190', Rule::unique('users', 'email')->ignore($user)],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^(?:\+213|0)[0-9]{9}$/D'],
+            'wilaya' => ['nullable', 'string', 'max:60'],
+            'children_count' => ['nullable', 'integer', 'min:0', 'max:20'],
+            'current_password' => $request->input('email') !== $user->email
+                ? ['required', 'string', 'current_password:sanctum']
+                : ['exclude'],
+        ]);
+
+        // The password is a verification field only; role and unknown fields are ignored.
+        unset($data['current_password']);
+        if ($data['email'] !== $user->email) {
+            $user->email_verified_at = null;
+        }
+        $user->fill($data)->save();
+
+        return response()->json(['user' => $this->payload($user)]);
+    }
+
     /** What the app may know about an account. The other parent's details are never included. */
     private function payload(User $user): array
     {
@@ -86,6 +119,9 @@ class AuthController extends Controller
             'role' => $user->role->value,
             'linked' => $partner !== null,
             'partner_role' => $partner?->role->value,
+            'phone' => $user->phone,
+            'wilaya' => $user->wilaya,
+            'children_count' => $user->children_count,
         ];
     }
 }
