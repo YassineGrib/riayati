@@ -290,15 +290,23 @@ void main() {
       expect(report.reference, equals('RIA-2026-0042'));
     });
 
-    test('pdf downloads and writes file named reference.pdf', () async {
+    test('pdf downloads real binary bytes untouched into report-5.pdf', () async {
       final testTempDir =
           Directory.systemTemp.createTempSync('riayati_pdf_test_');
+      // Bytes above 0x7F are not valid UTF-8: decoding them as text (the old
+      // behaviour) corrupts the file and yields a blank page.
+      final pdfBytes = <int>[
+        ...'%PDF-1.4\n'.codeUnits,
+        0xE2, 0xE3, 0xCF, 0xD3, 0xFF, 0x00, 0x80, 0xC3, 0x28,
+        ...'\n%%EOF'.codeUnits,
+      ];
 
       final dio = Dio()
         ..httpClientAdapter = FakeAdapter((options) {
           expect(options.path, equals('/reports/5/pdf'));
-          return ResponseBody.fromString(
-            '%PDF-1.4 mock binary stream',
+          expect(options.responseType, equals(ResponseType.bytes));
+          return ResponseBody.fromBytes(
+            pdfBytes,
             200,
             headers: {
               Headers.contentTypeHeader: ['application/pdf'],
@@ -313,8 +321,8 @@ void main() {
 
       final file = await repo.pdf(5);
       expect(file.existsSync(), isTrue);
-      expect(file.path.endsWith('reference.pdf'), isTrue);
-      expect(file.readAsStringSync(), contains('%PDF-1.4'));
+      expect(file.path.endsWith('report-5.pdf'), isTrue);
+      expect(file.readAsBytesSync(), equals(pdfBytes));
 
       try {
         testTempDir.deleteSync(recursive: true);

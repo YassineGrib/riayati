@@ -105,20 +105,18 @@ class ReportRepository {
   }
 
   Future<File> pdf(int id) async {
-    final data = await api.get<dynamic>('/reports/$id/pdf');
-    final file = File('${effectiveTempDir.path}/reference.pdf');
-
-    if (data is List<int>) {
-      await file.writeAsBytes(data);
-    } else if (data is String) {
-      await file.writeAsString(data);
-    } else if (data is ResponseBody) {
-      final bytes = await data.stream.expand((chunk) => chunk).toList();
-      await file.writeAsBytes(bytes);
-    } else {
-      await file.writeAsBytes(const []);
+    final bytes = await api.getBytes('/reports/$id/pdf');
+    // A real PDF always starts with "%PDF"; anything else (an error page, an
+    // empty body) must not be handed to a PDF viewer as a blank document.
+    if (bytes.length < 5 ||
+        bytes[0] != 0x25 ||
+        bytes[1] != 0x50 ||
+        bytes[2] != 0x44 ||
+        bytes[3] != 0x46) {
+      throw const ApiError(message: 'تعذر تحميل PDF. حاول مجددًا.');
     }
-
+    final file = File('${effectiveTempDir.path}/report-$id.pdf');
+    await file.writeAsBytes(bytes, flush: true);
     return file;
   }
 

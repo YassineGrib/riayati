@@ -49,6 +49,21 @@ class ApiClient {
   void Function()? onNotLinked;
   Future<T> get<T>(String path, {Map<String, dynamic>? queryParameters}) =>
       _request(() => _dio.get<T>(path, queryParameters: queryParameters));
+  /// Downloads a binary body (e.g. a PDF) untouched. A plain [get] would let
+  /// Dio decode the bytes as text, which corrupts any non-text file.
+  Future<List<int>> getBytes(String path) async {
+    final data = await _request<List<int>>(
+      () => _dio.get<List<int>>(
+        path,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {'Accept': 'application/pdf, application/json'},
+        ),
+      ),
+    );
+    return data;
+  }
+
   Future<T> post<T>(
     String path, {
     Object? data,
