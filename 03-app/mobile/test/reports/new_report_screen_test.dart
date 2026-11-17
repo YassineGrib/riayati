@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riayati/core/api/api_error.dart';
 import 'package:riayati/core/theme/app_theme.dart';
 import 'package:riayati/core/widgets/r_button.dart';
+import 'package:riayati/features/reports/attachment_compressor.dart';
 import 'package:riayati/features/reports/file_rules.dart';
 import 'package:riayati/features/reports/new_report_screen.dart';
 import 'package:riayati/features/reports/report.dart';
@@ -60,6 +61,7 @@ class FakeNewReportRepository extends Fake implements ReportRepository {
 Future<void> pumpNewReport(
   WidgetTester tester, {
   required FakeNewReportRepository repo,
+  AttachmentCompressor? compressor,
   Brightness brightness = Brightness.light,
   Future<PickedFile?> Function()? pickImage,
   Future<PickedFile?> Function()? pickVideo,
@@ -81,6 +83,7 @@ Future<void> pumpNewReport(
           pickImage: pickImage,
           pickVideo: pickVideo,
           pickDocument: pickDocument,
+          compressor: compressor,
           initialIncidentAt: initialIncidentAt,
         ),
       ),
@@ -99,6 +102,9 @@ Future<void> pumpNewReport(
     ProviderScope(
       overrides: [
         reportRepositoryProvider.overrideWithValue(repo),
+        attachmentCompressorProvider.overrideWithValue(
+          compressor ?? FakeAttachmentCompressor(),
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: router,
@@ -267,6 +273,173 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('تعذر حفظ البلاغ على الخادم.'), findsOneWidget);
+  });
+
+  testWidgets('back arrow without unsent content navigates to /home', (tester) async {
+    final repo = FakeNewReportRepository();
+    final pushed = <String>[];
+    await pumpNewReport(tester, repo: repo, pushedRoutes: pushed);
+
+    final backBtn = find.byKey(const ValueKey('new-report-back-button'));
+    expect(backBtn, findsOneWidget);
+
+    await tester.tap(backBtn);
+    await tester.pumpAndSettle();
+
+    expect(pushed, contains('/home'));
+    expect(find.text('تجاهل البلاغ؟'), findsNothing);
+  });
+
+  testWidgets('back arrow with unsent description shows discard dialog', (tester) async {
+    final repo = FakeNewReportRepository();
+    final pushed = <String>[];
+    await pumpNewReport(tester, repo: repo, pushedRoutes: pushed);
+
+    await tester.enterText(find.byKey(const ValueKey('report-description-input')), 'نص تجريبي');
+    await tester.pumpAndSettle();
+
+    final backBtn = find.byKey(const ValueKey('new-report-back-button'));
+    await tester.tap(backBtn);
+    await tester.pumpAndSettle();
+
+    // Dialog appears
+    expect(find.text('تجاهل البلاغ؟'), findsOneWidget);
+    expect(find.byKey(const ValueKey('dialog-continue-button')), findsOneWidget);
+    expect(find.byKey(const ValueKey('dialog-discard-button')), findsOneWidget);
+
+    // Cancel dialog
+    await tester.tap(find.byKey(const ValueKey('dialog-continue-button')));
+    await tester.pumpAndSettle();
+    expect(pushed, isEmpty);
+    expect(find.text('تجاهل البلاغ؟'), findsNothing);
+
+    // Tap back again and confirm discard
+    await tester.tap(backBtn);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('dialog-discard-button')));
+    await tester.pumpAndSettle();
+
+    expect(pushed, contains('/home'));
+  });
+
+  testWidgets('attachments are compressed before upload and compressed copy is sent to repository', (tester) async {
+    final repo = FakeNewReportRepository();
+    final fakeCompressor = FakeAttachmentCompressor(compressFactor: 0.5);
+
+    await pumpNewReport(
+      tester,
+      repo: repo,
+      compressor: fakeCompressor,
+      pickImage: () async => const PickedFile(
+        path: '/test/large_photo.jpg',
+        name: 'large_photo.jpg',
+        size: 10 * 1024 * 1024,
+        mime: 'image/jpeg',
+      ),
+    );
+
+    await tester.enterText(find.byKey(const ValueKey('report-description-input')), 'وصف واقعة صحيح للاختبار');
+    await tester.tap(find.byKey(const ValueKey('pick-image-button')));
+    await tester.pumpAndSettle();
+
+    expect(fakeCompressor.compressCalls, 1);
+    expect(find.text('large_photo.jpg'), findsOneWidget);
+    // Shows compressed size (5.0 MB)
+    expect(find.text('5.0 MB'), findsOneWidget);
+
+    await tester.tap(submitButton());
+    await tester.pumpAndSettle();
+
+    expect(repo.createCalls, 1);
+    expect(repo.lastFiles, isNotNull);
+    expect(repo.lastFiles!.first.path, contains('.compressed'));
+    expect(repo.lastFiles!.first.size, 5 * 1024 * 1024);
+  });
+
+  testWidgets('progress is shown during compression and cancel button removes the file', (tester) async {
+    final repo = FakeNewReportRepository();
+    final fakeCompressor = FakeAttachmentCompressor(
+      delay: const Duration(milliseconds: 500),
+      reportProgress: true,
+    );
+
+    await pumpNewReport(
+      tester,
+      repo: repo,
+      compressor: fakeCompressor,
+      pickVideo: () async => const PickedFile(
+        path: '/test/clip.mp4',
+        name: 'clip.mp4',
+        size: 12 * 1024 * 1024,
+        mime: 'video/mp4',
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('pick-video-button')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+
+    // Visible per-file "جارٍ الضغط…" progress state
+    expect(find.textContaining('جارٍ الضغط…'), findsOneWidget);
+
+    // Cancel / remove while compressing
+    final removeBtn = find.byKey(const ValueKey('remove-file-0'));
+    expect(removeBtn, findsOneWidget);
+    await tester.tap(removeBtn);
+    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
+
+    expect(find.text('clip.mp4'), findsNothing);
+    expect(find.textContaining('جارٍ الضغط…'), findsNothing);
+  });
+
+  testWidgets('compression failure falls back to original and shows message', (tester) async {
+    final repo = FakeNewReportRepository();
+    final fakeCompressor = FakeAttachmentCompressor(shouldFail: true);
+
+    await pumpNewReport(
+      tester,
+      repo: repo,
+      compressor: fakeCompressor,
+      pickImage: () async => const PickedFile(
+        path: '/test/fail_photo.jpg',
+        name: 'fail_photo.jpg',
+        size: 2 * 1024 * 1024,
+        mime: 'image/jpeg',
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('pick-image-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('تعذر الضغط، سيُرفع الملف الأصلي'), findsOneWidget);
+    expect(find.text('fail_photo.jpg'), findsOneWidget);
+  });
+
+  testWidgets('FileRules applies to COMPRESSED size', (tester) async {
+    final repo = FakeNewReportRepository();
+    // Original is 35MB (which exceeds 30MB limit), but compresses to 14MB
+    final fakeCompressor = FakeAttachmentCompressor(compressFactor: 0.4);
+
+    await pumpNewReport(
+      tester,
+      repo: repo,
+      compressor: fakeCompressor,
+      pickImage: () async => const PickedFile(
+        path: '/test/huge.jpg',
+        name: 'huge.jpg',
+        size: 35 * 1024 * 1024,
+        mime: 'image/jpeg',
+      ),
+    );
+
+    await tester.tap(find.byKey(const ValueKey('pick-image-button')));
+    await tester.pumpAndSettle();
+
+    // Accepted because compressed size (14MB) is under 30MB
+    expect(find.text('huge.jpg'), findsOneWidget);
+    expect(find.text('1 من 5'), findsOneWidget);
+    expect(find.text('حجم الملف يتجاوز الحد الأقصى (30 ميغابايت).'), findsNothing);
   });
 
   for (final brightness in Brightness.values) {

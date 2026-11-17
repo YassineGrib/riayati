@@ -95,6 +95,20 @@ void main() {
     expect(find.text('لا يمكن حذف البلاغ بعد إرساله، للحفاظ عليه كدليل.'), findsOneWidget);
   });
 
+  testWidgets('tapping back arrow navigates to /home', (tester) async {
+    final report = sampleSummaryReport();
+    final routes = <String>[];
+    await pumpSummary(tester, report: report, navigatedRoutes: routes);
+
+    final backBtn = find.byTooltip('رجوع');
+    expect(backBtn, findsOneWidget);
+
+    await tester.tap(backBtn);
+    await tester.pumpAndSettle();
+
+    expect(routes, contains('/home'));
+  });
+
   testWidgets('tapping back to home button navigates to /home', (tester) async {
     final report = sampleSummaryReport();
     final routes = <String>[];

@@ -12,6 +12,7 @@ import '../features/calendar/calendar_screen.dart';
 import '../features/calendar/visit_detail_screen.dart';
 import '../features/family/link_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/notifications/notifications_screen.dart';
 import '../features/profile/change_password_screen.dart';
 import '../features/profile/edit_profile_screen.dart';
 import '../features/profile/privacy_screen.dart';
@@ -81,6 +82,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (_, _) => const NotificationsScreen(),
       ),
       GoRoute(
         path: '/profile/edit',

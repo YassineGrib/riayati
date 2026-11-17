@@ -41,6 +41,22 @@ class ReportSummaryScreen extends StatelessWidget {
 
     return AppScaffold(
       title: 'تفاصيل البلاغ',
+      leading: SizedBox(
+        width: RSpace.s12,
+        height: RSpace.s12,
+        child: IconButton(
+          tooltip: 'رجوع',
+          icon: const Icon(Icons.arrow_back),
+          color: c.textPrimary,
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsetsDirectional.only(
           top: RSpace.s2,

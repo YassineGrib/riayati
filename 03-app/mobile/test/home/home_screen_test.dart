@@ -97,6 +97,16 @@ class FakeAuthNotifier extends Notifier<AuthState> implements AuthController {
 
   @override
   Future<void> signOut() async {}
+
+  @override
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    String? phone,
+    String? wilaya,
+    int? childrenCount,
+    String? currentPassword,
+  }) async {}
 }
 
 Future<void> pumpHome(
@@ -138,6 +148,13 @@ Future<void> pumpHome(
         builder: (_, _) {
           pushedRoutes?.add('/link');
           return const Scaffold(body: Text('link screen'));
+        },
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (_, _) {
+          pushedRoutes?.add('/notifications');
+          return const Scaffold(body: Text('notifications screen'));
         },
       ),
     ],
@@ -350,6 +367,49 @@ void main() {
     await tester.tap(find.text('RIA-2026-0142'));
     await tester.pumpAndSettle();
     expect(pushed, contains('/reports/42'));
+  });
+
+  testWidgets('bell button pushes /notifications and shows dot when actionable items exist', (tester) async {
+    final visits = FakeHomeVisits()
+      ..upcomingVisits = [
+        sampleVisit(), // sampleVisit has needsMyResponse: true
+      ];
+    final reports = FakeHomeReports();
+    final pushed = <String>[];
+
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports, pushedRoutes: pushed);
+    await tester.pumpAndSettle();
+
+    // Dot should be present because needsMyResponse is true
+    expect(find.byKey(const ValueKey('bell-actionable-dot')), findsOneWidget);
+
+    // Tap bell button
+    await tester.tap(find.byKey(const ValueKey('home-bell-button')));
+    await tester.pumpAndSettle();
+
+    expect(pushed, contains('/notifications'));
+  });
+
+  testWidgets('bell button hides dot when no actionable items exist', (tester) async {
+    final visits = FakeHomeVisits()
+      ..upcomingVisits = [
+        const Visit(
+          id: 5,
+          date: '2026-11-20',
+          from: '10:00',
+          to: '12:00',
+          status: VisitStatus.confirmed,
+          proposedByMe: false,
+          needsMyResponse: false,
+          canConfirm: false,
+        ),
+      ];
+    final reports = FakeHomeReports();
+
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports);
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('bell-actionable-dot')), findsNothing);
   });
 
   for (final brightness in Brightness.values) {

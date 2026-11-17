@@ -145,39 +145,71 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: RSpace.s11,
-                    height: RSpace.s11,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: c.surface,
-                      border: Border.all(
-                        color: c.border,
-                        width: RBorderWidth.thin,
-                      ),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          Icons.notifications_none_rounded,
-                          size: RSpace.s6,
-                          color: c.textPrimary,
-                        ),
-                        PositionedDirectional(
-                          top: RSpace.s2,
-                          start: RSpace.s2_5,
-                          child: Container(
-                            width: RSpace.s2,
-                            height: RSpace.s2,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: c.sos,
+                  FutureBuilder<List<Visit>>(
+                    future: _upcomingFuture,
+                    builder: (context, snapshot) {
+                      final visits = snapshot.data ?? const [];
+                      final hasActionable =
+                          visits.any((v) => v.needsMyResponse || v.canConfirm);
+
+                      return Tooltip(
+                        message: 'الإشعارات',
+                        child: Material(
+                          color: Colors.transparent,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            key: const ValueKey('home-bell-button'),
+                            customBorder: const CircleBorder(),
+                            onTap: () => context.push('/notifications'),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                minWidth: RSpace.s12,
+                                minHeight: RSpace.s12,
+                              ),
+                              child: Center(
+                                child: Container(
+                                  width: RSpace.s11,
+                                  height: RSpace.s11,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: c.surface,
+                                    border: Border.all(
+                                      color: c.border,
+                                      width: RBorderWidth.thin,
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.notifications_none_rounded,
+                                        size: RSpace.s6,
+                                        color: c.textPrimary,
+                                      ),
+                                      if (hasActionable)
+                                        PositionedDirectional(
+                                          key: const ValueKey(
+                                              'bell-actionable-dot'),
+                                          top: RSpace.s2,
+                                          start: RSpace.s2_5,
+                                          child: Container(
+                                            width: RSpace.s2,
+                                            height: RSpace.s2,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: c.sos,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),

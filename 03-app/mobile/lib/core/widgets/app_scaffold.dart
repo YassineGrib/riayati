@@ -7,12 +7,14 @@ class AppScaffold extends StatelessWidget {
   const AppScaffold({
     super.key,
     this.title,
+    this.leading,
     required this.body,
     this.showWatermark = true,
     this.bottom,
   });
 
   final String? title;
+  final Widget? leading;
   final Widget body;
   final bool showWatermark;
   final Widget? bottom;
@@ -29,24 +31,32 @@ class AppScaffold extends StatelessWidget {
               if (showWatermark) const Positioned.fill(child: Watermark()),
               Column(
                 children: [
-                  if (title != null)
+                  if (title != null || leading != null)
                     SizedBox(
                       height: RSpace.s14,
                       child: Padding(
                         padding: const EdgeInsetsDirectional.symmetric(
                           horizontal: RSpace.s6,
                         ),
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            title!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: RType.heading3.copyWith(
-                              fontFamily: RType.display.fontFamily,
-                              color: context.c.textPrimary,
-                            ),
-                          ),
+                        child: Row(
+                          children: [
+                            if (leading != null) ...[
+                              leading!,
+                              const SizedBox(width: RSpace.s2),
+                            ],
+                            if (title != null)
+                              Expanded(
+                                child: Text(
+                                  title!,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: RType.heading3.copyWith(
+                                    fontFamily: RType.display.fontFamily,
+                                    color: context.c.textPrimary,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ),
