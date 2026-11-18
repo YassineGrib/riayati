@@ -60,8 +60,8 @@ class IncidentReportsTable
                     ->when($data['until'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('incident_at', '<=', $date))),
             ])
             ->recordActions([
-                ViewAction::make()->label('عرض'),
-                Action::make('markReviewed')->label('تعيين كمُراجَع')->color('success')
+                ViewAction::make()->label('عرض')->icon('heroicon-o-eye'),
+                Action::make('markReviewed')->label('تعيين كمُراجَع')->icon('heroicon-o-check')->color('success')
                     ->authorize(fn (): bool => Filament::auth()->user()?->isAdmin() ?? false)
                     ->requiresConfirmation()->modalHeading('تأكيد المراجعة؟')
                     ->modalDescription('سيتم تسجيل مراجعة البلاغ باسمك مع وقت المراجعة.')

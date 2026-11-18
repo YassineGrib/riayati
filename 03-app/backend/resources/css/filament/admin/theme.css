@@ -1,0 +1,363 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* ==========================================================================
+   Riayati Filament Admin Theme (Desktop Arabic RTL)
+   Colors & tokens aligned with 01-brand/tokens/colors.json & 02-design/admin/admin.css
+   ========================================================================== */
+
+/* ---------- Page Backgrounds & Logo Watermark ---------- */
+body.fi-body {
+    background-color: #f5f6f1;
+    font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+}
+
+:is(.dark, .dark *) body.fi-body {
+    background-color: #0c0e0b;
+}
+
+/* Abstract corner watermark: faint logo ribbon cropped at corner of the main content area */
+.fi-main-ctn {
+    position: relative;
+    isolation: isolate;
+}
+
+.fi-main-ctn::before {
+    content: "";
+    position: fixed;
+    top: 30px;
+    left: -180px;
+    width: 720px;
+    height: 420px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.07;
+    background-color: #406a05;
+    -webkit-mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    transform: rotate(-24deg);
+}
+
+.fi-main-ctn::after {
+    content: "";
+    position: fixed;
+    bottom: -60px;
+    right: 260px;
+    width: 620px;
+    height: 380px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+    background-color: #406a05;
+    -webkit-mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    transform: rotate(156deg);
+}
+
+:is(.dark, .dark *) .fi-main-ctn::before,
+:is(.dark, .dark *) .fi-main-ctn::after {
+    background-color: #b9d476;
+    opacity: 0.07;
+}
+
+/* Fallback for browsers without CSS mask */
+@supports not (mask: url("")) {
+    .fi-main-ctn::before {
+        background: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+        opacity: 0.05;
+    }
+}
+
+/* Watermark in the sidebar */
+.fi-sidebar {
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+    border-inline-start: 1px solid #e5e7eb;
+}
+
+:is(.dark, .dark *) .fi-sidebar {
+    background-color: #141712;
+    border-inline-start-color: #262a22;
+}
+
+.fi-sidebar::after {
+    content: "";
+    position: absolute;
+    top: 180px;
+    left: -120px;
+    width: 500px;
+    height: 320px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+    background-color: #406a05;
+    -webkit-mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    mask: url("/images/riayati-mark-abstract.svg") center / contain no-repeat;
+    transform: rotate(-24deg);
+}
+
+:is(.dark, .dark *) .fi-sidebar::after {
+    background-color: #b9d476;
+    opacity: 0.07;
+}
+
+/* Ensure main content elements sit safely above watermarks */
+.fi-main {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- Sidebar Navigation & Badge ---------- */
+.fi-sidebar-item-btn {
+    border-radius: 8px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background-color: #effce5 !important;
+    color: #406a05 !important;
+    font-weight: 700;
+}
+
+:is(.dark, .dark *) .fi-sidebar-item.fi-active .fi-sidebar-item-btn {
+    background-color: rgba(185, 212, 118, 0.14) !important;
+    color: #b9d476 !important;
+}
+
+/* Navigation report count badge - solid green pill */
+.fi-sidebar-item-badge-ctn .fi-badge {
+    min-inline-size: 24px;
+    block-size: 24px;
+    padding-inline: 8px;
+    border-radius: 9999px !important;
+    background-color: #406a05 !important;
+    color: #ffffff !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+}
+
+:is(.dark, .dark *) .fi-sidebar-item-badge-ctn .fi-badge {
+    background-color: #b9d476 !important;
+    color: #102100 !important;
+}
+
+/* ---------- Status Badges (WCAG AA Compliant) ---------- */
+/* Info badge: "قيد المراجعة" */
+.fi-badge.fi-color-info {
+    border-radius: 9999px !important;
+    padding-inline: 10px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+    border: 1px solid rgba(2, 132, 199, 0.2) !important;
+}
+
+:is(.dark, .dark *) .fi-badge.fi-color-info {
+    background-color: rgba(8, 47, 73, 0.7) !important;
+    color: #7dd3fc !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+}
+
+/* Success badge: "تمت المراجعة" */
+.fi-badge.fi-color-success {
+    border-radius: 9999px !important;
+    padding-inline: 10px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    background-color: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid rgba(22, 163, 74, 0.2) !important;
+}
+
+:is(.dark, .dark *) .fi-badge.fi-color-success {
+    background-color: rgba(5, 46, 22, 0.7) !important;
+    color: #86efac !important;
+    border: 1px solid rgba(74, 222, 128, 0.35) !important;
+}
+
+/* ---------- Table Density & Card Styling ---------- */
+.fi-ta-ctn {
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+    overflow: hidden;
+}
+
+:is(.dark, .dark *) .fi-ta-ctn {
+    background-color: #171a15 !important;
+    border-color: #272b23 !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+.fi-ta-header-cell {
+    padding-block: 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    background-color: #f9faf8 !important;
+}
+
+:is(.dark, .dark *) .fi-ta-header-cell {
+    background-color: #131511 !important;
+    color: #9ca3af !important;
+}
+
+.fi-ta-record {
+    transition: background-color 0.15s ease;
+}
+
+.fi-ta-record:hover {
+    background-color: rgba(64, 106, 5, 0.03) !important;
+}
+
+:is(.dark, .dark *) .fi-ta-record:hover {
+    background-color: rgba(185, 212, 118, 0.04) !important;
+}
+
+.fi-ta-cell {
+    padding-block: 14px !important;
+}
+
+/* Monospace references */
+.font-mono, [dir="ltr"].font-mono {
+    font-family: 'IBM Plex Mono', Consolas, monospace !important;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Stats Cards Overview ---------- */
+.fi-wi-stats-overview-stat {
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    background-color: #ffffff !important;
+    padding: 16px 20px !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+}
+
+:is(.dark, .dark *) .fi-wi-stats-overview-stat {
+    background-color: #171a15 !important;
+    border-color: #272b23 !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ---------- Section Cards (View Report) ---------- */
+.fi-section {
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+}
+
+:is(.dark, .dark *) .fi-section {
+    background-color: #171a15 !important;
+    border-color: #272b23 !important;
+}
+
+/* ---------- Attachment Tiles ---------- */
+.attachment-tile {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background-color: #ffffff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:is(.dark, .dark *) .attachment-tile {
+    border-color: #272b22;
+    background-color: #171a15;
+}
+
+.attachment-tile:hover {
+    border-color: #406a05;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+:is(.dark, .dark *) .attachment-tile:hover {
+    border-color: #b9d476;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.attachment-tile-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.attachment-tile-preview {
+    height: 110px;
+    background-color: #f4f5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+:is(.dark, .dark *) .attachment-tile-preview {
+    background-color: #121410;
+}
+
+.attachment-tile-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.attachment-tile-info {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border-top: 1px solid #f0f2eb;
+}
+
+:is(.dark, .dark *) .attachment-tile-info {
+    border-top-color: #272b22;
+}
+
+.attachment-tile-name {
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    color: #111827;
+}
+
+:is(.dark, .dark *) .attachment-tile-name {
+    color: #f3f4f6;
+}
+
+.attachment-tile-size {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+:is(.dark, .dark *) .attachment-tile-size {
+    color: #9ca3af;
+}
+
+.attachment-tile-fingerprint {
+    padding: 6px 12px;
+    background-color: #f9faf8;
+    border-top: 1px solid #f0f2eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #6b7280;
+}
+
+:is(.dark, .dark *) .attachment-tile-fingerprint {
+    background-color: #131511;
+    border-top-color: #272b22;
+    color: #9ca3af;
+}

@@ -55,6 +55,11 @@ class IncidentReportResource extends Resource
         return (string) IncidentReport::where('status', ReportStatus::UnderReview)->count();
     }
 
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'primary';
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with('user')->withCount('attachments');

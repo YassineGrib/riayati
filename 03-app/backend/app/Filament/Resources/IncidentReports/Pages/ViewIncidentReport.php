@@ -23,6 +23,11 @@ class ViewIncidentReport extends ViewRecord
         $this->getRecord()->loadMissing(['attachments', 'reviewer']);
     }
 
+    public function getTitle(): string
+    {
+        return $this->getRecord()->reference;
+    }
+
     protected function getHeaderActions(): array
     {
         return [
