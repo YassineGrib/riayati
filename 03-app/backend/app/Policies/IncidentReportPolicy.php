@@ -11,6 +11,11 @@ use App\Models\User;
  */
 class IncidentReportPolicy
 {
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function view(User $user, IncidentReport $report): bool
     {
         return $user->id === $report->user_id || $user->isAdmin();
