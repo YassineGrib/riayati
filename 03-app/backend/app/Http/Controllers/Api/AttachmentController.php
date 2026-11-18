@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\IncidentReport;
 use App\Models\ReportAttachment;
+use App\Services\AttachmentLinks;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AttachmentController extends Controller
@@ -24,7 +24,7 @@ class AttachmentController extends Controller
         $ttl = config('riayati.reports.link_ttl_minutes');
 
         return response()->json([
-            'url' => URL::temporarySignedRoute('attachments.download', now()->addMinutes($ttl), ['attachment' => $file->id]),
+            'url' => AttachmentLinks::for($file),
             'expires_at' => now()->addMinutes($ttl)->toIso8601String(),
         ]);
     }

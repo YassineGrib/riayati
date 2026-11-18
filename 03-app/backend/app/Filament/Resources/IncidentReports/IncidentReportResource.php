@@ -5,6 +5,7 @@ namespace App\Filament\Resources\IncidentReports;
 use App\Enums\ReportStatus;
 use App\Filament\Resources\IncidentReports\Pages\ListIncidentReports;
 use App\Filament\Resources\IncidentReports\Pages\ViewIncidentReport;
+use App\Filament\Resources\IncidentReports\Schemas\IncidentReportInfolist;
 use App\Filament\Resources\IncidentReports\Tables\IncidentReportsTable;
 use App\Models\IncidentReport;
 use BackedEnum;
@@ -61,7 +62,7 @@ class IncidentReportResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return IncidentReportInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

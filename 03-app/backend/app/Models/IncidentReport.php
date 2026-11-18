@@ -30,6 +30,11 @@ class IncidentReport extends Model
         return $this->hasMany(ReportAttachment::class);
     }
 
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
+
     /** RIA-2026-0142. Call inside the transaction that creates the report. */
     public static function nextReference(): string
     {
