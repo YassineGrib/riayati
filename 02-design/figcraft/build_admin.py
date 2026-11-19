@@ -20,6 +20,11 @@ A.ICONS.update({
     "search": ["M21 21l-4.3-4.3", "M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0z"],
     "trash": ["M3 6h18", "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"],
     "refresh": ["M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", "M21 3v5h-5", "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", "M8 16H3v5"],
+    "building": ["M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", "M10 6h4", "M10 10h4", "M10 14h4", "M10 18h4"],
+    "users": ["M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", "M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", "M22 21v-2a4 4 0 0 0-3-3.87", "M16 3.13a4 4 0 0 1 0 7.75"],
+    "activity": ["M22 12h-4l-3 9L9 3l-3 9H2"],
+    "phone": ["M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"],
+    "chevd": ["M6 9l6 6 6-6"],
 })
 
 
@@ -103,17 +108,40 @@ def shell(f, active, c1, c2):
     A.logo(f, 1223, 29, 36)
     rt(f, "رعايتي", 1211, 20, 20, 700, "text/primary")
     rt(f, "لوحة الإدارة", 1211, 49, 12, 500, "text/secondary")
-    items = [("reports", "البلاغات", "file", "5", 96), ("legal", "النصوص القانونية", "book", "", 144)]
-    for key, label, icon, count, y in items:
-        on = key == active
-        if on:
-            A.rect(f, f"Nav {label} active", 1028, y, 231, 44, fill="interactive/selected-bg", r=8)
-        col = "text/link" if on else "text/secondary"
-        A.icon(f, f"Nav icon {label}", icon, 1227, y + 12, 20, col)
-        rt(f, label, 1215, y + 11, 16, 700 if on else 500, col, lh=1.4)
-        if count:
-            A.rect(f, "Nav count", 1040, y + 10, 24, 24, fill="action/primary", r=12)
-            A.text(f, "Nav count text", count, 1040, y + 14, 12, 700, "text/on-action", w=24, align="center", lh=1.4)
+    nav_groups = [
+        (None, [
+            ("dashboard", "الرئيسية", "home", ""),
+        ]),
+        ("العمليات", [
+            ("reports", "البلاغات", "file", "5"),
+            ("visits", "الزيارات", "cal", "3"),
+        ]),
+        ("المحتوى", [
+            ("content", "المحتوى التعليمي", "book", "24"),
+            ("centers", "مراكز وهيئات", "building", "12"),
+        ]),
+        ("الحسابات", [
+            ("users", "المستخدمون", "users", "8"),
+            ("activity", "سجل النشاط", "activity", ""),
+        ]),
+    ]
+    y = 80
+    for group_title, items in nav_groups:
+        if group_title:
+            y += 8
+            rt(f, group_title, 1240, y, 11, 700, "text/tertiary")
+            y += 20
+        for key, label, icon_name, count in items:
+            on = (key == active) or (key == "content" and active == "legal")
+            if on:
+                A.rect(f, f"Nav {label} active", 1028, y, 231, 38, fill="interactive/selected-bg", r=8)
+            col = "text/link" if on else "text/secondary"
+            A.icon(f, f"Nav icon {label}", icon_name, 1227, y + 10, 18, col)
+            rt(f, label, 1215, y + 9, 14, 700 if on else 500, col, lh=1.4)
+            if count:
+                A.rect(f, f"Nav count {label}", 1040, y + 8, 26, 22, fill="action/primary" if on else "surface/sunken", r=11)
+                A.text(f, f"Nav count text {label}", count, 1040, y + 11, 11, 700, "text/on-action" if on else "text/secondary", w=26, align="center", lh=1.4)
+            y += 42
     A.rect(f, "Admin card", 1028, 718, 231, 62, fill="surface/sunken", r=8)
     A.ellipse(f, "Admin avatar", 1211, 731, 36, 36, fill="accent/soft")
     A.text(f, "Avatar letter", "م", 1211, 739, 16, 700, "action/primary", w=36, align="center", lh=1.4)

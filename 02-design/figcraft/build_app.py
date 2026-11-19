@@ -36,6 +36,10 @@ A.ICONS.update({
     "clip": ["M16 6l-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"],
     "x": ["M18 6L6 18", "M6 6l12 12"],
     "clock": ["M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", "M12 6v6l4 2"],
+    "chevl": ["M15 18l-6-6 6-6"],
+    "chevr": ["M9 18l6-6-6-6"],
+    "book": ["M12 7v14", "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"],
+    "building": ["M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", "M10 6h4", "M10 10h4", "M10 14h4", "M10 18h4"],
     # mirrored for RTL (points left)
     "send": ["M9.464 21.686a.5.5 0 0 1-.937-.024l-6.5-19a.496.496 0 0 1 .635-.635l19 6.5a.5.5 0 0 1 .024.937l-7.93 3.18a2 2 0 0 0-1.112 1.11z", "M2.146 2.147l10.94 10.939"],
 })
@@ -150,30 +154,43 @@ def screen_home(fid):
     A.icon(fid, "Notifications", "bell", 20, 48, 24, "text/primary")
     A.ellipse(fid, "Unread dot", 36, 44, 10, 10, fill="sos/bg", stroke="surface/page", sw=2)
     # SOS
-    A.rect(fid, "SOS card", 24, 92, 312, 120, fill="sos/bg", r=16)
-    A.ellipse(fid, "SOS badge", 256, 123, 56, 56, fill="sos/text-on-bg")
-    A.icon(fid, "SOS icon", "alerttri", 270, 137, 28, "sos/bg")
-    rtext(fid, "SOS title", "الإبلاغ عن حادثة", 240, 112, 24, 700, "sos/text-on-bg", lh=1.4)
-    A.text(fid, "SOS text", "وثّق ما حدث بالنص والصور والفيديو.", 84, 149, 14, 400, "sos/text-on-bg", w=157, lh=1.5)
-    A.icon(fid, "SOS go", "backl", 44, 139, 24, "sos/text-on-bg")
+    A.rect(fid, "SOS card", 24, 88, 312, 108, fill="sos/bg", r=16)
+    A.ellipse(fid, "SOS badge", 256, 114, 56, 56, fill="sos/text-on-bg")
+    A.icon(fid, "SOS icon", "alerttri", 270, 128, 28, "sos/bg")
+    rtext(fid, "SOS title", "الإبلاغ عن حادثة", 240, 105, 22, 700, "sos/text-on-bg", lh=1.4)
+    A.text(fid, "SOS text", "وثّق ما حدث بالنص والصور والفيديو.", 84, 140, 14, 400, "sos/text-on-bg", w=157, lh=1.4)
+    A.icon(fid, "SOS go", "backl", 44, 130, 24, "sos/text-on-bg")
+
+    # Shortcuts under SOS card (icon without background, chevron flips in RTL at end edge)
+    card(fid, "Shortcut library", 186, 208, 150, 46, r=12)
+    A.icon(fid, "Shortcut library icon", "book", 308, 222, 18, "action/primary")
+    rtext(fid, "Shortcut library text", "المحتوى التعليمي", 302, 222, 12, 600, "text/primary", lh=1.4)
+    A.icon(fid, "Shortcut library chevron", "chevl", 196, 224, 14, "text/secondary")
+
+    card(fid, "Shortcut centers", 24, 208, 150, 46, r=12)
+    A.icon(fid, "Shortcut centers icon", "building", 146, 222, 18, "action/primary")
+    rtext(fid, "Shortcut centers text", "مراكز وهيئات", 140, 222, 12, 600, "text/primary", lh=1.4)
+    A.icon(fid, "Shortcut centers chevron", "chevl", 34, 224, 14, "text/secondary")
+
     # visit
-    card(fid, "Visit card", 24, 227, 312, 193)
-    rtext(fid, "Visit title", "الزيارة القادمة", 320, 246, 16, 700, "text/primary", lh=1.5)
-    chip(fid, 40, 244, "بانتظار ردّك", "warn", "clock")
-    rtext(fid, "Visit date", "الجمعة 20 نوفمبر", 320, 282, 20, 700, "text/primary", lh=1.5)
-    rtext(fid, "Visit meta", "10:00 – 14:00 · اقترحها الطرف الآخر", 320, 318, 14, 400, "text/secondary", lh=1.5)
-    button(fid, "قبول", 186, 355, 134, 48, "primary")
-    button(fid, "رفض", 40, 355, 134, 48, "outline")
+    card(fid, "Visit card", 24, 266, 312, 180)
+    rtext(fid, "Visit title", "الزيارة القادمة", 320, 282, 16, 700, "text/primary", lh=1.5)
+    chip(fid, 40, 280, "بانتظار ردّك", "warn", "clock")
+    rtext(fid, "Visit date", "الجمعة 20 نوفمبر", 320, 314, 18, 700, "text/primary", lh=1.5)
+    rtext(fid, "Visit meta", "10:00 – 14:00 · اقترحها الطرف الآخر", 320, 344, 13, 400, "text/secondary", lh=1.5)
+    button(fid, "قبول", 186, 384, 134, 46, "primary")
+    button(fid, "رفض", 40, 384, 134, 46, "outline")
+
     # assistant
-    card(fid, "Assistant card", 24, 436, 312, 196)
-    A.ellipse(fid, "Assistant mark", 276, 453, 40, 40, fill="accent/soft")
-    A.icon(fid, "Assistant icon", "chat", 286, 463, 20, "action/primary")
-    rtext(fid, "Assistant title", "المساعد القانوني", 264, 461, 16, 700, "text/primary", lh=1.5)
-    A.rect(fid, "Ask field", 40, 505, 280, 56, fill="surface/card", stroke="border/strong", r=12)
-    rtext(fid, "Ask placeholder", "اسأل عن قانون الأسرة…", 304, 519, 16, 400, "text/tertiary", lh=1.4)
-    A.ellipse(fid, "Ask send", 49, 513, 40, 40, fill="action/primary")
-    A.icon(fid, "Ask send icon", "send", 59, 523, 20, "text/on-action")
-    A.text(fid, "Assistant note", "أجوبة من نصوص قانون الأسرة الجزائري. لا تكتب أسماء أو تفاصيل قضية.", 40, 573, 14, 400,
+    card(fid, "Assistant card", 24, 458, 312, 176)
+    A.ellipse(fid, "Assistant mark", 276, 472, 38, 38, fill="accent/soft")
+    A.icon(fid, "Assistant icon", "chat", 285, 481, 20, "action/primary")
+    rtext(fid, "Assistant title", "المساعد القانوني", 264, 479, 16, 700, "text/primary", lh=1.5)
+    A.rect(fid, "Ask field", 40, 520, 280, 50, fill="surface/card", stroke="border/strong", r=12)
+    rtext(fid, "Ask placeholder", "اسأل عن قانون الأسرة…", 304, 533, 14, 400, "text/tertiary", lh=1.4)
+    A.ellipse(fid, "Ask send", 48, 526, 38, 38, fill="action/primary")
+    A.icon(fid, "Ask send icon", "send", 57, 535, 20, "text/on-action")
+    A.text(fid, "Assistant note", "أجوبة من نصوص قانون الأسرة الجزائري. لا تكتب أسماء أو تفاصيل قضية.", 40, 578, 13, 400,
            "text/secondary", w=280, lh=1.5)
     tabbar(fid, 0)
 

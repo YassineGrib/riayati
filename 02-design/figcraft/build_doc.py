@@ -27,19 +27,22 @@ import build_auth as A  # noqa: E402
 import build_app as B  # noqa: E402
 import build_cal as C  # noqa: E402
 import build_reports as R  # noqa: E402
+import build_library as LIB  # noqa: E402
+import build_centers as CEN  # noqa: E402
+import build_admin_sections as ADS  # noqa: E402
 
 W, H = A.W, A.H
 PAGE_BG = "#E9EDE5"
 HERE = os.path.dirname(os.path.abspath(__file__))
 COLORS = json.load(open(os.path.join(A.ROOT, "01-brand", "tokens", "colors.json"), encoding="utf-8"))
 
-ALL = {name: (fn, bg) for name, fn, bg in A.SCREENS + B.APP_SCREENS + C.CAL_SCREENS + R.REPORT_SCREENS}
+ALL = {name: (fn, bg) for name, fn, bg in A.SCREENS + B.APP_SCREENS + C.CAL_SCREENS + R.REPORT_SCREENS + LIB.LIBRARY_SCREENS + CEN.CENTERS_SCREENS}
 
 SCREEN_PAGES = [
     ("02 Auth", ["Welcome", "Login", "Login error", "Register", "Forgot password", "Forgot password sent"],
      "Welcome, sign in, register, password reset. Email and password only, no OTP."),
     ("03 Home", ["Link co-parent", "Home"],
-     "Linking the two parents with an invite code, and the home screen with the SOS report button."),
+     "Linking the two parents with an invite code, and the home screen with the SOS report button and shortcuts."),
     ("04 Reports", ["New report", "Report summary", "Reports list", "Reports empty"],
      "Create an incident report with attachments, the sent summary with PDF export, and the reports list."),
     ("05 Calendar", ["Calendar", "Propose visit", "Visit detail"],
@@ -48,6 +51,10 @@ SCREEN_PAGES = [
      "Legal assistant: first open, answer with cited sources, and the not-enough-in-the-sources state."),
     ("07 Profile", ["Profile", "Profile unlinked"],
      "Account, settings, and the linked or not-linked state of the other parent."),
+    ("09 Library", ["Library list", "Library detail", "Library empty", "Library error"],
+     "Educational content library: articles, laws, Supreme Court rulings, guides, detail, empty and error."),
+    ("10 Centers", ["Centers list", "Centers wilaya filter", "Center detail", "Centers empty"],
+     "Support centers and judicial directory: search, wilaya filter sheet, detail with tap-to-call, empty."),
 ]
 
 
@@ -95,20 +102,28 @@ def build_cover(pid):
     A.text(f, "Title", "رعايتي", 760, 150, 130, 700, "text/primary", w=584, align="right", lh=1.4)
     A.text(f, "Tagline", "منصة رقمية لحماية الأطفال في إطار الحضانة", 760, 330, 28, 400, "text/secondary", w=584, align="right")
 
-    ltr(f, "Contents", "Contents", 96, 640, 16, 700, "action/primary")
+    ltr(f, "Contents", "Contents", 96, 608, 16, 700, "action/primary")
     rows = [("01 Foundations", "Colors, semantic colors, typography, icons, brand"),
             ("02 Auth", "Welcome, sign in, register, password reset"),
-            ("03 Home", "Link the other parent, home with the SOS button"),
+            ("03 Home", "Link other parent, home with SOS and shortcuts"),
             ("04 Reports", "New report, sent summary and PDF, list"),
             ("05 Calendar", "Month view, propose a visit, visit detail"),
             ("06 Assistant", "Legal assistant with sources"),
             ("07 Profile", "Account, linked or not linked"),
-            ("08 Admin", "Admin panel: reports and legal texts")]
+            ("09 Library", "Educational library: articles, laws, rulings, guides"),
+            ("10 Centers", "Support centers directory and wilaya filter"),
+            ("08 Admin", "Admin panel: incident inbox and legal texts"),
+            ("11 Admin Home", "Admin dashboard: statistics, charts, latest reports"),
+            ("12 Admin Content", "Content library management and editor"),
+            ("13 Admin Centers", "Support centers directory and editor"),
+            ("14 Admin Users", "Users and families read-only overview"),
+            ("15 Admin Visits", "Visits calendar read-only overview"),
+            ("16 Admin Activity", "Activity log for evidence integrity")]
     for i, (name, desc) in enumerate(rows):
-        col, row = divmod(i, 4)
-        x, y = 96 + col * 560, 672 + row * 40
-        ltr(f, "Index name", name, x, y, 16, 700, "text/primary", w=150)
-        ltr(f, "Index text", desc, x + 160, y, 16, 400, "text/secondary", w=380)
+        col, row = divmod(i, 8)
+        x, y = 96 + col * 560, 638 + row * 30
+        ltr(f, "Index name", name, x, y, 14, 700, "text/primary", w=150)
+        ltr(f, "Index text", desc, x + 155, y, 13, 400, "text/secondary", w=385)
     return f
 
 
@@ -331,6 +346,24 @@ def main():
     admin = add("08 Admin")
     import build_admin as AD
     AD.build_admin_page(admin, page_header, made)
+
+    admin_home = add("11 Admin Home")
+    ADS.build_admin_home_page(admin_home, page_header, made)
+
+    admin_content = add("12 Admin Content")
+    ADS.build_admin_content_page(admin_content, page_header, made)
+
+    admin_centers = add("13 Admin Centers")
+    ADS.build_admin_centers_page(admin_centers, page_header, made)
+
+    admin_users = add("14 Admin Users")
+    ADS.build_admin_users_page(admin_users, page_header, made)
+
+    admin_visits = add("15 Admin Visits")
+    ADS.build_admin_visits_page(admin_visits, page_header, made)
+
+    admin_activity = add("16 Admin Activity log")
+    ADS.build_admin_activity_page(admin_activity, page_header, made)
 
     A.ex("page.select", id=first)
     A.fc.ex("file.saveAs", path=os.path.join(HERE, "riayati-design.figcraft"))
