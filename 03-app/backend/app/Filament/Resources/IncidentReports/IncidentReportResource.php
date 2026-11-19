@@ -22,6 +22,10 @@ class IncidentReportResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
+    protected static string|\UnitEnum|null $navigationGroup = 'العمليات';
+
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $navigationLabel = 'البلاغات';
 
     protected static ?string $modelLabel = 'بلاغ';

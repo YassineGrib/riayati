@@ -13,7 +13,7 @@ Work order (from the decisions in `CLAUDE.md`): brand tokens (done) → UI/UX (d
 | 6. PDF export of a report (Arabic, RTL) | done, tested, checked visually |
 | 7. Visit calendar (propose, accept, decline, confirm) | done, tested |
 | 8. Flutter app against this API | next |
-| 9. Filament admin | |
+| 9. Filament admin | done, tested |
 | 10. Legal texts, embeddings, Gemini chatbot | blocked on the client's documents for real data |
 
 ## Run it

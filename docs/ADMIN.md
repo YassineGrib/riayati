@@ -81,7 +81,24 @@ php artisan serve --port=8099
 
 ---
 
-## 5. Hostinger Production Deployment Notes
+## 5. Panel Navigation and Sections
+
+The admin panel is organized into Arabic RTL navigation groups:
+
+1. **العمليات (Operations):**
+   - **البلاغات (Incident Reports):** View submitted parent reports, inspect attached evidence through expiring 5-minute signed links, mark reports as reviewed, and download structured legal PDFs.
+   - **الزيارات (Visits):** Read-only audit log of shared child visitation schedules between linked parents (date, time range, status badges: proposed, accepted, declined, confirmed, and involved parents).
+
+2. **الحسابات (Accounts):**
+   - **المستخدمون والعائلات (Users & Families):** Read-only directory of parent accounts (fathers and mothers). Displays contact info, wilaya, children count, family link status, partner name, and last activity timestamp.
+   - **Privacy & Security Guarantee:** Passwords, password hashes, remember tokens, and personal access tokens are strictly excluded from queries and never exposed in the interface or DOM.
+
+3. **المحتوى (Content):**
+   - Educational content library (articles, laws, judicial rulings, and guides) with publication status controls and deletion confirmation.
+
+---
+
+## 6. Hostinger Production Deployment Notes
 
 1. **Vite Build (`public/build`):**
    - If Node.js and npm are available on the Hostinger server / cPanel Terminal, run `npm install && npm run build` directly on the server.
@@ -110,7 +127,7 @@ php artisan serve --port=8099
 
 ---
 
-## 6. Verification and Health Checks
+## 7. Verification and Health Checks
 
 Before pushing releases:
 - Verify all unit and feature tests pass:
