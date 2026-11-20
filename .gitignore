@@ -17,3 +17,10 @@ __MACOSX/
 
 /03-app/mobile/assets/fonts/thmanyah/
 /.local-flutter/
+
+# --- Marketing: local-only copies and heavy renders
+/05-marketing/_ref/
+/05-marketing/video/node_modules/
+/05-marketing/video/out/
+/05-marketing/video/public/fonts/
+/05-marketing/video/public/voiceover/

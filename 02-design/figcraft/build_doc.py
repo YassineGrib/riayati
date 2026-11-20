@@ -299,7 +299,7 @@ def build_screens_page(pid, title, names, desc, made):
             if mode == "Dark":
                 dark_mode(fid)
             fname = f"{title.replace(' ', '-')}_{name.replace(' ', '-')}_{mode}.png"
-            A.ex("file.export", ids=[fid], format="png", scale=1.5, path=os.path.join(A.OUT, fname))
+            A.ex("file.export", ids=[fid], format="png", scale=A.EXPORT_SCALE, path=os.path.join(A.OUT, fname))
             ids.append(fid)
             made.append(f"{short} / {name} / {mode}")
             print("built", short, "/", name, "/", mode, flush=True)
