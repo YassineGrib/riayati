@@ -96,22 +96,22 @@ def screen_list(fid):
         cur_right -= (w + 4)
 
     # 3 Content cards
-    content_card(fid, 186, "قانون", "قانون", "شروط استحقاق الحضانة وسقوطها",
-                 "ملخص لأهم المواد المنظمة للحضانة في قانون الأسرة الجزائري، وشروط ممارستها وحالات إسقاطها.",
+    content_card(fid, 186, "قانون", "قانون", "تعريف مبسّط بالحضانة وأطرافها",
+                 "عرض مبسّط لمفهوم الحضانة والجهات التي تنظر فيها، للتعريف والإرشاد الأولي.",
                  "18 نوفمبر 2026 · 4 د قراءة")
 
     content_card(fid, 334, "مقال", "مقال", "كيف تتجنب النزاع أثناء تسليم المحضون؟",
                  "إرشادات عملية ونفسية للوالدين لضمان بيئة آمنة وهادئة للطفل أثناء ممارسة حق الزيارة المقررة.",
                  "16 نوفمبر 2026 · 5 د قراءة")
 
-    content_card(fid, 482, "اجتهاد", "اجتهاد", "قرار المحكمة العليا رقم 412580",
-                 "المبدأ القضائي المكرّس لمصلحة المحضون الفضلى عند نزاع الوالدين حول تغيير مقر الإقامة.",
+    content_card(fid, 482, "اجتهاد", "اجتهاد", "مبدأ مصلحة الطفل الفضلى",
+                 "قراءة مبسّطة لمبدأ يُراعى عند النظر في كل ما يخص الطفل.",
                  "12 نوفمبر 2026 · 6 د قراءة")
 
     # Bottom helper note
     A.rect(fid, "Legal note banner", 24, 634, 312, 54, fill="surface/brand-soft", r=12)
     A.icon(fid, "Legal note icon", "shield", 306, 650, 20, "action/primary")
-    A.text(fid, "Legal note text", "محتوى قانوني وتثقيفي معتمد وفق التشريع الجزائري لمساعدة الوالدين.",
+    A.text(fid, "Legal note text", "محتوى تعريفي للإرشاد الأولي، ولا يغني عن استشارة مختص أو عن نص القانون الرسمي.",
            38, 644, 12, 400, "text/primary", w=258, align="right", lh=1.4)
 
     B.tabbar(fid, 0)
@@ -130,34 +130,33 @@ def screen_detail(fid):
     B.rtext(fid, "Reading meta", "18 نوفمبر 2026 · 4 دقائق قراءة", 268, 86, 13, 400, "text/secondary", lh=1.4)
 
     # Title in Serif Display
-    A.text(fid, "Title", "شروط استحقاق الحضانة وسقوطها في قانون الأسرة",
+    A.text(fid, "Title", "تعريف مبسّط بالحضانة وأطرافها",
            PAD, 122, 22, 700, "text/primary", w=312, align="right", lh=1.4)
 
     # Reference line box
     A.rect(fid, "Reference box", 24, 196, 312, 40, fill="surface/sunken", r=8)
     A.icon(fid, "Reference icon", "book", 308, 206, 18, "text/secondary")
-    B.rtext(fid, "Reference text", "المصدر: قانون الأسرة الجزائري · المواد 64، 65 و66", 298, 206, 13, 500, "text/secondary", lh=1.4)
+    B.rtext(fid, "Reference text", "محتوى تعريفي للإرشاد الأولي", 298, 206, 13, 500, "text/secondary", lh=1.4)
 
     # Legal Body in Serif Text (long reading text)
-    body1 = ("الحضانة هي حفظ الولد وتربيته ورعايته بما يحقق مصلحته الفضلى. "
-             "وقد أسندها المشرّع الجزائري في المادة 64 إلى الأم أولاً، ثم إلى أمها، ثم إلى خالتها، "
-             "ثم إلى الأب، مع مراعاة الأقدر على توفير الرعاية الكافية للصغير.")
+    body1 = ("الحضانة في معناها العام رعاية الطفل وتربيته وحفظه بما يحقق مصلحته. "
+             "يعرض هذا النص الفكرة بصيغة مبسطة، ويُرجع إلى النص الرسمي للقانون أو إلى مختص في الحالات الخاصة.")
     A.text(fid, "Answer body 1", body1, PAD, 252, 15, 400, "text/primary", w=312, align="right", lh=1.8)
 
-    body2 = ("وتسقط الحضانة إذا اختلت الشروط الواجب توفرها في الحاضن، ومنها: القدرة على التربية "
-             "والصيانة، والسلامة من الأمراض المعدية أو المعيقة، والحرص على عدم تفويت التعليم.")
+    body2 = ("الغاية من هذا القسم أن تفهم الأساسيات قبل أن تتواصل مع الجهة المختصة، "
+             "وأن تعرف أي أسئلة تطرح عليها.")
     A.text(fid, "Answer body 2", body2, PAD, 396, 15, 400, "text/primary", w=312, align="right", lh=1.8)
 
     # Highlight box with important caveat
     A.rect(fid, "Caveat box", 24, 536, 312, 82, fill="feedback/info-bg", stroke="feedback/info-border", sw=1, r=12)
     A.icon(fid, "Caveat icon", "info", 306, 552, 20, "feedback/info-icon")
-    A.text(fid, "Caveat text", "ملاحظة: تُراعى مصلحة المحضون دائمًا في جميع القرارات القضائية كمعيار أسمى، وتختص محكمة شؤون الأسرة بالفصل في النزاعات.",
+    A.text(fid, "Caveat text", "ملاحظة: هذا النص للتعريف والإرشاد الأولي، ولا يغني عن النص الرسمي للقانون أو عن استشارة مختص.",
            38, 548, 13, 400, "feedback/info-text", w=258, align="right", lh=1.5)
 
     # Next / Related link at bottom
     B.card(fid, "Related card", 24, 634, 312, 60, fill="surface/card", stroke="border/default", r=12)
-    B.rtext(fid, "Related label", "النص التالي: حقوق الزيارة وتنظيمها", 298, 644, 14, 600, "text/primary", lh=1.4)
-    B.rtext(fid, "Related sub", "المادة 67 وما يليها · 3 دقائق قراءة", 298, 666, 12, 400, "text/secondary", lh=1.4)
+    B.rtext(fid, "Related label", "النص التالي: تنظيم الزيارات", 298, 644, 14, 600, "text/primary", lh=1.4)
+    B.rtext(fid, "Related sub", "3 دقائق قراءة", 298, 666, 12, 400, "text/secondary", lh=1.4)
     A.icon(fid, "Related chevron", "chevl", 36, 656, 18, "action/primary")
 
     A.rect(fid, "Gesture bar", (W - 108) / 2, H - A.GESTURE_H + 8, 108, 4, fill="text/primary", r=2, opacity=0.6)
