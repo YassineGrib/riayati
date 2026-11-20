@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>رعايتي — الوثيقة التقنية</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  @page { size: A4; margin: 20mm 18mm 20mm; @bottom-center { content: counter(page); font-family: "thmanyah sans"; font-size: 9pt; color: #5b6657; } }
+  @page :first { margin: 0; @bottom-center { content: none; } }
+  body { font-size: 10.5pt; }
+  .cover { height: 297mm; padding: 38mm 24mm 24mm; display: flex; flex-direction: column; page-break-after: always; }
+  .cover img { height: 26mm; align-self: flex-start; margin-bottom: 12mm; }
+  .cover h1 { font-size: 50pt; color: var(--olive); line-height: 1.2; }
+  .cover .sub { font-size: 20pt; margin: 4mm 0 8mm; }
+  .cover .tag { font-size: 12pt; color: var(--muted); max-width: 120mm; }
+  .cover .meta { margin-top: auto; border-top: 1px solid var(--line); padding-top: 5mm; color: var(--muted); font-size: 10.5pt; }
+  h1 { font-size: 21pt; margin: 0 0 4mm; padding-top: 2mm; color: var(--ink); break-after: avoid; }
+  h1 .n { color: var(--olive); margin-inline-end: 10px; }
+  h2 { font-size: 13.5pt; margin: 6mm 0 2mm; color: var(--olive); break-after: avoid; }
+  p { margin-bottom: 3mm; }
+  ul { margin: 0 6mm 3mm 0; } li { margin-bottom: 1.4mm; }
+  section.sec { margin-bottom: 8mm; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.8pt; break-inside: auto; }
+  th { text-align: right; font-weight: 700; padding: 2mm 2.5mm; border-bottom: 1.5px solid var(--ink); }
+  td { padding: 2mm 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr { break-inside: avoid; }
+  td.c, th.c { direction: ltr; text-align: left; }
+  pre { direction: ltr; text-align: left; background: var(--soft); border-radius: 6px; padding: 3.5mm 4mm; font-family: Consolas, "Courier New", monospace; font-size: 8.8pt; line-height: 1.55; margin: 2mm 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+  .note { background: var(--soft); border-radius: 8px; padding: 3.5mm 4.5mm; margin: 2mm 0 4mm; }
+  .toc { list-style: none; margin: 8mm 0 0; padding: 0; columns: 2; column-gap: 12mm; }
+  .toc li { display: flex; gap: 4mm; padding: 2mm 0; border-bottom: 1px solid var(--line); font-size: 11.5pt; break-inside: avoid; }
+  .toc li b { color: var(--olive); width: 8mm; flex: none; }
+  .flow { display: flex; align-items: stretch; justify-content: space-between; gap: 3mm; margin: 4mm 0 5mm; }
+  .box { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 3.5mm; text-align: center; font-size: 9.6pt; }
+  .box b { display: block; font-size: 11pt; margin-bottom: 1mm; }
+  .box.g { background: var(--soft); border-color: var(--olive); }
+  .arrow { align-self: center; color: var(--olive); font-size: 14pt; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <img src="../../../01-brand/logo/riayati-symbol.svg" alt="">
+  <h1>رعايتي</h1>
+  <div class="sub display">الوثيقة التقنية</div>
+  <p class="tag">المعمارية، وواجهات البرمجة، والأمان، والتشغيل والنشر، لتطبيق رعايتي ولوحة التحكم والخادم.</p>
+  <div class="meta">مرجع العرض RIA-MVP-001 · الإصدار 1.0.0 · 20 نوفمبر 2026</div>
+</section>
+
+<section class="sec" style="break-after:page">
+  <h1>المحتويات</h1>
+  <ul class="toc">
+    <li><b>1</b>نظرة عامة على المعمارية</li>
+    <li><b>2</b>التقنيات والإصدارات</li>
+    <li><b>3</b>هيكل المشروع</li>
+    <li><b>4</b>الأدوار والصلاحيات</li>
+    <li><b>5</b>نموذج البيانات</li>
+    <li><b>6</b>واجهة API</li>
+    <li><b>7</b>البلاغات والأدلة</li>
+    <li><b>8</b>لوحة التحكم</li>
+    <li><b>9</b>تطبيق الهاتف</li>
+    <li><b>10</b>الأمان والخصوصية</li>
+    <li><b>11</b>الاختبارات</li>
+    <li><b>12</b>التشغيل المحلي</li>
+    <li><b>13</b>النشر على Hostinger</li>
+    <li><b>14</b>بناء التطبيق</li>
+    <li><b>15</b>الصيانة والنسخ الاحتياطي</li>
+    <li><b>16</b>المساعد القانوني: التصميم المعتمد</li>
+    <li><b>17</b>قيود معروفة</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">1</span>نظرة عامة على المعمارية</h1>
+  <p>تطبيق أندرويد (Flutter) يتصل بواجهة برمجية (Laravel) عبر HTTPS. نفس تطبيق Laravel يقدّم لوحة التحكم (Filament). البيانات في قاعدة SQLite، والأدلة في تخزين خاص خارج المجلد العام.</p>
+  <div class="flow">
+    <div class="box"><b>تطبيق الهاتف</b>Flutter · أندرويد</div>
+    <div class="arrow">⇄</div>
+    <div class="box g"><b>الخادم</b>Laravel 13 · PHP 8.3<br>Sanctum · mPDF</div>
+    <div class="arrow">⇄</div>
+    <div class="box"><b>التخزين</b>SQLite<br>ملفات الأدلة الخاصة</div>
+  </div>
+  <div class="flow">
+    <div class="box"><b>مسؤول</b>متصفح</div>
+    <div class="arrow">⇄</div>
+    <div class="box g"><b>لوحة التحكم</b>Filament 5 · <span class="en">/admin</span></div>
+    <div class="arrow">⇄</div>
+    <div class="box" style="border-style:dashed"><b>Gemini (لاحقًا)</b>سؤال المستخدم ومقتطفات القانون فقط</div>
+  </div>
+  <ul>
+    <li>مصادقة الهاتف برمز Sanctum (Bearer token) يُخزَّن في تخزين آمن على الجهاز.</li>
+    <li>الأدوار ثلاثة: أب، أم، مسؤول، وتُفرض بسياسات (Policies) في الخادم لا في التطبيق.</li>
+    <li>لا طابور دائم: مهمة مجدولة كل دقيقة تشغّل <code>queue:work --stop-when-empty</code> عند الحاجة (إعادة فهرسة النصوص القانونية لاحقًا).</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">2</span>التقنيات والإصدارات</h1>
+  <table>
+    <tr><th>الطبقة</th><th>التقنية</th><th class="c">الإصدار</th></tr>
+    <tr><td>تطبيق الهاتف</td><td>Flutter و Dart، إدارة الحالة Riverpod، التنقل go_router، الشبكة Dio، التخزين الآمن flutter_secure_storage</td><td class="c">Flutter 3.47 · Dart 3.13</td></tr>
+    <tr><td>الخادم</td><td>Laravel، PHP، مصادقة Sanctum، ملفات PDF عربية mPDF</td><td class="c">Laravel 13.43 · PHP 8.3</td></tr>
+    <tr><td>لوحة التحكم</td><td>Filament فوق Livewire، خط IBM Plex Sans Arabic</td><td class="c">Filament 5.11 · Livewire 4</td></tr>
+    <tr><td>قاعدة البيانات</td><td>SQLite (ملف واحد)، بلا pgvector</td><td class="c">SQLite 3</td></tr>
+    <tr><td>الاستضافة</td><td>Hostinger مشتركة بـ SSH، ونطاق riayati.site</td><td class="c">PHP 8.3 (مسار alt-php83)</td></tr>
+  </table>
+  <div class="note">الخط الخاص بالتطبيق (عائلة thmanyah) مدمج داخل التطبيق المترجم فقط. ممنوع بموجب ترخيصه نشره على موقع أو توزيع ملفاته، لذلك تستعمل اللوحة والموقع خط IBM Plex Sans Arabic.</div>
+</section>
+
+<section class="sec">
+  <h1><span class="n">3</span>هيكل المشروع</h1>
+<pre>00-admin/            عرض السعر والعقود
+01-brand/            الشعار، الألوان، الرموز (tokens)
+02-design/           تصاميم الواجهات (FigCraft + HTML)
+03-app/
+  backend/           Laravel: API + لوحة التحكم
+    app/Http/Controllers/Api    المتحكمات
+    app/Models, Policies        النماذج والسياسات
+    app/Filament                موارد ولوحات الإدارة
+    app/Services                روابط المرفقات، PDF، سجل النشاط
+    database/migrations         بنية الجداول
+    routes/api.php              مسارات الواجهة
+  mobile/            Flutter: lib/features/{auth,family,home,reports,
+                     calendar,library,centers,notifications,profile}
+docs/                الخطط وهذه الوثائق
+tools/               سكربت النشر وأدوات التصميم</pre>
+  <p>رموز التصميم (ألوان، مسافات، خطوط) تُولَّد من ملفات JSON في <code>01-brand/tokens</code> إلى ملف Dart واحد للتطبيق، فتبقى الواجهة مطابقة للتصميم.</p>
+</section>
+
+<section class="sec">
+  <h1><span class="n">4</span>الأدوار والصلاحيات</h1>
+  <table>
+    <tr><th>الدور</th><th>يستطيع</th><th>لا يستطيع</th></tr>
+    <tr><td>أب / أم</td><td>إرسال بلاغاته وقراءتها وتنزيل PDF، التقويم المشترك مع الطرف المربوط، المكتبة والمراكز المنشورة، تعديل ملفه</td><td>قراءة بلاغات الآخر، حذف بلاغ بعد إرساله، دخول اللوحة</td></tr>
+    <tr><td>مسؤول</td><td>قراءة كل البلاغات والأدلة، وسم «تمت المراجعة»، إدارة المحتوى والمراكز، عرض المستخدمين والزيارات وسجل النشاط</td><td>تعديل البلاغات أو حذفها، رؤية كلمات المرور</td></tr>
+  </table>
+  <ul>
+    <li>الربط بين الأب والأم بعائلة (family) ورمز دعوة قصير ينتهي بعد مدة؛ يتيح التقويم فقط.</li>
+    <li>غير المربوط يعمل بكل الميزات عدا التقويم (يردّ الخادم بالرمز <code>not_linked</code> وتعرض الواجهة زر الربط).</li>
+    <li>الدخول إلى <code>/admin</code> للمسؤول فقط (<code>canAccessPanel</code>)، وغيره يحصل على 403.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">5</span>نموذج البيانات</h1>
+  <table>
+    <tr><th class="c">الجدول</th><th>الغرض</th></tr>
+    <tr><td class="c">users</td><td>الحسابات: الاسم والبريد وكلمة المرور المشفّرة والدور والعائلة، والهاتف والولاية وعدد الأطفال، وقبول الشروط</td></tr>
+    <tr><td class="c">families, invite_codes</td><td>ربط الأب بالأم، ورموز الدعوة المؤقتة</td></tr>
+    <tr><td class="c">incident_reports</td><td>البلاغات: رقم مرجعي <span class="en">RIA-YYYY-NNNN</span>، الوصف، وقت الحادثة، الحالة (قيد المراجعة / تمت المراجعة)، من راجعه ومتى</td></tr>
+    <tr><td class="c">report_attachments</td><td>مرفقات البلاغ: النوع، الاسم، الحجم، المسار الخاص، وبصمة SHA-256</td></tr>
+    <tr><td class="c">visits</td><td>الزيارات: العائلة، المقترِح، التاريخ والوقت، الحالة (مقترحة / مقبولة / مرفوضة / مؤكدة) وأوقات كل مرحلة</td></tr>
+    <tr><td class="c">contents</td><td>المحتوى التعليمي: النوع (مقال، قانون، اجتهاد، دليل)، العنوان والمعرّف الفريد، النص، ومفتاح النشر</td></tr>
+    <tr><td class="c">support_centers</td><td>المراكز والهيئات: النوع، الولاية، العنوان، الهاتف، الخط الأخضر، ساعات العمل، ومفتاح النشر</td></tr>
+    <tr><td class="c">admin_activities</td><td>سجل نشاط المسؤولين: الإجراء، السجل المعني، العنوان IP، الوقت (لا يُعدَّل)</td></tr>
+    <tr><td class="c">personal_access_tokens, sessions, cache, jobs</td><td>جداول Laravel/Sanctum الداخلية</td></tr>
+  </table>
+</section>
+
+<section class="sec">
+  <h1><span class="n">6</span>واجهة API</h1>
+  <p>العنوان الأساسي <code>https://riayati.site/api</code>. كل المسارات تتطلب رأس <code>Authorization: Bearer ...</code> ما عدا ما ذُكر. الردود JSON وبرسائل عربية.</p>
+  <table>
+    <tr><th class="c">المسار</th><th>الوظيفة</th><th>حدّ الطلبات</th></tr>
+    <tr><td class="c">POST /register · /login</td><td>إنشاء حساب، دخول (بلا رمز)</td><td>6 / دقيقة</td></tr>
+    <tr><td class="c">POST /forgot-password · /reset-password</td><td>استعادة كلمة المرور (بلا رمز)</td><td>6 / دقيقة</td></tr>
+    <tr><td class="c">GET /me · PUT /me</td><td>قراءة الملف الشخصي وتعديله</td><td>6 / دقيقة للتعديل</td></tr>
+    <tr><td class="c">PUT /password · POST /logout</td><td>تغيير كلمة المرور، الخروج</td><td>6 / دقيقة</td></tr>
+    <tr><td class="c">GET /family · POST /family/invite · /family/link</td><td>حالة الربط، توليد رمز الدعوة، الربط بالرمز</td><td>10 / دقيقة للربط</td></tr>
+    <tr><td class="c">GET /visits · /visits/upcoming · /visits/{id}</td><td>قراءة الزيارات (للمربوطين)</td><td>—</td></tr>
+    <tr><td class="c">POST /visits · /visits/{id}/accept · /decline · /confirm</td><td>اقتراح الزيارة وقبولها ورفضها وتأكيدها</td><td>30 / دقيقة للاقتراح</td></tr>
+    <tr><td class="c">GET /reports · /reports/{id}</td><td>قائمة بلاغاتي وتفاصيل بلاغ</td><td>—</td></tr>
+    <tr><td class="c">POST /reports</td><td>إرسال بلاغ (multipart مع الملفات)</td><td>20 / دقيقة</td></tr>
+    <tr><td class="c">GET /reports/{id}/pdf</td><td>ملف PDF للبلاغ</td><td>20 / دقيقة</td></tr>
+    <tr><td class="c">GET /reports/{id}/attachments/{a}/link</td><td>رابط موقّع مؤقت لفتح المرفق</td><td>—</td></tr>
+    <tr><td class="c">GET /attachments/{a}/download</td><td>تنزيل المرفق برابط موقّع صالح 5 دقائق</td><td>60 / دقيقة</td></tr>
+    <tr><td class="c">GET /contents · /contents/{slug}</td><td>المحتوى المنشور مع بحث <code>q</code> وتصفية <code>type</code></td><td>—</td></tr>
+    <tr><td class="c">GET /centers · /centers/{id}</td><td>الجهات المنشورة مع <code>kind</code> و <code>wilaya</code> و <code>q</code></td><td>—</td></tr>
+  </table>
+  <p>لا يوجد مسار لتعديل البلاغ أو حذفه، عن قصد: البلاغ المرسل دليل.</p>
+</section>
+
+<section class="sec">
+  <h1><span class="n">7</span>البلاغات والأدلة</h1>
+  <ul>
+    <li>حتى 5 ملفات للبلاغ، وكل ملف حتى 30 ميغابايت (<code>config/riayati.php</code>).</li>
+    <li>الأنواع المسموحة تُفحص بمحتوى الملف الفعلي لا بامتداده: JPEG, PNG, WebP, MP4, MOV, PDF.</li>
+    <li>الصور والفيديو تُضغط على الهاتف قبل الرفع.</li>
+    <li>تُحفظ الملفات في <code>storage/app/private</code> خارج المجلد العام، وتُحسب لكل ملف بصمة SHA-256 لإثبات سلامته.</li>
+    <li>لا تُعطى مسارات التخزين أبدًا؛ تُفتح الملفات برابط موقّع ينتهي بعد 5 دقائق (<code>link_ttl_minutes</code>) للصاحب أو المسؤول فقط.</li>
+    <li>ملف PDF عربي يُولَّد في الخادم بـ mPDF ويضم رقم البلاغ والحالة والتواريخ ومقدّم البلاغ والوصف وجدول المرفقات وصورها.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">8</span>لوحة التحكم</h1>
+  <p>المسار <code>/admin</code>، بالعربية من اليمين لليسار، بألوان العلامة.</p>
+  <table>
+    <tr><th>القسم</th><th>الصلاحية</th><th>ملاحظات</th></tr>
+    <tr><td>الرئيسية</td><td>قراءة</td><td>أرقام، رسمان بيانيان (آخر 8 أسابيع، حسب الحالة)، آخر البلاغات</td></tr>
+    <tr><td>البلاغات</td><td>قراءة + «تمت المراجعة»</td><td>لا إنشاء ولا تعديل ولا حذف؛ تنزيل PDF؛ المرفقات بروابط مؤقتة</td></tr>
+    <tr><td>مكتبة المحتوى</td><td>إنشاء وتعديل وحذف</td><td>الحذف بتأكيد؛ النص يُعرض آمنًا (لا تنفيذ نصوص برمجية)</td></tr>
+    <tr><td>مراكز وهيئات</td><td>إنشاء وتعديل وحذف</td><td>58 ولاية، تبويب لكل نوع، مفتاح النشر</td></tr>
+    <tr><td>المستخدمون والعائلات</td><td>قراءة فقط</td><td>لا تُحمَّل كلمات المرور ولا رموز الدخول</td></tr>
+    <tr><td>الزيارات</td><td>قراءة فقط</td><td>تصفية بالحالة والتاريخ</td></tr>
+    <tr><td>سجل النشاط</td><td>قراءة فقط</td><td>مراجعة بلاغ، PDF، فتح مرفق، إنشاء/تعديل/حذف محتوى أو مركز</td></tr>
+  </table>
+</section>
+
+<section class="sec">
+  <h1><span class="n">9</span>تطبيق الهاتف</h1>
+  <ul>
+    <li>واجهة عربية من اليمين لليسار، فاتحة وداكنة، بخط thmanyah (Sans للواجهة، Serif Display للعناوين، Serif Text للنصوص الطويلة).</li>
+    <li>التنقل: شريط سفلي بخمس تبويبات (الرئيسية، التقارير، التقويم، المساعد، حسابي) وشاشات التفاصيل فوقه.</li>
+    <li>رموز التصميم مولّدة من <code>01-brand/tokens</code> إلى <code>tokens.g.dart</code>.</li>
+    <li>الرمز المميز (token) في <code>flutter_secure_storage</code>؛ عند 401 يُمسح ويُعاد المستخدم لشاشة الدخول.</li>
+    <li>ضغط المرفقات في الهاتف (صور <code>flutter_image_compress</code>، فيديو <code>video_compress</code>).</li>
+    <li>التاريخ والوقت بتنسيق موحّد بتوقيت الجهاز، وأرقام لاتينية في كل الشاشات.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">10</span>الأمان والخصوصية</h1>
+  <table>
+    <tr><th>الخطر</th><th>المعالجة</th></tr>
+    <tr><td>وصول غير مصرّح</td><td>سياسات لكل مورد، وكل والد يقرأ سجلاته فقط؛ اللوحة للمسؤول فقط</td></tr>
+    <tr><td>تسرّب الأدلة</td><td>تخزين خاص، روابط موقّعة قصيرة العمر، لا مسارات في الردود</td></tr>
+    <tr><td>تخمين كلمات المرور</td><td>حدّ 6 محاولات في الدقيقة، وكلمات المرور مشفّرة (bcrypt)</td></tr>
+    <tr><td>ملفات خبيثة</td><td>فحص النوع بالمحتوى، حدّ للحجم والعدد</td></tr>
+    <tr><td>تنفيذ نصوص من المحتوى</td><td>النص يُعرض كنص خالص في التطبيق وبتعقيم في اللوحة</td></tr>
+    <tr><td>إنكار الأفعال</td><td>سجل نشاط لا يُعدَّل</td></tr>
+    <tr><td>الاتصال</td><td>HTTPS إلزامي، ونسخة الإنتاج من التطبيق ترفض HTTP</td></tr>
+    <tr><td>إعدادات الخادم</td><td><code>APP_DEBUG=false</code>، ملف <code>.env</code> بصلاحية 600 وخارج المجلد العام (يرد 403 من الويب)</td></tr>
+    <tr><td>الذكاء الاصطناعي</td><td>لا يُرسل إلا السؤال ومقتطفات القانون؛ لا بلاغات ولا بيانات شخصية؛ تنبيه للمستخدم بعدم كتابة الأسماء</td></tr>
+  </table>
+</section>
+
+<section class="sec">
+  <h1><span class="n">11</span>الاختبارات</h1>
+  <table>
+    <tr><th>الجزء</th><th>العدد</th><th>الأمر</th></tr>
+    <tr><td>الخادم (PHPUnit)</td><td>135 اختبارًا ناجحًا</td><td class="c"><code>php artisan test</code></td></tr>
+    <tr><td>التطبيق (Flutter)</td><td>246 اختبارًا ناجحًا</td><td class="c"><code>flutter test</code></td></tr>
+    <tr><td>تحليل الكود</td><td>بلا ملاحظات</td><td class="c"><code>flutter analyze</code></td></tr>
+  </table>
+  <p>اختبار آلي يمنع أي ملف PHP يبدأ بعلامة BOM (سبب سابق لملف PDF فارغ). أُجريت أيضًا تجربة شاملة على محاكي أندرويد مع الخادم ولوحة التحكم، وتقريرها في <code>docs/E2E-REPORT-2026-11-20.md</code>.</p>
+</section>
+
+<section class="sec">
+  <h1><span class="n">12</span>التشغيل المحلي</h1>
+  <h2>الخادم</h2>
+<pre>cd 03-app/backend
+composer install
+cp .env.example .env &amp;&amp; php artisan key:generate
+php artisan migrate
+npm install &amp;&amp; npm run build      # قالب اللوحة
+powershell -File serve-lan.ps1       # خادم يصل إليه الهاتف (المنفذ 8765)</pre>
+  <h2>التطبيق</h2>
+<pre>cd 03-app/mobile
+flutter pub get
+flutter run --dart-define=API_URL=http://192.168.1.2:8765/api</pre>
+  <p>الاتصال بـ HTTP مسموح في نسخة التطوير فقط.</p>
+</section>
+
+<section class="sec">
+  <h1><span class="n">13</span>النشر على Hostinger</h1>
+  <ul>
+    <li>الشيفرة في <code>~/riayati-app</code> خارج المجلد العام، و <code>public_html</code> رابط رمزي إلى <code>riayati-app/public</code>.</li>
+    <li>أمر PHP في سطر الأوامر الافتراضي هو 7.4، لذا تُستعمل <code>/opt/alt/php83/usr/bin/php</code> دائمًا (الموقع نفسه يعمل بـ 8.3).</li>
+    <li>ملف <code>.env</code> للإنتاج وقاعدة SQLite والمرفقات لا تُستبدل أثناء التحديث.</li>
+  </ul>
+  <h2>تحديث الخادم</h2>
+<pre>powershell -File tools\deploy-hostinger.ps1</pre>
+  <p>يرفع الشيفرة، ويثبّت الاعتماديات <code>composer install --no-dev</code>، ويشغّل <code>migrate --force</code>، ويخزّن الإعدادات والمسارات مؤقتًا. يحتاج مفتاح SSH <code>~/.ssh/riayati_deploy</code> الذي أُضيف جزؤه العام في لوحة Hostinger، ويتحقق من بصمة الخادم قبل الاتصال.</p>
+  <h2>المهمة المجدولة (عند تفعيل المساعد)</h2>
+<pre>* * * * * cd /home/u514106451/riayati-app &amp;&amp; /opt/alt/php83/usr/bin/php artisan queue:work --stop-when-empty</pre>
+  <p>تفاصيل أوفى في <code>docs/DEPLOY-HOSTINGER.md</code>.</p>
+</section>
+
+<section class="sec">
+  <h1><span class="n">14</span>بناء التطبيق</h1>
+<pre>cd 03-app/mobile
+flutter build apk --release --dart-define=API_URL=https://riayati.site/api</pre>
+  <ul>
+    <li>الناتج: <code>build/app/outputs/flutter-apk/app-release.apk</code> (نحو 58 ميغابايت).</li>
+    <li>الاسم المعروض Riayati، ومعرّف الحزمة <code>dz.riayati.riayati</code>.</li>
+    <li>التوقيع حاليًا بمفتاح التطوير؛ للنشر على Google Play يلزم مفتاح توقيع رسمي وملف <code>key.properties</code>.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">15</span>الصيانة والنسخ الاحتياطي</h1>
+  <ul>
+    <li><b>ما يجب نسخه:</b> ملف <code>database/database.sqlite</code> ومجلد <code>storage/app/private</code> (الأدلة). فقدانهما فقدان للبلاغات.</li>
+    <li><b>تكرار مقترح:</b> يوميًا للقاعدة، وأسبوعيًا للمرفقات، مع نسخة خارج الاستضافة.</li>
+    <li><b>السجلات:</b> <code>storage/logs/laravel.log</code>، ومستوى التسجيل <code>warning</code> في الإنتاج.</li>
+    <li><b>تجديدات سنوية:</b> الاستضافة والنطاق riayati.site.</li>
+    <li><b>تحديث الاعتماديات:</b> <code>composer update</code> ثم الاختبارات قبل النشر؛ وكذلك <code>flutter pub upgrade</code>.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">16</span>المساعد القانوني: التصميم المعتمد</h1>
+  <p>لم يُبنَ بعد لأن النصوص القانونية لم تصل. القرارات المتفق عليها:</p>
+  <ul>
+    <li><b>الإجابة من المصادر المقدَّمة فقط</b>، مع ذكر المواد، وعبارة صريحة عند عدم كفاية المصادر.</li>
+    <li><b>RAG بسيط:</b> تُقسَّم النصوص إلى مقاطع، وتُخزَّن متجهاتها (embeddings) في جدول SQLite، ويُحسب التشابه (cosine) في PHP، بنموذج تضمين من Gemini يدعم العربية. لا pgvector.</li>
+    <li><b>إعادة الفهرسة التلقائية</b> بعد كل تعديل يجريه المسؤول على نص، عبر مهمة في الطابور تشغّلها المهمة المجدولة.</li>
+    <li><b>الخصوصية:</b> إلى Gemini يذهب السؤال ومقتطفات القانون فقط. يلزم مفتاح مدفوع عند التسليم، لأن المجاني قد يستعمل البيانات لتحسين المنتج.</li>
+  </ul>
+</section>
+
+<section class="sec">
+  <h1><span class="n">17</span>قيود معروفة</h1>
+  <ul>
+    <li>الإصدار لأندرويد وبالعربية فقط.</li>
+    <li>لا مزوّد بريد: رسائل «نسيت كلمة المرور» لا تُرسل بعد.</li>
+    <li>التوقيع بمفتاح تطوير إلى حين إنشاء مفتاح النشر الرسمي.</li>
+    <li>المحتوى والمراكز المتوفرة بيانات تجريبية غير منشورة.</li>
+    <li>نصوص الخصوصية وشروط الاستخدام في التطبيق مسودة تحتاج مراجعة قانونية.</li>
+    <li>لا نسخ احتياطي تلقائي بعد؛ يُعدّ مع المطوّر.</li>
+  </ul>
+</section>
+
+</body>
+</html>

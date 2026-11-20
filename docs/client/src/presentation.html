@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>رعايتي — دليل العرض والاستخدام</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  @page { size: 297mm 210mm; margin: 0; }
+  .page { width: 297mm; height: 210mm; padding: 15mm 18mm 13mm; page-break-after: always; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .page:last-child { page-break-after: auto; }
+  .top { display: flex; align-items: center; justify-content: space-between; height: 9mm; flex: none; }
+  .top .brand { display: flex; align-items: center; gap: 8px; font-size: 10pt; color: var(--muted); }
+  .top .brand img { height: 6.5mm; }
+  .top .no { font-size: 10pt; color: var(--muted); font-weight: 500; }
+  .body { flex: 1; display: flex; flex-direction: column; min-height: 0; padding-top: 6mm; }
+  h1 { font-size: 27pt; line-height: 1.25; margin-bottom: 3mm; color: var(--ink); }
+  .lead { font-size: 13pt; color: var(--muted); max-width: 190mm; margin-bottom: 6mm; }
+  .kicker { font-size: 10pt; font-weight: 500; color: var(--olive); margin-bottom: 2mm; }
+
+  /* cover */
+  .cover { padding: 0; flex-direction: row; background: #fff; }
+  .cover .text { flex: 1; padding: 28mm 22mm 20mm 10mm; display: flex; flex-direction: column; justify-content: center; }
+  .cover .art { width: 112mm; background: var(--soft); display: flex; align-items: center; justify-content: center; flex: none; }
+  .cover .art img { height: 150mm; border: 1px solid var(--line); border-radius: 14px; }
+  .cover .logo { height: 22mm; margin-bottom: 8mm; align-self: flex-start; }
+  .cover h1 { font-size: 54pt; margin-bottom: 4mm; color: var(--olive); }
+  .cover .sub { font-size: 17pt; margin-bottom: 14mm; }
+  .cover .meta { font-size: 10.5pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 4mm; }
+
+  /* blocks */
+  .cols { display: grid; gap: 8mm; }
+  .c2 { grid-template-columns: 1fr 1fr; } .c3 { grid-template-columns: repeat(3, 1fr); } .c4 { grid-template-columns: repeat(4, 1fr); }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 6mm 6mm; }
+  .card h3 { font-size: 13.5pt; font-weight: 700; margin-bottom: 2mm; }
+  .card p { font-size: 10.5pt; color: var(--muted); line-height: 1.7; }
+  .card .chip { margin-top: 3mm; }
+  .num { font-family: "thmanyah display", serif; font-weight: 700; font-size: 26pt; color: var(--olive); line-height: 1; margin-bottom: 3mm; }
+  .list { list-style: none; }
+  .list li { display: flex; gap: 3mm; margin-bottom: 3.2mm; font-size: 12pt; line-height: 1.65; }
+  .list li b { font-weight: 700; }
+  .steps { counter-reset: s; list-style: none; }
+  .steps li { counter-increment: s; display: flex; gap: 5mm; align-items: flex-start; padding: 3.2mm 0; border-bottom: 1px solid var(--line); font-size: 12.5pt; }
+  .steps li::before { content: counter(s); flex: none; width: 9mm; height: 9mm; border-radius: 50%; background: var(--olive); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 11pt; }
+  .steps li small { display: block; color: var(--muted); font-size: 10.5pt; }
+
+  /* screens */
+  .shots { display: flex; gap: 9mm; justify-content: center; align-items: flex-start; flex: 1; min-height: 0; }
+  .shot { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2.5mm; }
+  .shot img { display: block; border: 1px solid var(--line); border-radius: 12px; }
+  .phones .shot img { height: 112mm; }
+  .phones.four .shot img { height: 104mm; }
+  .shot .cap { font-size: 10.5pt; font-weight: 500; }
+  .shot .cap span { display: block; font-weight: 400; color: var(--muted); font-size: 9.5pt; }
+  .wide .shot img { width: 118mm; }
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 8mm; }
+  .grid4 .shot img { width: 100mm; }
+  table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+  th { text-align: right; font-weight: 700; padding: 3mm 3mm; border-bottom: 2px solid var(--ink); }
+  td { padding: 3mm 3mm; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .tint { background: var(--soft); border-radius: 10px; padding: 5mm 6mm; font-size: 11pt; }
+</style>
+</head>
+<body>
+
+<!-- 1 cover -->
+<section class="page cover">
+  <div class="text">
+    <img class="logo" src="../../../01-brand/logo/riayati-symbol.svg" alt="">
+    <h1>رعايتي</h1>
+    <div class="sub display">منصة رقمية لحماية الطفل في إطار الحضانة</div>
+    <div class="display" style="font-size:20pt;margin-bottom:14mm">دليل العرض والاستخدام</div>
+    <div class="meta">مرجع العرض RIA-MVP-001 · الإصدار 1.0 · 20 نوفمبر 2026<br>تطبيق أندرويد · لوحة تحكم · موقع riayati.site</div>
+  </div>
+  <div class="art"><img src="../../../02-design/figcraft/output/02-Auth_Welcome_Light.png" alt=""></div>
+</section>
+
+<!-- 2 idea -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">2</div></div>
+  <div class="body">
+    <div class="kicker">الفكرة</div>
+    <h1>مساحة آمنة تحفظ حق الطفل، ويطمئن إليها الوالدان</h1>
+    <p class="lead">بعد الطلاق يحتاج الوالدان إلى أداة هادئة تنظّم الزيارات وتوثّق ما يقع، وتعرّفهما بحقوقهما وبالجهات التي يلجآن إليها.</p>
+    <div class="cols c3" style="margin-top:4mm">
+      <div class="card"><div class="num">01</div><h3>توثيق منظّم</h3><p>بلاغ بالنص والصور والفيديو، مع ملف PDF مرتّب يصلح للأرشفة، ولا يُحذف بعد إرساله.</p></div>
+      <div class="card"><div class="num">02</div><h3>تنسيق بلا خلاف</h3><p>تقويم مشترك: اقتراح الزيارة وقبولها وتأكيدها في خطوات واضحة، ولا يطّلع أي طرف على بلاغات الآخر.</p></div>
+      <div class="card"><div class="num">03</div><h3>معرفة وإرشاد</h3><p>مكتبة تعليمية، ودليل محاكم ومراكز وهيئات متخصصة، ومساعد قانوني يُجيب من نصوص معتمدة فقط.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 included -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">3</div></div>
+  <div class="body">
+    <div class="kicker">ما تسلّمتِه</div>
+    <h1>أربعة مكوّنات، ثلاثة منها جاهزة اليوم</h1>
+    <div class="cols c2" style="margin-top:6mm">
+      <div class="card"><h3>تطبيق الهاتف</h3><p>أندرويد، بالعربية، بوضع فاتح وداكن. حساب أب وحساب أم، بلاغات، تقويم، مكتبة، مراكز.</p><span class="chip ok">جاهز للتجربة</span></div>
+      <div class="card"><h3>لوحة التحكم</h3><p>استقبال البلاغات ومراجعتها، وإدارة المحتوى والمراكز، وعرض المستخدمين والزيارات، وسجل نشاط.</p><span class="chip ok">جاهزة</span></div>
+      <div class="card"><h3>الخادم والموقع</h3><p>riayati.site باتصال مشفّر، وقاعدة بيانات وملفات خاصة بالأدلة.</p><span class="chip ok">جاهز</span></div>
+      <div class="card"><h3>المساعد القانوني الذكي</h3><p>الواجهة موجودة بعنوان «قريبًا». يبدأ العمل عليه حين تصلنا النصوص القانونية والاجتهادات المعتمدة.</p><span class="chip soon">ينتظر النصوص</span></div>
+    </div>
+    <p class="muted" style="margin-top:7mm;font-size:10.5pt">قادمان: صفحة الهبوط وفيديو الترويج.</p>
+  </div>
+</section>
+
+<!-- 4 tour: sign in & link -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">4</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 1</div>
+    <h1>الدخول وربط الأب بالأم</h1>
+    <div class="shots phones">
+      <div class="shot"><img src="../../../02-design/figcraft/output/02-Auth_Welcome_Light.png" alt=""><div class="cap">البداية<span>إنشاء حساب أو دخول</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/02-Auth_Login_Light.png" alt=""><div class="cap">تسجيل الدخول<span>بريد وكلمة مرور</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/03-Home_Link-co-parent_Light.png" alt=""><div class="cap">ربط الطرف الآخر<span>رمز دعوة لكل حساب</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 tour: home -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">5</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 2</div>
+    <h1>الرئيسية: كل شيء في شاشة واحدة</h1>
+    <div style="display:flex;gap:14mm;align-items:center;flex:1;min-height:0">
+      <div class="shot" style="flex:none"><img src="../../../02-design/figcraft/output/03-Home_Home_Light.png" alt="" style="height:128mm"></div>
+      <ul class="list" style="flex:1">
+        <li><span class="dot" style="margin-top:9px;flex:none"></span><span><b>الإبلاغ عن حادثة</b><br><span class="muted">البطاقة الحمراء في الأعلى، أسرع طريق لتوثيق ما يقع.</span></span></li>
+        <li><span class="dot" style="margin-top:9px;flex:none"></span><span><b>المحتوى التعليمي ومراكز وهيئات</b><br><span class="muted">اختصاران إلى المكتبة ودليل الجهات.</span></span></li>
+        <li><span class="dot" style="margin-top:9px;flex:none"></span><span><b>الزيارات القادمة</b><br><span class="muted">أقرب زيارة وحالتها، مع قبول أو رفض مباشر.</span></span></li>
+        <li><span class="dot" style="margin-top:9px;flex:none"></span><span><b>آخر البلاغات</b><br><span class="muted">آخر ما أرسلتِه، وحالته: قيد المراجعة أو تمت المراجعة.</span></span></li>
+        <li><span class="dot" style="margin-top:9px;flex:none"></span><span><b>الجرس</b><br><span class="muted">تنبيهات الزيارات والبلاغات التي تمت مراجعتها.</span></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 6 tour: reports -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">6</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 3</div>
+    <h1>البلاغ: من الكتابة إلى ملف PDF</h1>
+    <div class="shots phones">
+      <div class="shot"><img src="../../../02-design/figcraft/output/04-Reports_New-report_Light.png" alt=""><div class="cap">بلاغ جديد<span>نص وتاريخ وحتى 5 مرفقات</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/04-Reports_Report-summary_Light.png" alt=""><div class="cap">الملخص<span>رقم البلاغ وملف PDF</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/04-Reports_Reports-list_Light.png" alt=""><div class="cap">بلاغاتي<span>تصفية حسب الحالة</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 tour: calendar -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">7</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 4</div>
+    <h1>التقويم المشترك: اقتراح، قبول، تأكيد</h1>
+    <div class="shots phones">
+      <div class="shot"><img src="../../../02-design/figcraft/output/05-Calendar_Calendar_Light.png" alt=""><div class="cap">التقويم<span>الأيام التي فيها زيارات</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/05-Calendar_Propose-visit_Light.png" alt=""><div class="cap">اقتراح زيارة<span>تاريخ ووقت وملاحظة</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/05-Calendar_Visit-detail_Light.png" alt=""><div class="cap">مراحل الزيارة<span>من الاقتراح إلى التأكيد</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 tour: library & centers -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">8</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 5</div>
+    <h1>المعرفة والجهات المختصة</h1>
+    <div class="shots phones four">
+      <div class="shot"><img src="../../../02-design/figcraft/output/09-Library_Library-list_Light.png" alt=""><div class="cap">المحتوى التعليمي<span>بحث وتصفية بالنوع</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/09-Library_Library-detail_Light.png" alt=""><div class="cap">قراءة نص<span>خط مريح للنصوص الطويلة</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/10-Centers_Centers-list_Light.png" alt=""><div class="cap">مراكز وهيئات<span>حسب الولاية والنوع</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/10-Centers_Center-detail_Light.png" alt=""><div class="cap">تفاصيل الجهة<span>اتصال ونسخ الرقم</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 tour: profile & assistant -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">9</div></div>
+  <div class="body">
+    <div class="kicker">جولة في التطبيق · 6</div>
+    <h1>حسابي، والمساعد القادم</h1>
+    <div class="shots phones four">
+      <div class="shot"><img src="../../../02-design/figcraft/output/07-Profile_Profile_Light.png" alt=""><div class="cap">حسابي<span>الهاتف والولاية وعدد الأطفال</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/06-Assistant_Assistant-answer_Light.png" alt=""><div class="cap">المساعد: إجابة بمصادر<span>تصميم مرجعي، التفعيل لاحقًا</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/06-Assistant_Assistant-no-sources_Light.png" alt=""><div class="cap">عند غياب المصدر<span>يقول ذلك بدل أن يخمّن</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/06-Assistant_Assistant-empty_Light.png" alt=""><div class="cap">بداية المحادثة<span>مع تنبيه عدم كتابة الأسماء</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 admin 1 -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">10</div></div>
+  <div class="body">
+    <div class="kicker">لوحة التحكم · 1</div>
+    <h1>نظرة عامة وصندوق البلاغات</h1>
+    <div class="shots wide" style="align-items:center">
+      <div class="shot"><img src="../../../02-design/figcraft/output/11-Admin-Home_Dashboard-home_Light.png" alt=""><div class="cap">الرئيسية<span>أرقام سريعة ورسمان بيانيان وآخر البلاغات</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/08-Admin_Incident-inbox_Light.png" alt=""><div class="cap">البلاغات<span>جدول بالتصفية وزر المراجعة</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 admin 2 -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">11</div></div>
+  <div class="body">
+    <div class="kicker">لوحة التحكم · 2</div>
+    <h1>قراءة البلاغ ونشر المحتوى</h1>
+    <div class="shots wide" style="align-items:center">
+      <div class="shot"><img src="../../../02-design/figcraft/output/08-Admin_Incident-detail_Light.png" alt=""><div class="cap">تفاصيل البلاغ<span>الأدلة بروابط مؤقتة، وتنزيل PDF</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/12-Admin-Content_Content-edit_Light.png" alt=""><div class="cap">إضافة محتوى<span>مفتاح «منشور» يتحكم بما يراه الوالدان</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 admin 3 -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">12</div></div>
+  <div class="body">
+    <div class="kicker">لوحة التحكم · 3</div>
+    <h1>الجهات والحسابات والزيارات والسجل</h1>
+    <div class="grid4">
+      <div class="shot"><img src="../../../02-design/figcraft/output/13-Admin-Centers_Centers-list_Light.png" alt=""><div class="cap">مراكز وهيئات</div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/14-Admin-Users_Users-table_Light.png" alt=""><div class="cap">المستخدمون والعائلات<span>عرض فقط، بلا كلمات مرور</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/15-Admin-Visits_Visits-table_Light.png" alt=""><div class="cap">الزيارات<span>عرض فقط</span></div></div>
+      <div class="shot"><img src="../../../02-design/figcraft/output/16-Admin-Activity-log_Activity-log-table_Light.png" alt=""><div class="cap">سجل النشاط<span>من فعل ماذا ومتى، لا يُعدَّل</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 demo script -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">13</div></div>
+  <div class="body">
+    <div class="kicker">كيف تعرضين النظام</div>
+    <h1>سيناريو عرض من خمس خطوات</h1>
+    <ol class="steps" style="margin-top:2mm">
+      <li><span>الأب يرسل بلاغًا فيه صورة<small>الرئيسية ← الإبلاغ عن حادثة ← إرسال ← فتح ملف PDF</small></span></li>
+      <li><span>الأب يقترح زيارة<small>التقويم ← اقتراح زيارة ← اختيار التاريخ والوقت</small></span></li>
+      <li><span>الأم تقبل الزيارة، ثم يؤكّدها من اقترحها<small>الجرس يعرض التنبيهات في كل طرف</small></span></li>
+      <li><span>المسؤول يراجع البلاغ من اللوحة<small>البلاغات ← فتح البلاغ ← تمت المراجعة، ثم سجل النشاط</small></span></li>
+      <li><span>نشر مقال جديد يظهر فورًا في التطبيق<small>مكتبة المحتوى ← إضافة محتوى ← منشور</small></span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 14 install & accounts -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">14</div></div>
+  <div class="body">
+    <div class="kicker">البدء</div>
+    <h1>التثبيت والحسابات</h1>
+    <div class="cols c2" style="margin-top:4mm">
+      <div>
+        <h3 class="display" style="font-size:15pt;margin-bottom:3mm">تثبيت التطبيق</h3>
+        <ol class="steps">
+          <li><span>انقلي riayati-release.apk إلى الهاتف</span></li>
+          <li><span>افتحيه واسمحي بالتثبيت من هذا المصدر</span></li>
+          <li><span>افتحي «Riayati» وسجّلي الدخول</span></li>
+        </ol>
+      </div>
+      <div>
+        <h3 class="display" style="font-size:15pt;margin-bottom:3mm">الروابط والحسابات</h3>
+        <table>
+          <tr><td>الموقع</td><td class="en">riayati.site</td></tr>
+          <tr><td>لوحة التحكم</td><td class="en">riayati.site/admin</td></tr>
+          <tr><td>الحسابات التجريبية</td><td>أب · أم · مسؤول</td></tr>
+        </table>
+        <div class="tint" style="margin-top:5mm">بريد وكلمة مرور كل حساب في بطاقة منفصلة تُسلَّم لك مباشرة. غيّريها أو احذفيها قبل فتح المنصة للعائلات.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 privacy -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">15</div></div>
+  <div class="body">
+    <div class="kicker">الخصوصية والأمان</div>
+    <h1>الأدلة محفوظة، والبيانات لا تخرج</h1>
+    <div class="cols c2" style="margin-top:4mm">
+      <div class="card"><h3>كل والد يرى بياناته فقط</h3><p>الربط بين الأب والأم يتيح التقويم المشترك فقط، ولا يطّلع أحدهما على بلاغات الآخر.</p></div>
+      <div class="card"><h3>أدلة لا تُحذف</h3><p>لا يمكن حذف البلاغ بعد إرساله. المرفقات في مساحة خاصة وتُفتح بروابط تنتهي بعد 5 دقائق.</p></div>
+      <div class="card"><h3>كل وصول مسجَّل</h3><p>مراجعة البلاغ وتنزيل PDF وفتح المرفق وتعديل المحتوى كلها تُسجَّل باسم المسؤول ووقتها.</p></div>
+      <div class="card"><h3>الذكاء الاصطناعي بلا بيانات شخصية</h3><p>عند تفعيله يتلقى سؤال المستخدم ومقتطفات القانون فقط، لا البلاغات ولا الأسماء.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 next -->
+<section class="page">
+  <div class="top"><div class="brand"><img src="../../../01-brand/logo/riayati-symbol.svg" alt="">رعايتي</div><div class="no">16</div></div>
+  <div class="body">
+    <div class="kicker">المرحلة القادمة</div>
+    <h1>ما نحتاجه منك لنكمل</h1>
+    <table style="margin-top:2mm">
+      <tr><th style="width:28%">البند</th><th>المطلوب</th></tr>
+      <tr><td>المساعد القانوني</td><td>النصوص القانونية والاجتهادات القضائية المعتمدة</td></tr>
+      <tr><td>المحتوى والمراكز</td><td>قائمة جهات وأرقام صحيحة، ونصوص تثقيفية موثّقة (الموجود الآن تجريبي وغير منشور)</td></tr>
+      <tr><td>الخصوصية والشروط</td><td>مراجعة قانونية للنص النهائي (الموجود مسودة)</td></tr>
+      <tr><td>البريد الإلكتروني</td><td>بريد للمشروع لإرسال رسائل «نسيت كلمة المرور»</td></tr>
+      <tr><td>متجر Google Play</td><td>حساب مطوّر ومفتاح توقيع باسم المشروع</td></tr>
+      <tr><td>صفحة الهبوط والفيديو</td><td>الموافقة على الاتجاه البصري والنص</td></tr>
+    </table>
+  </div>
+</section>
+
+</body>
+</html>

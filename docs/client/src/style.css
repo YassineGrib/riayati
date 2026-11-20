@@ -1,0 +1,32 @@
+/* Riayati documents: flat, minimal, right-to-left.
+   Fonts are loaded from the local brand folder only to render the PDFs. Never publish this folder with the fonts. */
+@font-face { font-family: "thmanyah sans"; font-weight: 300; src: url("../../../01-brand/fonts/thmanyah/thmanyahsans/woff2/thmanyahsans-Light.woff2") format("woff2"); }
+@font-face { font-family: "thmanyah sans"; font-weight: 400; src: url("../../../01-brand/fonts/thmanyah/thmanyahsans/woff2/thmanyahsans-Regular.woff2") format("woff2"); }
+@font-face { font-family: "thmanyah sans"; font-weight: 500; src: url("../../../01-brand/fonts/thmanyah/thmanyahsans/woff2/thmanyahsans-Medium.woff2") format("woff2"); }
+@font-face { font-family: "thmanyah sans"; font-weight: 700; src: url("../../../01-brand/fonts/thmanyah/thmanyahsans/woff2/thmanyahsans-Bold.woff2") format("woff2"); }
+@font-face { font-family: "thmanyah display"; font-weight: 500; src: url("../../../01-brand/fonts/thmanyah/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Medium.woff2") format("woff2"); }
+@font-face { font-family: "thmanyah display"; font-weight: 700; src: url("../../../01-brand/fonts/thmanyah/thmanyahserifdisplay/woff2/thmanyahserifdisplay-Bold.woff2") format("woff2"); }
+
+:root {
+  --ink: #1b2418;
+  --muted: #5b6657;
+  --line: #d9e0d0;
+  --soft: #f3f8ec;
+  --olive: #406a05;
+  --lime: #c5e76c;
+  --sos: #dc2626;
+  --warn: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { direction: rtl; }
+body { font-family: "thmanyah sans", sans-serif; font-weight: 400; color: var(--ink); background: #fff; line-height: 1.7; font-size: 11pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+h1, h2, .display { font-family: "thmanyah display", serif; font-weight: 700; letter-spacing: 0; }
+.en { direction: ltr; unicode-bidi: isolate; display: inline-block; }
+code, .code { direction: ltr; unicode-bidi: isolate; font-family: Consolas, "Courier New", monospace; font-size: 0.86em; }
+code { background: var(--soft); padding: 1px 6px; border-radius: 4px; }
+.muted { color: var(--muted); }
+.chip { display: inline-block; font-size: 9pt; font-weight: 500; padding: 1px 10px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); }
+.chip.ok { color: var(--olive); border-color: var(--olive); }
+.chip.soon { color: var(--warn); border-color: var(--warn); }
+.rule { height: 1px; background: var(--line); border: 0; margin: 10px 0; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--olive); margin-inline-end: 8px; }
