@@ -150,7 +150,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                 final readingTime = '${item.readingTimeMinutes} دقائق قراءة';
                 // Isolated parts keep the date and reading-time digits apart.
                 final metaText = dateText.isNotEmpty
-                    ? '⁧$dateText⁩  ·  ⁧$readingTime⁩'
+                    ? '\u2067$dateText\u2069  ·  \u2067$readingTime\u2069'
                     : readingTime;
 
                 return SingleChildScrollView(

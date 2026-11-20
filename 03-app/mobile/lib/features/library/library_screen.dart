@@ -298,7 +298,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
     // Each part is isolated so digits of the date and the reading time do not
     // merge into one run in right-to-left text.
     final metaText = dateText.isNotEmpty
-        ? '⁧$dateText⁩  ·  ⁧$readingTime⁩'
+        ? '\u2067$dateText\u2069  ·  \u2067$readingTime\u2069'
         : readingTime;
 
     return RCard(
