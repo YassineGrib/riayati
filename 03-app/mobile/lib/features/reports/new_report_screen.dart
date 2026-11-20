@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart' hide PickedFile;
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
@@ -13,7 +13,6 @@ import '../../core/widgets/r_card.dart';
 import 'attachment_compressor.dart';
 import 'file_rules.dart';
 import 'report_repository.dart';
-import 'report_summary_screen.dart';
 
 class AttachmentEntry {
   AttachmentEntry({
@@ -86,21 +85,10 @@ class _NewReportScreenState extends ConsumerState<NewReportScreen> {
   }
 
   String _formatIncidentDate(DateTime dt) {
-    try {
-      return DateFormat('d MMMM yyyy · HH:mm', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} · ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-    }
+    return formatDateTime(dt);
   }
 
-  String _formatFileSize(int bytes) {
-    if (bytes >= 1024 * 1024) {
-      final mb = bytes / (1024 * 1024);
-      return '${mb.toStringAsFixed(1)} MB';
-    }
-    final kb = bytes / 1024;
-    return '${kb.toStringAsFixed(0)} KB';
-  }
+  String _formatFileSize(int bytes) => formatFileSize(bytes);
 
   Future<void> _selectDateTime() async {
     final now = DateTime.now();
@@ -420,13 +408,11 @@ class _NewReportScreenState extends ConsumerState<NewReportScreen> {
         },
       );
 
+      ref.read(reportsRevisionProvider.notifier).bump();
       if (!mounted) return;
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute<void>(
-          builder: (_) => ReportSummaryScreen(report),
-        ),
-      );
+      // A router route (not a raw Navigator one), so "back to home" can leave it.
+      context.pushReplacement('/reports/summary', extra: report);
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -763,7 +749,7 @@ class _NewReportScreenState extends ConsumerState<NewReportScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    file.name,
+                                    isolateLtr(file.name),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: RType.label.copyWith(

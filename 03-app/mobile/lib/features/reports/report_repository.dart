@@ -8,6 +8,18 @@ import '../../core/api/api_error.dart';
 import 'file_rules.dart';
 import 'report.dart';
 
+/// Counts how many times the user's reports changed (a report was sent), so
+/// Home and the reports list reload without waiting for a screen to close.
+class ReportsRevision extends Notifier<int> {
+  @override
+  int build() => 0;
+  void bump() => state++;
+}
+
+final reportsRevisionProvider = NotifierProvider<ReportsRevision, int>(
+  ReportsRevision.new,
+);
+
 final reportRepositoryProvider = Provider<ReportRepository>(
   (ref) => ReportRepository(ref.watch(apiClientProvider)),
 );

@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -53,14 +53,14 @@ void main() {
       repo,
     );
     for (var i = 0; i < 2; i++) {
-      await tester.ensureVisible(find.text('evidence.pdf'));
-      await tester.tap(find.text('evidence.pdf'));
+      await tester.ensureVisible(find.textContaining('evidence.pdf'));
+      await tester.tap(find.textContaining('evidence.pdf'));
       await tester.pumpAndSettle();
     }
     expect(repo.links, [(7, 9), (7, 9)]);
     expect(opened.map((uri) => uri.query), ['signature=1', 'signature=2']);
     repo.linkError = const ApiError(message: 'تعذر فتح المرفق');
-    await tester.tap(find.text('evidence.pdf'));
+    await tester.tap(find.textContaining('evidence.pdf'));
     await tester.pumpAndSettle();
     expect(find.text('تعذر فتح المرفق'), findsOneWidget);
   });
@@ -70,8 +70,8 @@ void main() {
   ) async {
     final repo = FakeReports();
     await pumpReports(tester, const ReportDetailScreen(7), repo);
-    await tester.ensureVisible(find.text('evidence.pdf'));
-    await tester.tap(find.text('evidence.pdf'));
+    await tester.ensureVisible(find.textContaining('evidence.pdf'));
+    await tester.tap(find.textContaining('evidence.pdf'));
     await tester.pumpAndSettle();
     expect(repo.links.length, 1);
     expect(find.text('فتح الروابط غير متاح حاليًا.'), findsOneWidget);

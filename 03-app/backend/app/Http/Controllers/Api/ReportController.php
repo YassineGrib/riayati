@@ -29,7 +29,10 @@ class ReportController extends Controller
             ->latest()
             ->get();
 
-        return response()->json(['reports' => $reports->map(fn ($r) => $r->setRelation('attachments', collect())->toApi(false) + ['attachments_count' => $r->attachments_count])]);
+        return response()->json(['reports' => $reports->map(fn ($r) => array_merge(
+            $r->setRelation('attachments', collect())->toApi(false),
+            ['attachments_count' => $r->attachments_count],
+        ))]);
     }
 
     public function store(Request $request): JsonResponse

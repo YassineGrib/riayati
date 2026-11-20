@@ -53,11 +53,27 @@ class AuthController extends Notifier<AuthState> {
     return const AuthState.unknown();
   }
 
+  Future<bool> _readSkip() async {
+    try {
+      return await ref.read(linkSkipStoreProvider).read();
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _writeSkip(bool skipped) async {
+    try {
+      await ref.read(linkSkipStoreProvider).write(skipped);
+    } catch (_) {}
+  }
+
   Future<void> signIn({required String email, required String password}) async {
+    final user = await ref
+        .read(authRepositoryProvider)
+        .signIn(email: email, password: password);
     state = AuthState.signedIn(
-      await ref
-          .read(authRepositoryProvider)
-          .signIn(email: email, password: password),
+      user,
+      linkSkipped: !user.linked && await _readSkip(),
     );
   }
 
@@ -85,6 +101,7 @@ class AuthController extends Notifier<AuthState> {
     try {
       await ref.read(authRepositoryProvider).signOut();
     } finally {
+      _writeSkip(false); // best effort; never blocks signing out
       state = const AuthState.signedOut();
     }
   }
@@ -120,16 +137,16 @@ class AuthController extends Notifier<AuthState> {
       state = const AuthState.signedOut();
       return;
     }
-    final skipped = state.linkSkipped;
-    state = AuthState.signedIn(
-      await ref.read(authRepositoryProvider).me(),
-      linkSkipped: skipped,
-    );
+    final user = await ref.read(authRepositoryProvider).me();
+    final skipped = state.linkSkipped || (!user.linked && await _readSkip());
+    state = AuthState.signedIn(user, linkSkipped: skipped);
   }
 
   /// Lets an unlinked parent into the app; the calendar keeps asking to link.
   void skipLink() {
     final user = state.user;
-    if (user != null) state = AuthState.signedIn(user, linkSkipped: true);
+    if (user == null) return;
+    state = AuthState.signedIn(user, linkSkipped: true);
+    _writeSkip(true);
   }
 }

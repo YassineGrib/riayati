@@ -1,26 +1,72 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
+
+import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
 import '../../core/widgets/r_card.dart';
 import '../../core/widgets/status_chip.dart';
 import 'report.dart';
+import 'report_repository.dart';
 
-class ReportSummaryScreen extends StatelessWidget {
-  const ReportSummaryScreen(this.report, {super.key});
+class ReportSummaryScreen extends ConsumerStatefulWidget {
+  const ReportSummaryScreen(this.report, {super.key, this.onOpenPdf});
 
   final Report report;
 
-  String _formatIncidentDate(DateTime dt) {
+  /// Test seam; defaults to opening the downloaded file with OpenFilex.
+  final Future<void> Function(File)? onOpenPdf;
+
+  @override
+  ConsumerState<ReportSummaryScreen> createState() =>
+      _ReportSummaryScreenState();
+}
+
+class _ReportSummaryScreenState extends ConsumerState<ReportSummaryScreen> {
+  Report get report => widget.report;
+  bool _pdfLoading = false;
+  String? _pdfError;
+
+  Future<void> _openPdf() async {
+    if (_pdfLoading) return;
+    setState(() {
+      _pdfLoading = true;
+      _pdfError = null;
+    });
     try {
-      return DateFormat('d MMMM yyyy · HH:mm', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} · ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+      final file = await ref.read(reportRepositoryProvider).pdf(report.id);
+      if (!mounted) return;
+      if (widget.onOpenPdf != null) {
+        await widget.onOpenPdf!(file);
+      } else {
+        final result = await OpenFilex.open(file.path);
+        if (result.type != ResultType.done) {
+          throw const ApiError(
+            message:
+                'تعذر فتح PDF. تأكد من وجود تطبيق لقراءة PDF وحاول مجددًا.',
+          );
+        }
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(
+          () => _pdfError = error is ApiError
+              ? error.message
+              : 'تعذر تحميل PDF. حاول مجددًا.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _pdfLoading = false);
     }
   }
+
+  String _formatIncidentDate(DateTime dt) => formatDateTime(dt);
 
   String _attachmentsSummary(Report report) {
     final count = report.attachmentsCount > 0
@@ -241,6 +287,7 @@ class ReportSummaryScreen extends StatelessWidget {
 
             // PDF Card
             RCard(
+              onTap: _pdfLoading ? null : _openPdf,
               child: Row(
                 children: [
                   Container(
@@ -269,14 +316,31 @@ class ReportSummaryScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'ملف PDF جاهز للأرشفة والمشاركة',
+                          _pdfError ??
+                              (_pdfLoading
+                                  ? 'جارٍ تجهيز الملف…'
+                                  : 'اضغط لفتح ملف PDF للأرشفة والمشاركة'),
                           style: RType.caption.copyWith(
-                            color: c.textSecondary,
+                            color: _pdfError != null
+                                ? c.feedbackErrorText
+                                : c.textSecondary,
                           ),
                         ),
                       ],
                     ),
                   ),
+                  if (_pdfLoading)
+                    const SizedBox(
+                      width: RSpace.s5,
+                      height: RSpace.s5,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  else
+                    Icon(
+                      Icons.download_rounded,
+                      size: RSpace.s5,
+                      color: c.textSecondary,
+                    ),
                 ],
               ),
             ),

@@ -53,6 +53,23 @@ class ReportTest extends TestCase
         $this->assertArrayNotHasKey('path', $response->json('report.attachments.0'));
     }
 
+    public function test_the_list_reports_the_real_attachment_count(): void
+    {
+        $mother = User::factory()->mother()->create();
+        $this->submit($mother, $this->payload([
+            'files' => [UploadedFile::fake()->image('a.jpg', 100, 100), UploadedFile::fake()->image('b.jpg', 100, 100)],
+        ]));
+        $this->submit($mother, $this->payload());
+
+        $counts = collect($this->actingAs($mother, 'sanctum')->getJson('/api/reports')->json('reports'))
+            ->pluck('attachments_count', 'reference')
+            ->sort()
+            ->values()
+            ->all();
+
+        $this->assertSame([0, 2], $counts);
+    }
+
     public function test_references_count_up(): void
     {
         $father = User::factory()->father()->create();

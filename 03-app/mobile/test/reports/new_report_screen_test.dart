@@ -13,6 +13,7 @@ import 'package:riayati/features/reports/file_rules.dart';
 import 'package:riayati/features/reports/new_report_screen.dart';
 import 'package:riayati/features/reports/report.dart';
 import 'package:riayati/features/reports/report_repository.dart';
+import 'package:riayati/features/reports/report_summary_screen.dart';
 
 const longArabic = 'وصف طويل للواقعة مع نصوص تفصيلية باللغة العربية للاختبار ';
 
@@ -86,6 +87,10 @@ Future<void> pumpNewReport(
           compressor: compressor,
           initialIncidentAt: initialIncidentAt,
         ),
+      ),
+      GoRoute(
+        path: '/reports/summary',
+        builder: (_, state) => ReportSummaryScreen(state.extra! as Report),
       ),
       GoRoute(
         path: '/home',
@@ -209,7 +214,7 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('pick-image-button')));
     await tester.pumpAndSettle();
-    expect(find.text('دليل.png'), findsOneWidget);
+    expect(find.textContaining('دليل.png'), findsOneWidget);
     expect(find.text('1 من 5'), findsOneWidget);
 
     // Remove the file
@@ -217,7 +222,7 @@ void main() {
     await tester.tap(removeBtn);
     await tester.pumpAndSettle();
 
-    expect(find.text('دليل.png'), findsNothing);
+    expect(find.textContaining('دليل.png'), findsNothing);
     expect(find.text('0 من 5'), findsOneWidget);
   });
 
@@ -343,9 +348,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(fakeCompressor.compressCalls, 1);
-    expect(find.text('large_photo.jpg'), findsOneWidget);
+    expect(find.textContaining('large_photo.jpg'), findsOneWidget);
     // Shows compressed size (5.0 MB)
-    expect(find.text('5.0 MB'), findsOneWidget);
+    expect(find.textContaining('5.0 MB'), findsOneWidget);
 
     await tester.tap(submitButton());
     await tester.pumpAndSettle();
@@ -389,7 +394,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 600));
     await tester.pumpAndSettle();
 
-    expect(find.text('clip.mp4'), findsNothing);
+    expect(find.textContaining('clip.mp4'), findsNothing);
     expect(find.textContaining('جارٍ الضغط…'), findsNothing);
   });
 
@@ -413,7 +418,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('تعذر الضغط، سيُرفع الملف الأصلي'), findsOneWidget);
-    expect(find.text('fail_photo.jpg'), findsOneWidget);
+    expect(find.textContaining('fail_photo.jpg'), findsOneWidget);
   });
 
   testWidgets('FileRules applies to COMPRESSED size', (tester) async {
@@ -437,7 +442,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Accepted because compressed size (14MB) is under 30MB
-    expect(find.text('huge.jpg'), findsOneWidget);
+    expect(find.textContaining('huge.jpg'), findsOneWidget);
     expect(find.text('1 من 5'), findsOneWidget);
     expect(find.text('حجم الملف يتجاوز الحد الأقصى (30 ميغابايت).'), findsNothing);
   });

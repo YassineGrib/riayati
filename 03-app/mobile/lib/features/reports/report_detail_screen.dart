@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 import 'package:open_filex/open_filex.dart';
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
@@ -253,9 +253,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                             ),
                           ),
                           Text(
-                            (DateFormat('d MMMM yyyy · HH:mm', 'ar')
-                                  ..useNativeDigits = false)
-                                .format(report.incidentAt.toLocal()),
+                            formatDateTime(report.incidentAt),
                             style: RType.label.copyWith(
                               color: context.c.textPrimary,
                             ),
@@ -384,7 +382,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
               const SizedBox(width: RSpace.s3),
               Expanded(
                 child: Text(
-                  attachment.filename,
+                  isolateLtr(attachment.filename),
                   textAlign: TextAlign.start,
                   style: RType.label,
                   maxLines: 2,

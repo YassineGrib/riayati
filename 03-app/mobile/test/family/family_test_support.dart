@@ -64,6 +64,14 @@ class FamilyTestApi extends ApiClient {
   }
 }
 
+class MemoryLinkSkipStore implements LinkSkipStore {
+  bool skipped = false;
+  @override
+  Future<bool> read() async => skipped;
+  @override
+  Future<void> write(bool value) async => skipped = value;
+}
+
 Future<ProviderContainer> pumpFamilyApp(
   WidgetTester tester,
   FamilyTestApi api, {
@@ -79,6 +87,7 @@ Future<ProviderContainer> pumpFamilyApp(
       tokenStoreProvider.overrideWithValue(
         MemoryTokenStore()..token = 'session',
       ),
+      linkSkipStoreProvider.overrideWithValue(MemoryLinkSkipStore()),
     ],
   );
   addTearDown(container.dispose);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
@@ -48,7 +48,13 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => AppScaffold(
+  Widget build(BuildContext context) {
+    // A report was just sent: reload so it appears without leaving the tab.
+    ref.listen<int>(reportsRevisionProvider, (_, _) => _load());
+    return _scaffold(context);
+  }
+
+  Widget _scaffold(BuildContext context) => AppScaffold(
     title: 'بلاغاتي',
     body: Column(
       children: [
@@ -232,10 +238,7 @@ class _ReportCard extends StatelessWidget {
         ),
         const SizedBox(height: RSpace.s2),
         Text(
-          (DateFormat(
-            'd MMMM yyyy · HH:mm',
-            'ar',
-          )..useNativeDigits = false).format(report.incidentAt.toLocal()),
+          formatDateTime(report.incidentAt),
           style: RType.caption.copyWith(color: context.c.textSecondary),
         ),
         const SizedBox(height: RSpace.s2),

@@ -23,6 +23,8 @@ import '../features/profile/privacy_screen.dart';
 import '../features/profile/profile_screen.dart';
 import '../features/profile/terms_screen.dart';
 import '../features/reports/new_report_screen.dart';
+import '../features/reports/report.dart';
+import '../features/reports/report_summary_screen.dart';
 import '../features/reports/report_detail_screen.dart';
 import '../features/reports/reports_screen.dart';
 import 'shell.dart';
@@ -109,6 +111,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const ChangePasswordScreen(),
       ),
       GoRoute(path: '/reports/new', builder: (_, _) => NewReportScreen()),
+      // Before '/reports/:id' so "summary" is not read as an id.
+      GoRoute(
+        path: '/reports/summary',
+        redirect: (_, state) => state.extra is Report ? null : '/reports',
+        builder: (_, state) => ReportSummaryScreen(state.extra! as Report),
+      ),
       GoRoute(
         path: '/reports/:id',
         builder: (_, state) =>

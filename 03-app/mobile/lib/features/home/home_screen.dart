@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_button.dart';
@@ -46,6 +47,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  /// Opens the new-report form; when it closes (sent or not) the list is reloaded
+  /// so a just-sent report shows up without restarting the app.
+  Future<void> _newReport() async {
+    await context.push('/reports/new');
+    if (mounted) _fetchReports();
+  }
+
   String _formatToday() {
     try {
       return DateFormat('EEEE d MMMM', 'ar').format(DateTime.now());
@@ -65,11 +73,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   String _formatIncidentDate(DateTime dt) {
-    try {
-      return DateFormat('d MMMM yyyy · HH:mm', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} · ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-    }
+    return formatDateTime(dt);
   }
 
   Future<void> _respondVisit(int id, bool accept) async {
@@ -94,6 +98,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final c = context.c;
+    // A report was just sent from the new-report flow: reload the latest list.
+    ref.listen<int>(reportsRevisionProvider, (_, _) => _fetchReports());
     final authState = ref.watch(authControllerProvider);
     final userName = authState.user?.name;
     final greeting = userName != null && userName.isNotEmpty
@@ -222,9 +228,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 borderRadius: BorderRadius.circular(RRadius.x2xl),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
-                  onTap: () {
-                    context.push('/reports/new');
-                  },
+                  onTap: _newReport,
                   child: Stack(
                     children: [
                       Positioned.fill(
@@ -681,7 +685,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(width: RSpace.s2),
               InkWell(
-                onTap: () => context.push('/reports/new'),
+                onTap: _newReport,
                 borderRadius: BorderRadius.circular(RRadius.lg),
                 child: Padding(
                   padding: const EdgeInsetsDirectional.symmetric(

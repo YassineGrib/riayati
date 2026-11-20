@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/api/api_error.dart';
@@ -7,6 +8,36 @@ import '../../core/widgets/r_button.dart';
 import 'calendar_widgets.dart';
 import 'visit.dart';
 import 'visit_repository.dart';
+
+/// Keeps only digits and puts [separator] between the groups, so typing
+/// `1000` gives `10:00` and `20261125` gives `2026-11-25`.
+class _DigitsFormatter extends TextInputFormatter {
+  const _DigitsFormatter(this.groups, this.separator);
+  final List<int> groups;
+  final String separator;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+    final out = StringBuffer();
+    var index = 0;
+    for (final size in groups) {
+      if (index >= digits.length) break;
+      if (out.isNotEmpty) out.write(separator);
+      final end = index + size > digits.length ? digits.length : index + size;
+      out.write(digits.substring(index, end));
+      index = end;
+    }
+    final text = out.toString();
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
 
 Future<Visit?> showProposeVisitSheet(
   BuildContext context, {
@@ -152,6 +183,11 @@ class _ProposeVisitSheetState extends ConsumerState<ProposeVisitSheet> {
           enabled: !_sending,
           textDirection: note ? TextDirection.rtl : TextDirection.ltr,
           keyboardType: note ? TextInputType.multiline : TextInputType.datetime,
+          inputFormatters: name == 'visit-date'
+              ? [_DigitsFormatter(const [4, 2, 2], '-')]
+              : note
+              ? null
+              : [_DigitsFormatter(const [2, 2], ':')],
           maxLength: note ? _noteLimit : null,
           minLines: note ? 3 : 1,
           maxLines: note ? null : 1,

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:riayati/core/api/api_client.dart';
 import 'package:riayati/core/api/api_error.dart';
-import 'package:riayati/core/api/token_store.dart';
+import 'package:riayati/core/api/token_store.dart' show linkSkipStoreProvider, tokenStoreProvider;
 import 'package:riayati/core/router.dart';
 import 'package:riayati/core/widgets/r_button.dart';
 import 'package:riayati/features/auth/auth_controller.dart';
@@ -24,6 +24,22 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }
+
+  testWidgets('skip is remembered for the next start', (tester) async {
+    final api = FamilyTestApi();
+    final container = await pumpFamilyApp(tester, api);
+    final store = container.read(linkSkipStoreProvider) as MemoryLinkSkipStore;
+    expect(store.skipped, isFalse);
+
+    await tapFamilyButton(tester, 'تخطي الآن');
+    await tester.pumpAndSettle();
+    expect(store.skipped, isTrue);
+
+    // A later start reads the flag and goes straight in.
+    await container.read(authControllerProvider.notifier).refresh();
+    expect(container.read(authControllerProvider).linkSkipped, isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 
   testWidgets('skip lets an unlinked parent into the app', (tester) async {
     final api = FamilyTestApi();
