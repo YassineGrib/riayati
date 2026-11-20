@@ -1,0 +1,14 @@
+{
+  "name": "رعايتي",
+  "short_name": "رعايتي",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F3F8EC",
+  "theme_color": "#406A05",
+  "icons": [
+    {"src": "/landing/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/landing/icon-512.png", "sizes": "512x512", "type": "image/png"}
+  ]
+}

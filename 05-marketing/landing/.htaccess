@@ -1,0 +1,19 @@
+# Install in public/landing/ AND public/downloads/; do not replace the Laravel root rules.
+Options -Indexes
+AddType application/vnd.android.package-archive .apk
+AddType font/woff2 .woff2
+AddType image/webp .webp
+AddType image/svg+xml .svg
+<IfModule mod_headers.c>
+  <FilesMatch "\.apk$">
+    Header set Content-Disposition "attachment; filename=riayati.apk"
+    Header set Cache-Control "no-cache"
+    Header set X-Content-Type-Options "nosniff"
+  </FilesMatch>
+  <FilesMatch "\.(woff2|webp|jpg|png|ico|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(html|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

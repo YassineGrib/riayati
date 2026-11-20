@@ -3,7 +3,15 @@
 use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => response()->json(['name' => config('app.name')]));
+// The public landing + download page lives in public/landing (uploaded by tools/deploy-landing.ps1).
+// Without it (local development, tests) the root answers with the app name.
+Route::get('/', function () {
+    $page = public_path('landing/index.html');
+
+    return is_file($page)
+        ? response()->file($page, ['Cache-Control' => 'no-cache'])
+        : response()->json(['name' => config('app.name')]);
+});
 
 // Page opened from the password-reset email.
 Route::get('/reset-password/{token}', fn (string $token) => view('auth.reset-password', [

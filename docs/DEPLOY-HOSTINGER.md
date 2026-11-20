@@ -17,6 +17,13 @@ powershell -File tools\deploy-hostinger.ps1
 ```
 Uploads the backend, keeps `.env`, the database and uploads, runs `composer install --no-dev`, `migrate --force` and the caches. It pins the server host key and needs `~\.ssh\riayati_deploy` (its public key is added in hPanel, SSH Access).
 
+## Landing page and APK download
+- `https://riayati.site/` is the landing + download page (Laravel route `/` serves `public/landing/index.html`; without that file it answers with the app name).
+- The signed APK is `public/downloads/riayati.apk`, served with the Android MIME type and `Content-Disposition: attachment` (`.htaccess` in `public/downloads`).
+- Publish: `powershell -File tools\deploy-landing.ps1 -Apk <path to the signed APK>` (uploads the production files of `05-marketing/landing`, then compares the APK SHA-256 on the server). After a new APK, run `python 05-marketing/landing/tools/update-facts.py <apk>` first so the page shows the right size and fingerprint.
+- Release signing: `03-app/mobile/android/key.properties` (git-ignored) points to `C:\Users\Yassi\keystores\riayati-release.jks`. The keystore password is only in `key.properties` and in the owner's backup email. The keystore itself is also in the owner's Google Drive. Losing it means installed apps can never be updated.
+- Build the download file: `flutter build apk --release --split-per-abi --target-platform android-arm64 --dart-define=API_URL=https://riayati.site/api` (arm64 only, about 21.5 MB). Check it with `apksigner verify --print-certs` (certificate SHA-256 must start `3B:0C:67:59`).
+
 ## Accounts
 The admin and the two demo parents were created on 2026-11-20 with random passwords shown once to the owner. To change a password: `php83 artisan tinker`, then `User::where('email', '...')->first()->update(['password' => '...'])`.
 

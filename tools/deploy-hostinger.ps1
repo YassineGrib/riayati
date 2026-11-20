@@ -2,7 +2,7 @@
 #   powershell -File tools\deploy-hostinger.ps1
 # Needs the SSH key C:\Users\<you>\.ssh\riayati_deploy (public part added in hPanel > SSH Access).
 # Never overwrites .env, the SQLite database or uploaded evidence on the server.
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'   # native stderr is noise; real failures are checked with $LASTEXITCODE
 $hostIp = '191.96.63.216'; $port = 65002; $user = 'u514106451'
 $key = "$env:USERPROFILE\.ssh\riayati_deploy"
 $root = Split-Path -Parent $PSScriptRoot
@@ -24,6 +24,7 @@ tar -czf $tgz --exclude=./vendor --exclude=./node_modules --exclude=./.env --exc
   --exclude=./public/css/filament --exclude=./public/js/filament --exclude=./public/fonts/filament `
   --exclude=./tests --exclude=./bootstrap/cache -C $backend .
 scp -P $port @opt $tgz "${user}@${hostIp}:riayati-backend.tgz"
+if ($LASTEXITCODE -ne 0) { throw 'scp failed' }
 
 $remote = @'
 set -e
