@@ -23,16 +23,14 @@ class E2eAccountsSeeder extends Seeder
             ['e2e-mother@riayati.test', 'أم اختبار', Role::Mother],
             ['e2e-admin@riayati.test', 'مسؤول اختبار', Role::Admin],
         ] as [$email, $name, $role]) {
-            User::updateOrCreate(
-                ['email' => $email],
-                [
-                    'name' => $name,
-                    'password' => self::PASSWORD,
-                    'role' => $role,
-                    'family_id' => null,
-                    'terms_accepted_at' => now(),
-                ]
-            );
+            // Re-running resets the password but keeps an existing family link.
+            $user = User::firstOrNew(['email' => $email]);
+            $user->forceFill([
+                'name' => $name,
+                'password' => self::PASSWORD,
+                'role' => $role,
+                'terms_accepted_at' => $user->terms_accepted_at ?? now(),
+            ])->save();
         }
     }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
 import '../../core/theme/tokens.g.dart';
@@ -10,6 +9,7 @@ import '../../core/widgets/r_card.dart';
 import '../../core/widgets/state_views.dart';
 import '../calendar/visit.dart';
 import '../calendar/visit_repository.dart';
+import '../../core/format.dart';
 import '../reports/report.dart';
 import '../reports/report_repository.dart';
 
@@ -55,20 +55,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   }
 
   String _formatDate(DateTime dt) {
-    try {
-      return DateFormat('d MMMM yyyy', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-    }
+    return formatDay(dt.toLocal(), year: true);
   }
 
   String _formatVisitDate(String dateStr) {
-    try {
-      final dt = DateTime.parse(dateStr);
-      return DateFormat('EEEE d MMMM yyyy', 'ar').format(dt);
-    } catch (_) {
-      return dateStr;
-    }
+    final dt = DateTime.tryParse(dateStr);
+    return dt == null ? dateStr : formatDay(dt, weekday: true, year: true);
   }
 
   DateTime _parseVisitDate(String dateStr) {

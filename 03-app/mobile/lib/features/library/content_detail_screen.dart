@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/state_views.dart';
@@ -49,11 +49,7 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
 
   String _formatDate(DateTime? dt) {
     if (dt == null) return '';
-    try {
-      return DateFormat('d MMMM yyyy', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-    }
+    return formatDay(dt.toLocal(), year: true);
   }
 
   StatusTone _toneForType(ContentType type) {

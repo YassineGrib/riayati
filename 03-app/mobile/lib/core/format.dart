@@ -30,6 +30,28 @@ String _fallback(DateTime dt) {
   );
 }
 
+/// "الأربعاء 25 نوفمبر" (or with the year), Latin digits like the calendar.
+String formatDay(DateTime value, {bool weekday = false, bool year = false}) {
+  final pattern = '${weekday ? 'EEEE ' : ''}d MMMM${year ? ' yyyy' : ''}';
+  try {
+    return isolateRtl(
+      (DateFormat(pattern, 'ar')..useNativeDigits = false).format(value),
+    );
+  } catch (_) {
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${value.year}-${two(value.month)}-${two(value.day)}';
+  }
+}
+
+/// Correct Arabic count wording for attachments.
+String attachmentsLabel(int count) {
+  if (count <= 0) return 'بدون مرفقات';
+  if (count == 1) return 'مرفق واحد';
+  if (count == 2) return 'مرفقان';
+  if (count <= 10) return '$count مرفقات';
+  return '$count مرفقًا';
+}
+
 /// "143 KB" / "1.2 MB" kept as one run.
 String formatFileSize(int bytes) {
   if (bytes >= 1024 * 1024) {

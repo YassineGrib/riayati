@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
+import '../../core/format.dart';
 import '../../core/theme/tokens.g.dart';
 import '../../core/widgets/app_scaffold.dart';
 import '../../core/widgets/r_card.dart';
@@ -58,11 +58,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
 
   String _formatDate(DateTime? dt) {
     if (dt == null) return '';
-    try {
-      return DateFormat('d MMMM yyyy', 'ar').format(dt);
-    } catch (_) {
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-    }
+    return formatDay(dt.toLocal(), year: true);
   }
 
   StatusTone _toneForType(ContentType type) {
@@ -370,7 +366,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           const SizedBox(width: RSpace.s2_5),
           Expanded(
             child: Text(
-              'محتوى قانوني وتثقيفي معتمد وفق التشريع الجزائري لمساعدة الوالدين.',
+              'محتوى تعريفي للإرشاد الأولي، ولا يغني عن استشارة مختص أو عن نص القانون الرسمي.',
               style: RType.caption.copyWith(color: c.textSecondary),
             ),
           ),

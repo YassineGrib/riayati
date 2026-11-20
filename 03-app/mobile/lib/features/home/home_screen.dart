@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
 import '../../core/format.dart';
@@ -55,21 +54,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   String _formatToday() {
-    try {
-      return DateFormat('EEEE d MMMM', 'ar').format(DateTime.now());
-    } catch (_) {
-      final now = DateTime.now();
-      return '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
-    }
+    return formatDay(DateTime.now(), weekday: true);
   }
 
   String _formatVisitDate(String dateStr) {
-    try {
-      final dt = DateTime.parse(dateStr);
-      return DateFormat('EEEE d MMMM', 'ar').format(dt);
-    } catch (_) {
-      return dateStr;
-    }
+    final dt = DateTime.tryParse(dateStr);
+    return dt == null ? dateStr : formatDay(dt, weekday: true);
   }
 
   String _formatIncidentDate(DateTime dt) {
@@ -874,7 +864,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ),
                               const SizedBox(width: RSpace.s1),
                               Text(
-                                '${report.attachmentsCount} مرفقات',
+                                attachmentsLabel(report.attachmentsCount),
                                 style: RType.caption.copyWith(
                                   color: c.textSecondary,
                                 ),

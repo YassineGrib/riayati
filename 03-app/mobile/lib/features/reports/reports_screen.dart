@@ -258,12 +258,10 @@ class _ReportCard extends StatelessWidget {
             ),
             const SizedBox(width: RSpace.s1_5),
             Expanded(
-              child: Text(switch (report.attachmentsCount) {
-                0 => 'بدون مرفقات',
-                1 => 'ملف واحد',
-                2 => 'ملفان',
-                final count => '$count ملفات',
-              }, style: RType.caption.copyWith(color: context.c.textSecondary)),
+              child: Text(
+                attachmentsLabel(report.attachmentsCount),
+                style: RType.caption.copyWith(color: context.c.textSecondary),
+              ),
             ),
             Icon(
               Icons.arrow_forward_ios,
