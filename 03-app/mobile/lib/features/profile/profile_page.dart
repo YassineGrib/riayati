@@ -60,8 +60,8 @@ class ProfileLegalPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'نسخة مبدئية، سيُستبدل النص النهائي قبل الإطلاق',
-          style: RType.bodyLegal.copyWith(color: context.c.textPrimary),
+          'آخر تحديث: نوفمبر 2026',
+          style: RType.caption.copyWith(color: context.c.textSecondary),
         ),
         for (final (heading, body) in sections) ...[
           const SizedBox(height: RSpace.s6),

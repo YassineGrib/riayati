@@ -68,11 +68,11 @@ Future<GoRouter> _pump(
 void main() {
   for (final page in [const TermsScreen(), const PrivacyScreen()]) {
     testWidgets(
-      '${page.runtimeType} renders draft notice, serif body and back',
+      '${page.runtimeType} renders update date, serif body and back',
       (tester) async {
         final router = await _pump(tester, page);
         expect(
-          find.text('نسخة مبدئية، سيُستبدل النص النهائي قبل الإطلاق'),
+          find.text('آخر تحديث: نوفمبر 2026'),
           findsOneWidget,
         );
         expect(
