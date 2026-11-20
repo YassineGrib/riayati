@@ -148,7 +148,10 @@ class _ContentDetailScreenState extends ConsumerState<ContentDetailScreen> {
                 final item = snapshot.data!;
                 final dateText = _formatDate(item.publishedAt);
                 final readingTime = '${item.readingTimeMinutes} دقائق قراءة';
-                final metaText = dateText.isNotEmpty ? '$dateText · $readingTime' : readingTime;
+                // Isolated parts keep the date and reading-time digits apart.
+                final metaText = dateText.isNotEmpty
+                    ? '⁧$dateText⁩  ·  ⁧$readingTime⁩'
+                    : readingTime;
 
                 return SingleChildScrollView(
                   padding: const EdgeInsetsDirectional.only(bottom: RSpace.s8),

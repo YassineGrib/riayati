@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 
 import '../../core/api/api_error.dart';
@@ -231,6 +232,18 @@ class _LinkScreenState extends ConsumerState<LinkScreen> {
                     onPressed: _signingOut || _code.text.trim().isEmpty
                         ? null
                         : _link,
+                  ),
+                  const SizedBox(height: RSpace.s3),
+                  RButton(
+                    key: const ValueKey('link-skip-btn'),
+                    label: 'تخطي الآن',
+                    kind: RButtonKind.secondary,
+                    onPressed: _linking || _signingOut
+                        ? null
+                        : () {
+                            ref.read(authControllerProvider.notifier).skipLink();
+                            context.go('/home');
+                          },
                   ),
                   const SizedBox(height: RSpace.s6),
                   const Spacer(),

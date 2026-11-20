@@ -43,7 +43,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (auth.status == AuthStatus.signedOut) {
         return public.contains(path) ? null : '/welcome';
       }
-      if (!auth.user!.linked) return path == '/link' ? null : '/link';
+      if (!auth.user!.linked) {
+        if (path == '/link') return null;
+        if (!auth.linkSkipped) return '/link';
+        return public.contains(path) ? '/home' : null;
+      }
       return public.contains(path) || path == '/link' ? '/home' : null;
     },
     routes: [

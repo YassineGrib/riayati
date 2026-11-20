@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:riayati/core/api/api_client.dart';
 import 'package:riayati/core/api/api_error.dart';
 import 'package:riayati/core/api/token_store.dart';
 import 'package:riayati/core/router.dart';
@@ -23,6 +24,30 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }
+
+  testWidgets('skip lets an unlinked parent into the app', (tester) async {
+    final api = FamilyTestApi();
+    final container = await pumpFamilyApp(tester, api);
+    final router = container.read(routerProvider);
+    expect(router.routeInformationProvider.value.uri.path, '/link');
+    expect(container.read(authControllerProvider).linkSkipped, isFalse);
+
+    await tapFamilyButton(tester, 'تخطي الآن');
+
+    expect(container.read(authControllerProvider).linkSkipped, isTrue);
+    expect(container.read(authControllerProvider).user!.linked, isFalse);
+    expect(router.routeInformationProvider.value.uri.path, '/home');
+    // The link screen stays reachable from the calendar and the profile.
+    router.go('/link');
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, '/link');
+    // A server "not linked" answer must not push a skipping parent back.
+    container.read(apiClientProvider).onNotLinked?.call();
+    router.go('/reports');
+    await tester.pumpAndSettle();
+    expect(router.routeInformationProvider.value.uri.path, '/reports');
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
 
   testWidgets('bad code shows server message below field and permits retry', (
     tester,

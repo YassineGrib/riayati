@@ -84,6 +84,9 @@ class FakeAuthNotifier extends Notifier<AuthState> implements AuthController {
   Future<void> refresh() async {}
 
   @override
+  void skipLink() {}
+
+  @override
   Future<void> register({
     required String name,
     required String email,
