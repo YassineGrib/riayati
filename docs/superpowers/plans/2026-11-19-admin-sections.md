@@ -48,11 +48,11 @@
 ### Task 3: Users and families (→ 80%)
 **Files:** Create `app/Filament/Resources/Users/UserResource.php` (+ list/view pages, table/infolist), test `tests/Feature/Admin/UserResourceTest.php`.
 **Interfaces:** Query only role in (father, mother); columns name, role badge, phone, wilaya, children count, linked status (family has two parents), partner name (admin only), joined date, last activity (latest `personal_access_tokens.last_used_at`); filters role, linked/unlinked, wilaya; `canCreate/canEdit/canDelete` false; model attributes `password`, `remember_token` never selected.
-- [ ] Failing tests per Review Focus 1-3 plus filters. [ ] Implement. [ ] Run all → PASS. [ ] Commit. Report **80%**.
+- [x] Failing tests per Review Focus 1-3 plus filters. [x] Implement. [x] Run all → PASS. [x] Commit. Report **80%**.
 
 ### Task 4: Visits overview and polish (→ 100%)
 **Files:** Create `app/Filament/Resources/Visits/VisitResource.php` (+ list/view), test `tests/Feature/Admin/VisitResourceTest.php`; modify navigation groups (Reports and Visits under "العمليات", Content under "المحتوى", Users under "الحسابات"); update `docs/ADMIN.md`, `CLAUDE.md`, `03-app/PLAN.md`.
-- [ ] Failing tests: list shows date, time range, status badge (proposed info, accepted warning, declined danger, confirmed success), family parents' names, proposed-by role; filters status and date range; no write actions; parent 403. [ ] Implement. [ ] Visual check in the browser (light and dark) against the theme, fix contrast. [ ] Run all tests. [ ] Commit. Report **100%**.
+- [x] Failing tests: list shows date, time range, status badge (proposed info, accepted warning, declined danger, confirmed success), family parents' names, proposed-by role; filters status and date range; no write actions; parent 403. [x] Implement. [x] Visual check in the browser (light and dark) against the theme, fix contrast. [x] Run all tests. [x] Commit. Report **100%**.
 
 ## Who does what
 Codex: Tasks 1 and 2. Antigravity: Tasks 3 and 4 (read-only resources, navigation, visual check). The orchestrator runs every gate, resolves overlaps in `AdminPanelProvider`, and commits.

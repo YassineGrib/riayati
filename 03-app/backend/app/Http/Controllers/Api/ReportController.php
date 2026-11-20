@@ -6,6 +6,7 @@ use App\Enums\ReportStatus;
 use App\Http\Controllers\Controller;
 use App\Models\IncidentReport;
 use App\Models\ReportAttachment;
+use App\Services\AdminActivityLog;
 use App\Services\ReportPdf;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -89,7 +90,12 @@ class ReportController extends Controller
     {
         $model = $this->visible($request, $report)->load('attachments', 'user');
 
-        return response($pdf->render($model), 200, [
+        $body = $pdf->render($model);
+        if ($request->user()->isAdmin()) {
+            app(AdminActivityLog::class)->record($request->user(), 'report.pdf_downloaded', $model);
+        }
+
+        return response($body, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename="'.$model->reference.'.pdf"',
             'Cache-Control' => 'private, no-store',

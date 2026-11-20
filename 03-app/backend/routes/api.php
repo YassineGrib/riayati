@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CenterController;
+use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\FamilyController;
 use App\Http\Controllers\Api\PasswordController;
 use App\Http\Controllers\Api\PasswordResetController;
@@ -22,6 +24,10 @@ Route::get('/attachments/{attachment}/download', [AttachmentController::class, '
     ->middleware(['signed', 'throttle:60,1'])->name('attachments.download');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/contents', [ContentController::class, 'index']);
+    Route::get('/contents/{slug}', [ContentController::class, 'show']);
+    Route::get('/centers', [CenterController::class, 'index']);
+    Route::get('/centers/{id}', [CenterController::class, 'show'])->whereNumber('id');
     Route::get('/me', [AuthController::class, 'me']);
     Route::put('/me', [AuthController::class, 'updateProfile'])->middleware('throttle:6,1');
     Route::post('/logout', [AuthController::class, 'logout']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\IncidentReport;
 use App\Models\ReportAttachment;
+use App\Services\AdminActivityLog;
 use App\Services\AttachmentLinks;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,11 @@ class AttachmentController extends Controller
     public function download(ReportAttachment $attachment): StreamedResponse
     {
         abort_unless(Storage::disk('local')->exists($attachment->path), 404);
+
+        $admin = auth('web')->user();
+        if ($admin?->isAdmin()) {
+            app(AdminActivityLog::class)->record($admin, 'attachment.opened', $attachment);
+        }
 
         return Storage::disk('local')->response($attachment->path, null, [
             'Content-Type' => $attachment->mime,

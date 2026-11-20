@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReportStatus;
+use App\Services\AdminActivityLog;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,11 +48,15 @@ class IncidentReport extends Model
 
     public function markReviewed(User $admin): void
     {
+        if ($this->status === ReportStatus::Reviewed) {
+            return;
+        }
         $this->forceFill([
             'status' => ReportStatus::Reviewed,
             'reviewed_at' => now(),
             'reviewed_by' => $admin->id,
         ])->save();
+        app(AdminActivityLog::class)->record($admin, 'report.reviewed', $this);
     }
 
     public function toApi(bool $detail = true): array

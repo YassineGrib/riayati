@@ -5,6 +5,7 @@ namespace App\Filament\Resources\IncidentReports\Pages;
 use App\Enums\ReportStatus;
 use App\Filament\Resources\IncidentReports\IncidentReportResource;
 use App\Models\IncidentReport;
+use App\Services\AdminActivityLog;
 use App\Services\ReportPdf;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
@@ -36,6 +37,8 @@ class ViewIncidentReport extends ViewRecord
                 ->action(function (ReportPdf $pdf): StreamedResponse {
                     abort_unless(Filament::auth()->user()?->isAdmin(), 403);
                     $report = $this->getRecord()->loadMissing(['user', 'attachments']);
+
+                    app(AdminActivityLog::class)->record(Filament::auth()->user(), 'report.pdf_downloaded', $report);
 
                     return response()->streamDownload(
                         function () use ($pdf, $report): void {

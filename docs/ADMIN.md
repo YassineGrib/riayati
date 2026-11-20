@@ -138,3 +138,12 @@ Before pushing releases:
   ```bash
   php artisan test --filter NoByteOrderMarkTest
   ```
+
+
+### Centers and activity log
+
+The admin directory (مراكز وهيئات, under المحتوى) supports CRUD, kind tabs, wilaya filters and publication. Its 58 wilayas match mobile. SupportCenterPlaceholderSeeder is opt-in and idempotent: labelled unpublished demo entries, fake numbers only.
+
+سجل النشاط under الحسابات is read-only: content/center changes, report reviews, PDF downloads and attachment file requests by signed-in admins, with subject, timestamp and request IP. Image preview requests also count as attachment opens.
+
+Sanctum-authenticated users can GET /api/contents, /api/contents/{slug}, /api/centers, /api/centers/{id}. Lists paginate at 20; content filters: type, q; center filters: kind, wilaya (catalogue key, e.g. 16), q. Responses use data; details add body or notes. HTML is JSON text. Drafts return 404; guests return 401.
