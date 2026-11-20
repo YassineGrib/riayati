@@ -22,6 +22,9 @@ class ContentsTable
                 ->color(fn (ContentType $state): string => $state->color()),
             TextColumn::make('category')->label('التصنيف')->searchable()->placeholder('—'),
             TextColumn::make('reference')->label('المرجع')->searchable()->placeholder('—'),
+            TextColumn::make('chunks_count')->counts('chunks')->label('فهرسة المساعد')->badge()
+                ->formatStateUsing(fn ($state): string => $state > 0 ? 'مفهرس' : 'غير مفهرس')
+                ->color(fn ($state): string => $state > 0 ? 'success' : 'gray'),
             IconColumn::make('is_published')->label('منشور')->boolean(),
             TextColumn::make('published_at')->label('تاريخ النشر')->dateTime('Y-m-d H:i')->sortable()->placeholder('—'),
         ])->filters([

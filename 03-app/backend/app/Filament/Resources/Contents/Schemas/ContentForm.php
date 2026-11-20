@@ -33,6 +33,8 @@ class ContentForm
                         ['h2', 'h3', 'bulletList', 'orderedList', 'blockquote'],
                         ['undo', 'redo'],
                     ]),
+                Toggle::make('use_in_assistant')->label('يستعمله المساعد القانوني')->default(false)
+                    ->helperText('النص المنشور والمفعّل يصير مصدرًا لإجابات المساعد؛ التعديل يعيد الفهرسة تلقائيًا'),
                 Toggle::make('is_published')->label('منشور')->default(false)
                     ->helperText('يُسجّل تاريخ النشر عند التفعيل.'),
             ]),

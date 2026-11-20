@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AssistantController;
 use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CenterController;
@@ -24,6 +25,7 @@ Route::get('/attachments/{attachment}/download', [AttachmentController::class, '
     ->middleware(['signed', 'throttle:60,1'])->name('attachments.download');
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/assistant', AssistantController::class)->middleware('throttle:12,1');
     Route::get('/contents', [ContentController::class, 'index']);
     Route::get('/contents/{slug}', [ContentController::class, 'show']);
     Route::get('/centers', [CenterController::class, 'index']);

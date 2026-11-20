@@ -147,3 +147,10 @@ The admin directory (مراكز وهيئات, under المحتوى) supports CRU
 سجل النشاط under الحسابات is read-only: content/center changes, report reviews, PDF downloads and attachment file requests by signed-in admins, with subject, timestamp and request IP. Image preview requests also count as attachment opens.
 
 Sanctum-authenticated users can GET /api/contents, /api/contents/{slug}, /api/centers, /api/centers/{id}. Lists paginate at 20; content filters: type, q; center filters: kind, wilaya (catalogue key, e.g. 16), q. Responses use data; details add body or notes. HTML is JSON text. Drafts return 404; guests return 401.
+
+
+## المساعد القانوني
+
+أدخل النص وعنوانه ومرجعه في مكتبة المحتوى، ثم فعّل «يستعمله المساعد القانوني» وانشره. الحفظ يعيد الفهرسة مباشرة دون طابور. إلغاء النشر أو التفعيل أو حذف النص يحذف مقاطعه. شارة «مفهرس» تؤكد وجود المقاطع؛ عند فشل الاتصال يبقى النص محفوظًا دون فهرسة. أعد المحاولة بزر «إعادة فهرسة المساعد» أو `php artisan assistant:reindex` عبر SSH. تظهر أعداد النجاح والفشل وتُسجّل عمليات المسؤول في سجل النشاط.
+
+اضبط `GEMINI_API_KEY` في بيئة الخادم؛ ويمكن تخصيص `GEMINI_EMBEDDING_MODEL` و`GEMINI_ANSWER_MODEL`. تُرسل المصادر المفعّلة إلى Gemini لإنشاء التضمينات، وعند السؤال يُرسل السؤال والمقتطفات المسترجعة فقط. لا تُرسل البلاغات أو المرفقات أو بيانات الحسابات، ولا يُحفظ سجل محادثات. لا تُدخل أسماء أو تفاصيل شخصية في الأسئلة أو المصادر. المساعد آلي وليس محاميًا، ويذكر المصادر ويصرّح عندما لا تكفي للإجابة.
