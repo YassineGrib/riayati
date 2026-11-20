@@ -10,8 +10,12 @@ import '../features/auth/screens/welcome_screen.dart';
 import '../features/assistant/assistant_screen.dart';
 import '../features/calendar/calendar_screen.dart';
 import '../features/calendar/visit_detail_screen.dart';
+import '../features/centers/center_detail_screen.dart';
+import '../features/centers/centers_screen.dart';
 import '../features/family/link_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/library/content_detail_screen.dart';
+import '../features/library/library_screen.dart';
 import '../features/notifications/notifications_screen.dart';
 import '../features/profile/change_password_screen.dart';
 import '../features/profile/edit_profile_screen.dart';
@@ -110,6 +114,24 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/calendar/:id',
         builder: (_, state) =>
             VisitDetailScreen(int.parse(state.pathParameters['id']!)),
+      ),
+      GoRoute(
+        path: '/library',
+        builder: (_, _) => const LibraryScreen(),
+      ),
+      GoRoute(
+        path: '/library/:slug',
+        builder: (_, state) =>
+            ContentDetailScreen(slug: state.pathParameters['slug']!),
+      ),
+      GoRoute(
+        path: '/centers',
+        builder: (_, _) => const CentersScreen(),
+      ),
+      GoRoute(
+        path: '/centers/:id',
+        builder: (_, state) =>
+            CenterDetailScreen(id: int.parse(state.pathParameters['id']!)),
       ),
     ],
   );

@@ -113,7 +113,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsetsDirectional.only(
-            top: RSpace.s3,
+            top: RSpace.s1_5,
             bottom: RSpace.s20,
           ),
           child: Column(
@@ -213,7 +213,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: RSpace.s4),
+              const SizedBox(height: RSpace.s3),
 
               // 2. SOS card (MUST BE FIRST)
               Material(
@@ -233,25 +233,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsetsDirectional.all(RSpace.s5),
+                        padding: const EdgeInsetsDirectional.all(RSpace.s4),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             // Badge
                             Container(
-                              width: RSpace.s14,
-                              height: RSpace.s14,
+                              width: RSpace.s12,
+                              height: RSpace.s12,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: c.sosTextOnBg,
                               ),
                               child: Icon(
                                 Icons.warning_amber_rounded,
-                                size: RSpace.s7,
+                                size: RSpace.s6,
                                 color: c.sos,
                               ),
                             ),
-                            const SizedBox(width: RSpace.s4),
+                            const SizedBox(width: RSpace.s3),
                             // Titles
                             Expanded(
                               child: Column(
@@ -264,7 +264,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const SizedBox(height: RSpace.s1),
+                                  const SizedBox(height: RSpace.s0_5),
                                   Text(
                                     'وثّق ما حدث بالنص والصور والفيديو.',
                                     style: RType.caption.copyWith(
@@ -287,15 +287,91 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: RSpace.s5),
+              const SizedBox(height: RSpace.s2_5),
+
+              // Two shortcut cards under the SOS card
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildShortcutCard(
+                      key: const ValueKey('home-shortcut-library'),
+                      icon: Icons.menu_book_outlined,
+                      label: 'المحتوى التعليمي',
+                      onTap: () => context.push('/library'),
+                    ),
+                  ),
+                  const SizedBox(width: RSpace.s2_5),
+                  Expanded(
+                    child: _buildShortcutCard(
+                      key: const ValueKey('home-shortcut-centers'),
+                      icon: Icons.account_balance_outlined,
+                      label: 'مراكز وهيئات',
+                      onTap: () => context.push('/centers'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: RSpace.s3),
 
               // 3. Upcoming Visit Section
               _buildVisitSection(context),
-              const SizedBox(height: RSpace.s5),
+              const SizedBox(height: RSpace.s3),
 
               // 4. Last Reports Section
               _buildReportsSection(context),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShortcutCard({
+    Key? key,
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    final c = context.c;
+    return Material(
+      key: key,
+      color: c.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(RRadius.x2xl),
+        side: BorderSide(color: c.border, width: RBorderWidth.thin),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 40.0),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.symmetric(
+              horizontal: RSpace.s3,
+              vertical: RSpace.s1_5,
+            ),
+            child: Row(
+              children: [
+                Icon(icon, size: RSpace.s5, color: c.primary),
+                const SizedBox(width: RSpace.s2),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: RType.label.copyWith(
+                      color: c.textPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_left,
+                  size: RSpace.s4,
+                  color: c.textSecondary,
+                ),
+              ],
+            ),
           ),
         ),
       ),

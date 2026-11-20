@@ -157,6 +157,20 @@ Future<void> pumpHome(
           return const Scaffold(body: Text('notifications screen'));
         },
       ),
+      GoRoute(
+        path: '/library',
+        builder: (_, _) {
+          pushedRoutes?.add('/library');
+          return const Scaffold(body: Text('library screen'));
+        },
+      ),
+      GoRoute(
+        path: '/centers',
+        builder: (_, _) {
+          pushedRoutes?.add('/centers');
+          return const Scaffold(body: Text('centers screen'));
+        },
+      ),
     ],
   );
   addTearDown(router.dispose);
@@ -236,6 +250,34 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('shortcut cards navigate to /library and /centers', (tester) async {
+    final visits = FakeHomeVisits();
+    final reports = FakeHomeReports();
+    final pushed = <String>[];
+
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports, pushedRoutes: pushed);
+
+    expect(find.byKey(const ValueKey('home-shortcut-library')), findsOneWidget);
+    expect(find.byKey(const ValueKey('home-shortcut-centers')), findsOneWidget);
+    expect(find.text('المحتوى التعليمي'), findsOneWidget);
+    expect(find.text('مراكز وهيئات'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('home-shortcut-library')));
+    await tester.pumpAndSettle();
+    expect(pushed, contains('/library'));
+  });
+
+  testWidgets('shortcut card centers navigates to /centers', (tester) async {
+    final visits = FakeHomeVisits();
+    final reports = FakeHomeReports();
+    final pushed = <String>[];
+
+    await pumpHome(tester, visitsRepo: visits, reportsRepo: reports, pushedRoutes: pushed);
+    await tester.tap(find.byKey(const ValueKey('home-shortcut-centers')));
+    await tester.pumpAndSettle();
+    expect(pushed, contains('/centers'));
   });
 
   testWidgets('home section titles have leading icons for visits and reports', (tester) async {
