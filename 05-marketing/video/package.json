@@ -1,0 +1,27 @@
+{
+  "name": "riayati-video",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio",
+    "render:promo": "remotion render src/index.ts Promo out/riayati-promo.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:promo-vertical": "remotion render src/index.ts PromoVertical out/riayati-promo-vertical.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:howto": "remotion render src/index.ts HowTo out/riayati-howto-vertical.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:problems": "remotion render src/index.ts Problems out/riayati-problems-vertical.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:story": "remotion render src/index.ts Story out/riayati-story.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:story-vertical": "remotion render src/index.ts StoryVertical out/riayati-story-vertical.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=192k",
+    "render:logo-light": "remotion render src/index.ts LogoLight out/riayati-logo-light.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p",
+    "render:logo-dark": "remotion render src/index.ts LogoDark out/riayati-logo-dark.mp4 --image-format=png --codec=h264 --crf=18 --pixel-format=yuv420p",
+    "render:social": "node scripts/render-social.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  }
+}
